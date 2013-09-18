@@ -1,0 +1,43 @@
+@page {
+	size: letter;
+}
+
+body {
+	font-family: sans-serif;
+}
+
+table {
+	border-collapse: collapse;
+	border: 1px solid black;
+	border-style: solid;
+}
+
+table td {
+	padding: 3px;
+}
+
+label {
+	margin-right: 3px;	
+}
+
+hook {
+	display: inline;
+}
+
+.important {
+	font-weight: bold;
+	font-size: 120%;
+}
+
+.note {
+	font-weight: normal;
+	font-size: small;
+}
+
+.right {
+	text-align: right;
+}
+
+.center {
+	text-align: center;
+}
