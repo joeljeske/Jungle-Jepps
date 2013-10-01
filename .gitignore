@@ -1,2 +1,4 @@
 /bin
 /sample.db
+.DS_Store
+.gitignore_global
