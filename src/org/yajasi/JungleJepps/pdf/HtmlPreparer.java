@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.validation.SchemaFactory;
 
 import org.w3c.dom.*;
 import org.xhtmlrenderer.simple.PDFRenderer;
@@ -68,6 +67,7 @@ public class HtmlPreparer {
 	 */
 	private void publishPDF(String outputUrl) throws IOException, DocumentException{
 		if(dom == null) return;
+		
 		PDFRenderer.renderToPDF(dom, parentUrl, outputUrl);
 	}
 	
