@@ -36,7 +36,14 @@ public class DatabaseManager {
 		return SettingsManager.getInstance();
 	}
 	
-	
+	/**
+	 * This method is used to initialize a database connection.
+	 * It uses the settings to load the database type and initiates 
+	 * the merge class with a 3rd party source if need be.
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	private static DatabaseConnection createDatabaseConnection() throws ClassNotFoundException, SQLException{
 		DatabaseConnection newConnection;
 		SettingsManager settings = getSettings();
