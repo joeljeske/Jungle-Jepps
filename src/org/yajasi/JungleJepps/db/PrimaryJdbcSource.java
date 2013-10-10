@@ -43,12 +43,32 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	
 	// This method is an example of how to query and work in a JDBC Context
 	public static void main(String[] args) throws SQLException{
+		setupRelationships();
+	}
+	
+	public static void setupRelationships() throws SQLException{
+		System.out.println("setup ");
+		Connection con = DriverManager.getConnection("jdbc:sqlite:sample.db"); //NOTICE==> :sqlite:
+		Statement statement = con.createStatement();
+		statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+		statement.executeUpdate("CREATE TABLE customers (      customer_id INT AUTO_INCREMENT PRIMARY KEY,      customer_name VARCHAR(100)   );");  
+		statement.executeUpdate("CREATE TABLE orders (      order_id INT AUTO_INCREMENT PRIMARY KEY,     customer_id INT,      amount DOUBLE,      FOREIGN KEY (customer_id) REFERENCES customers(customer_id) );");  
+		statement.executeUpdate("INSERT INTO `customers` (`customer_id`, `customer_name`) VALUES  (1, 'Adam'),  (2, 'Andy'),  (3, 'Joe'), (4, 'Sandy');");  
+		statement.executeUpdate("INSERT INTO `orders` (`order_id`, `customer_id`, `amount`) VALUES  (1, 1, 19.99),  (2, 1, 35.15),  (3, 3, 17.56),  (4, 4, 12.34);");
+		
+		con.close();
+		return;
+	}
+	
+	public static void runSample() throws SQLException{
 		
 		//Get a connection from the drivere manager using a driver-specific database URL.
 		Connection con = DriverManager.getConnection("jdbc:sqlite:sample.db"); //NOTICE==> :sqlite:
 		Statement statement = con.createStatement();
 		statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
+		
 		statement.executeUpdate("drop table if exists person");
 		statement.executeUpdate("create table person (id integer, name string)");
 		statement.executeUpdate("insert into person values(1, 'leo')");
