@@ -1,13 +1,17 @@
 package org.yajasi.JungleJepps.jjtp;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceListener;
+
+import org.apache.http.client.utils.URIBuilder;
 
 /**
  * This class manages the client-side and server-side of multicast DNS. 
@@ -17,85 +21,67 @@ import javax.jmdns.ServiceListener;
 public class JungleJeppsmDNS {
 	
 	// mDNS service values 
-	public static final String MDNS_SERVICE_TYPE = "_junglejepps._tcp.local.";
+	public static final String PROPRIETARY_MDNS_SERVICE_TYPE = "_junglejepps._tcp.local.";
+	public static final String HTTP_MDNS_SERVICE_TYPE = "_http._tcp.local.";
+
 	public static final int SERVER_PORT = 8080;
 	private static final String MDNS_SERVICE_NAME = "JJTP service";
 	private static final String MDNS_SERVICE_NAME_PRETTY = "Jungle Jepps Desktop Service";
 
-	private static JmDNS jmDns;
+	private static JmDNS broadcasting, discovery;
+	private static Listener listener;
 	
 	// Client requested server
-	private static ServiceInfo provider;
-	
+	private static Set<URI> providers = new HashSet<URI>();
+
 	// Demonstration function
 	public static void main(String[] args) throws InterruptedException {
 		 JungleJeppsmDNS.startBroadcasting();
 		 
-		 Thread.sleep(2000);
+		 JungleJeppsmDNS.startDiscovery();
+		 Thread.sleep(1000);
 		 
-		 ServiceInfo server = JungleJeppsmDNS.getServiceProvider();
-		 for(String a: server.getHostAddresses())
-			 System.out.println("FOUND: " + a + ":" + server.getPort());
+		 for(URI provider : getProviders())
+			 System.out.println(provider);
 		 
-		 Thread.sleep(15000);
+		 JungleJeppsmDNS.stopDiscovery();
+		 
 		 
 		 JungleJeppsmDNS.stopBroadcasting();
 	 }
-
-	// Getters and initializers
-	/**
-	 * Get a JmDNS instance and keep a handle locally.
-	 * @return JmDNS an instance of JmDNS.create()
-	 */
-	private static JmDNS getJmDNS(){
-		if( jmDns == null)
-		{
+	
+	public static URI[] getProviders(){
+		int count = providers.size();
+		URI[] providerArray = new URI[count];
+		return providers.toArray( providerArray );
+	}
+	
+	public static void startDiscovery(){
+		 if(discovery == null)
 			try {
-				jmDns = JmDNS.create();
+				discovery = JmDNS.create();
 			} catch (IOException e) {
 				e.printStackTrace();
+				return;
 			}
-		}
-		
-		return jmDns;
-	}
-	 
-	 public static ServiceInfo getServiceProvider(){
-		JmDNS mdns = getJmDNS();
 		 
-		/* 
-		  * TODO: Implement driver callback functionality to alert user/program 
-		  * if service 
-		  * broadcast is stopped. 
-		  */
-		 ServiceListener listener = new ServiceListener() {
-			public void serviceAdded(ServiceEvent serviceEvent) {}
-			public void serviceRemoved(ServiceEvent serviceEvent) {}
-			public void serviceResolved(ServiceEvent serviceEvent) {}
-		 };
-			
-			
-		 try {
-		 	// Create and register service listener			
-		 	mdns.addServiceListener(MDNS_SERVICE_TYPE, listener);
+		 System.out.println("Listening for service changes...");
+		 
+		 listener = new Listener();
+		 discovery.addServiceListener(PROPRIETARY_MDNS_SERVICE_TYPE, listener);
+	}
+	
+	public static void stopDiscovery(){
+		System.out.println("Stop listening for service changes...");
 		
-			// Retrieve service info from either ServiceInfo[] returned here or listener callback method above.
-			ServiceInfo[] serviceInfos = mdns.list(MDNS_SERVICE_TYPE);
-			
+		// Clean up
+		discovery.removeServiceListener(PROPRIETARY_MDNS_SERVICE_TYPE, listener);
 		
-			if(serviceInfos.length > 0)
-				provider = serviceInfos[0];
-						
-			// Clean up
-			mdns.removeServiceListener(MDNS_SERVICE_TYPE, listener);
-			mdns.close();
-				
+		try {
+			discovery.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
 		}
-		 
-		return provider;
 	 }
 	 
 	 /**
@@ -103,17 +89,26 @@ public class JungleJeppsmDNS {
 	  * name over multicast DNS (mDNS). 
 	  */
 	 public static void startBroadcasting(){
-		 JmDNS mdns = getJmDNS();
-		 ServiceInfo jjtpService;
+		 ServiceInfo jjtpService, httpService;
 
+		 if(broadcasting == null)
+			try {
+				broadcasting = JmDNS.create();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}		 
+		 
 		try 
 		{
 			// Assign service name and info
-			jjtpService = ServiceInfo.create(MDNS_SERVICE_TYPE, MDNS_SERVICE_NAME_PRETTY, SERVER_PORT, MDNS_SERVICE_NAME);
-			
+			jjtpService = ServiceInfo.create(PROPRIETARY_MDNS_SERVICE_TYPE, MDNS_SERVICE_NAME_PRETTY, SERVER_PORT, MDNS_SERVICE_NAME);
+			httpService = ServiceInfo.create(HTTP_MDNS_SERVICE_TYPE, MDNS_SERVICE_NAME_PRETTY, SERVER_PORT, MDNS_SERVICE_NAME);
+
 			// Register service and broadcast over LAN
 			System.out.println("Registering service and starting broadcast...");
-			mdns.registerService( jjtpService );
+			broadcasting.registerService( jjtpService );
+			broadcasting.registerService( httpService );
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -124,13 +119,12 @@ public class JungleJeppsmDNS {
 	  * This method unregisters broadcaster
 	  */
 	 public static void stopBroadcasting(){
-		 JmDNS mdns = getJmDNS();
 		System.out.println("Unregistering service and killing broadcast...");
 		 
 		try
 		{
-			mdns.unregisterAllServices();
-			mdns.close();
+			broadcasting.unregisterAllServices();
+			broadcasting.close();
 			System.out.println("Broadcast finished.");
 		} 
 		catch (IOException e) {
@@ -138,4 +132,46 @@ public class JungleJeppsmDNS {
 			e.printStackTrace();	 
 		}
 	 }
+	 
+	 static class Listener implements ServiceListener {
+			
+			/**
+			 * Callback function to handle adding of services.
+			 */
+			public void serviceAdded(ServiceEvent serviceEvent) {
+			}
+			
+			/**
+			 * Callback function to handle removal of services from list
+			 */
+			public void serviceRemoved(ServiceEvent serviceEvent) {
+				ServiceInfo info = serviceEvent.getInfo();
+				
+				for(String addr : info.getHostAddresses())
+					providers.remove( buildAddress( addr, info.getPort() ) );
+			}
+			
+			/**
+			 * Callback function to handle addition (after resolution)
+			 * of services to list
+			 */
+			public void serviceResolved(ServiceEvent serviceEvent) {
+				ServiceInfo info = serviceEvent.getInfo();
+				
+				for(String addr : info.getHostAddresses())
+					providers.add( buildAddress( addr, info.getPort() ) );
+			}
+			
+			private URI buildAddress(String address, int port){
+				URI uri= null;
+				
+				try {
+					uri = new URIBuilder().setHost(address).setPort(port).build();
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
+				
+				return uri; 
+			}
+		 }
 }

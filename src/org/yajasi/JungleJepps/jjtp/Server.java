@@ -1,12 +1,23 @@
 package org.yajasi.JungleJepps.jjtp;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.File;
 import java.net.InetSocketAddress;
+import java.net.URI;
+import java.nio.channels.WritableByteChannel;
 
+import org.apache.http.HttpStatus;
+import org.xhtmlrenderer.util.IOUtil;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 import org.yajasi.JungleJepps.db.DatabaseManager;
 
+import sun.misc.IOUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.sun.net.httpserver.*;
 
 
@@ -75,9 +86,9 @@ public class Server {
 			{
 				doPost( exchange );
 			}
-			else if( method.equals("PATCH") )
+			else if( method.equals("PUT") )
 			{
-				doPatch( exchange );
+				doPut( exchange );
 			}
 			else
 			{
@@ -101,21 +112,94 @@ public class Server {
 		 * @throws IOException 
 		 */
 		private void doGet(HttpExchange exchange) throws IOException{
-			String host = exchange.getLocalAddress().getHostName();
-			String port = String.valueOf( JungleJeppsmDNS.SERVER_PORT );
+			String type = exchange.getRequestHeaders().getFirst("Accepts");
+			System.out.println("Handling GET...");
 			
-			String resp = "<html><body><h1>METHOD: " + exchange.getRequestMethod() + "</h1><br /></body>" +
-					"<script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>" +	
-					"<script>window.setTimeout(dopost, 2500);" +
-						"function dopost(){ $.post('http://" + host + ":" + port + "', function(resp){ $('body').append(resp); }); }"+ 
-						"</script>"+
-					"</html>";
+			if( type.equalsIgnoreCase( "application/json" ) )
+			{
+				handleGetDatabaseRequest( exchange );
+			}
+			else 
+			{
+				//handle html and pdf requests
+				
+			}
 			
-			exchange.sendResponseHeaders(200, resp.length());
+			if( exchange.getRequestURI().toASCIIString().equals("/") )
+				writeDefault(exchange);
+			else if( exchange.getRequestURI().toASCIIString().endsWith(".pdf") )
+				writePdf(exchange);
+				
+		}
+		
+		private void handleGetDatabaseRequest(HttpExchange exchange) throws IOException{
+			System.out.println("Handling JSON GET...");
+			exchange.getResponseHeaders().add("content-type", "application/json");
+			Gson gson = new Gson();
+			DatabaseConnection db = DatabaseManager.getDatabase();
+			OutputStream os = exchange.getResponseBody();
+			
+			String path = exchange.getRequestURI().getPath();
+			
+			System.out.println( path );
+			
+			if( path.equals( "/*" ) )
+			{
+				System.out.println("Getting Runway Names...");
+				// Get all runway names 
+				String[] runwayIds;
+				//runwayIds = db.getAllRunwayIds();
+				runwayIds = new String[]{"KIWI", "AMA","JFK"};
+				String json = gson.toJson(runwayIds);
+				
+				System.out.println(json);
+
+				exchange.sendResponseHeaders(HttpStatus.SC_OK, json.length());
+				os.write( json.getBytes() );
+				os.close();
+			}
+			else
+			{
+				// Get specific runway
+			}
+	
+		}
+		
+		private void writeDefault(HttpExchange exchange) throws IOException{
+			File outputHtml = new File("src/xhtml/pdf-test.html");
+			int size = (int) outputHtml.length();
+			InputStream input = new FileInputStream(outputHtml);
+
+			exchange.getResponseHeaders().add("content-type", "text/html");
+			exchange.sendResponseHeaders(200, size);
 			
 			OutputStream os = exchange.getResponseBody();
-			os.write( resp.getBytes() );
+			byte[] bytes = new byte[ size ];
+			input.read(bytes);
+			
+			os.write(bytes);
+			
+			//new FileInputStream( outputHtml ).getChannel().transferTo( Long.valueOf(0), (Long) outputHtml.length(), (WritableByteChannel) os);
 			os.close();
+		}
+		
+		private void writePdf(HttpExchange exchange) throws IOException{
+	
+			
+			File pdf = new File("pdf-repo/output.pdf");
+			InputStream input = new FileInputStream(pdf);
+
+			int size = (int) pdf.length();
+			exchange.getResponseHeaders().add("content-type", "application/pdf");
+			exchange.sendResponseHeaders(200, size);
+			
+			OutputStream os = exchange.getResponseBody();
+			byte[] bytes = new byte[ size ];
+			input.read(bytes);
+			
+			os.write(bytes);
+			
+			os.close();			
 		}
 		
 		
@@ -138,7 +222,7 @@ public class Server {
 		 * Handles upsert requests from client
 		 * @param exchange
 		 */
-		private void doPatch(HttpExchange exchange){
+		private void doPut(HttpExchange exchange){
 			
 		}		
 	}
