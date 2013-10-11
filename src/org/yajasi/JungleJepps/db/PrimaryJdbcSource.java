@@ -1,10 +1,12 @@
 package org.yajasi.JungleJepps.db;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 import org.yajasi.JungleJepps.Runway;
 
@@ -42,13 +44,17 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	
 	
 	// This method is an example of how to query and work in a JDBC Context
-	public static void main(String[] args) throws SQLException{
+	public static void main(String[] args) throws SQLException, ClassNotFoundException{
+	    Class.forName("rssbus.jdbc.excel.ExcelDriver");
+
 		setupRelationships();
 	}
 	
 	public static void setupRelationships() throws SQLException{
 		System.out.println("setup ");
-		Connection con = DriverManager.getConnection("jdbc:sqlite:sample.db"); //NOTICE==> :sqlite:
+		Properties prop = new Properties();
+		prop.put("ExcelFile", "test.xls");
+		Connection con = DriverManager.getConnection("jdbc:excel:", prop); //NOTICE==> :sqlite:
 		Statement statement = con.createStatement();
 		statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
@@ -56,15 +62,15 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 		statement.executeUpdate("CREATE TABLE orders (      order_id INT AUTO_INCREMENT PRIMARY KEY,     customer_id INT,      amount DOUBLE,      FOREIGN KEY (customer_id) REFERENCES customers(customer_id) );");  
 		statement.executeUpdate("INSERT INTO `customers` (`customer_id`, `customer_name`) VALUES  (1, 'Adam'),  (2, 'Andy'),  (3, 'Joe'), (4, 'Sandy');");  
 		statement.executeUpdate("INSERT INTO `orders` (`order_id`, `customer_id`, `amount`) VALUES  (1, 1, 19.99),  (2, 1, 35.15),  (3, 3, 17.56),  (4, 4, 12.34);");
-		
-		con.close();
+		DatabaseMetaData meta = con.getMetaData();
+	
 		return;
 	}
 	
 	public static void runSample() throws SQLException{
 		
 		//Get a connection from the drivere manager using a driver-specific database URL.
-		Connection con = DriverManager.getConnection("jdbc:sqlite:sample.db"); //NOTICE==> :sqlite:
+		Connection con = DriverManager.getConnection("jdbc:xls:file:test.xlsx"); //NOTICE==> :sqlite:
 		Statement statement = con.createStatement();
 		statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
