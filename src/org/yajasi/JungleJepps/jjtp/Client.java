@@ -9,9 +9,10 @@ import java.net.URISyntaxException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
+
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 
@@ -22,13 +23,12 @@ import com.google.gson.Gson;
 public class Client implements DatabaseConnection{
 	private HttpClient client; 
 	
-	
-	public Client() {
-		client = HttpClientBuilder.create().build();
-		JungleJeppsmDNS.startDiscovery();
-	} 
-	
-	
+	/**
+	 * This example demonstrates the retrieval of runway ids from 
+	 * a LAN conected server.
+	 * @param args
+	 * @throws InterruptedException
+	 */
 	public static void main(String[] args) throws InterruptedException{
 		Client client = new Client();
 		Thread.sleep(1000);
@@ -39,32 +39,98 @@ public class Client implements DatabaseConnection{
 	}
 	
 	
+	/**
+	 * Constructor to create a new JungleJepps DatabaseConnection 
+	 * to access the database on a primary instance over the LAN
+	 */
+	public Client() {
+		client = HttpClientBuilder.create().build();
+		JungleJeppsmDNS.startDiscovery();
+	} 
+	
+	/////////////////////////////////////////////////////////////////////////////////
+	// START DatabaseConnection Implementation
+	//
+	//
+	// 	public String[] getAllRunwayIds()
+	//
+	// 	public Runway getRunway(String runwayId)
+	//
+	// 	public boolean updateRunway(Runway runway) 
+	/////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * This method will return all the runway Ids for this database connection
+	 */
 	@Override
 	public String[] getAllRunwayIds() {
-		String[] list;
-		HttpResponse response = null;
-		Gson gson = new Gson();
-		BufferedReader reader = null;
-
-		HttpGet get = new HttpGet();
-		get.addHeader("Accepts", "application/json");
+		String[] list; // To store all the Ids
+		URI uri = null; //The URI that will be built
+		HttpResponse response = null; // The response from the Server
+		BufferedReader reader = null; // What will read the response from the server 
+		Gson gson = new Gson(); // Googles JSON parser
+		HttpGet request = new HttpGet(); // Using HTTP method GET
 		
-		URI provider = getProvider();
-
-		URI uri = null;
+		// Application requests over LAN will only use JSON
+		request.addHeader("Accepts", "application/json");
+		
 		try {
-			uri = new URIBuilder(provider)
-						.setScheme("http")
-						.setPath("/*")
+			uri = new URIBuilder( JungleJeppsmDNS.getProvider() ) // Partial URI containing host and port <host>:<port> 
+						.setScheme("http") // Not secure
+						.setPath("/*") // Request to list all runway ids
 						.build();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 					
-		get.setURI(uri);
+		request.setURI(uri); // Use this URI for the request
 		
 		try {
-			response = client.execute(get);
+			response = client.execute(request); // Execute HTTP method 
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			// Create reader for the response data
+			reader = new BufferedReader( new InputStreamReader(response.getEntity().getContent()));
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// Build the response data back into a String[] 
+		list = gson.fromJson(reader, String[].class);	
+		return list;
+	}
+
+	@Override
+	public Runway getRunway(String runwayId) {
+		Runway runway;
+		HttpResponse response = null;
+		BufferedReader reader = null;
+		Gson gson = new Gson();
+		HttpGet request = new HttpGet();
+		
+		request.addHeader("Accepts", "application/json");
+
+		URI uri = null;
+		try {
+			uri = new URIBuilder( JungleJeppsmDNS.getProvider() )
+						.setScheme("http")
+						.setPath("/runway")
+						.addParameter("rid", runwayId)
+						.build();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+					
+		request.setURI(uri);
+		
+		try {
+			response = client.execute(request);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -81,25 +147,17 @@ public class Client implements DatabaseConnection{
 			e.printStackTrace();
 		}
 		
-		list = gson.fromJson(reader, String[].class);	
-		return list;
-	}
-
-	@Override
-	public Runway getRunway(String runwayId) {
-		throw new UnsupportedOperationException();
+		runway = gson.fromJson(reader, Runway.class);	
+		return runway;
 	}
 
 	@Override
 	public boolean updateRunway(Runway runway) {
+		HttpPatch request = new HttpPatch();
+		request.addHeader("Accepts", "application/json");
+
 		throw new UnsupportedOperationException();
 	}
 
-	private URI getProvider(){
-		URI[] providers = JungleJeppsmDNS.getProviders();
-		if( providers.length > 0 )
-			return providers[0];
-		return null;
-	}
 	
 }

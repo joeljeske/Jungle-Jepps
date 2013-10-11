@@ -1,6 +1,7 @@
 package org.yajasi.JungleJepps.jjtp;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -8,9 +9,13 @@ import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.channels.WritableByteChannel;
+import java.util.List;
 
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URIBuilder;
 import org.xhtmlrenderer.util.IOUtil;
+import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 import org.yajasi.JungleJepps.db.DatabaseManager;
 
@@ -23,6 +28,7 @@ import com.sun.net.httpserver.*;
 
 public class Server { 
 	private HttpServer server;
+	private static final File WEB_ROOT = new File("/src/xhtml/");
 
 
 	public static void main(String[] args) throws IOException{
@@ -141,8 +147,6 @@ public class Server {
 			
 			String path = exchange.getRequestURI().getPath();
 			
-			System.out.println( path );
-			
 			if( path.equals( "/*" ) )
 			{
 				System.out.println("Getting Runway Names...");
@@ -158,9 +162,29 @@ public class Server {
 				os.write( json.getBytes() );
 				os.close();
 			}
-			else
+			else if( path.startsWith( "/runway" ) )
 			{
-				// Get specific runway
+				String runwayId = null; 
+				List<NameValuePair> params = new URIBuilder(exchange.getRequestURI()).getQueryParams();
+				for(NameValuePair param : params)
+					if( param.getName().equalsIgnoreCase("rid") )
+						runwayId = param.getValue();
+				if(runwayId == null)
+				System.out.println("Getting Runway: " + runwayId);
+				// Get specific runway 
+				Runway runway;
+				//runway = db.getRunway(runwayId);
+				runway = new Runway();
+				String json = gson.toJson(runway);
+				
+				System.out.println(json);
+
+				exchange.sendResponseHeaders(HttpStatus.SC_OK, json.length());
+				os.write( json.getBytes() );
+				os.close();
+			}
+			else {
+				templateResponse(exchange, HttpStatus.SC_NOT_FOUND);
 			}
 	
 		}
@@ -225,5 +249,33 @@ public class Server {
 		private void doPut(HttpExchange exchange){
 			
 		}		
+		
+		private void templateResponse(HttpExchange exchange, int httpStatusCode){
+			File outputFile = new File(WEB_ROOT, httpStatusCode + ".html");
+			sendFile( exchange, outputFile, httpStatusCode );
+		}
+		
+		private void sendFile(HttpExchange exchange, File file, int status){
+			OutputStream os;
+			InputStream is;
+			Long size = file.length();
+			byte[] data = new byte[ size.intValue() ];
+
+			try {
+				is = new FileInputStream(file);
+				is.read( data );
+
+				exchange.sendResponseHeaders(status, size);
+				
+				os = exchange.getResponseBody();
+				os.write( data );
+				
+				os.close();
+			} catch (FileNotFoundException e){
+				templateResponse(exchange, HttpStatus.SC_NOT_FOUND);
+			} catch (IOException e) {
+				templateResponse(exchange, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+			}
+		}
 	}
 }
