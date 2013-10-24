@@ -116,7 +116,7 @@ public class PDFRenderer {
     /**
      * Renders the XML file as a PDF file at the target location.
      *
-     * @param file XML file to render
+     * @param Document XML DOM to render
      * @param pdf  path to the PDF file to create
      * @throws IOException       if the file or PDF location is
      *                           invalid
@@ -132,7 +132,7 @@ public class PDFRenderer {
     /**
      * Renders the XML file as a PDF file at the target location.
      *
-     * @param file XML file to render
+     * @param Document XML DOM to render
      * @param pdf  path to the PDF file to create
      * @param pdfVersion version of PDF to output; null uses default version
      * @throws IOException       if the file or PDF location is
@@ -142,11 +142,15 @@ public class PDFRenderer {
      */
     public static void renderToPDF(Document document, String baseUrl, String pdf, Character pdfVersion)
             throws IOException, DocumentException {
+		Long start = System.currentTimeMillis();
 
         ITextRenderer renderer = new ITextRenderer();
+		System.out.println(System.currentTimeMillis() - start);
+
         renderer.setDocument(document, baseUrl);
         if (pdfVersion != null) renderer.setPDFVersion(pdfVersion.charValue());
         doRenderToPDF(renderer, pdf);
+
     }
     
 
@@ -165,7 +169,6 @@ public class PDFRenderer {
             os = new FileOutputStream(pdf);
             renderer.layout();
             renderer.createPDF(os);
-
             os.close();
             os = null;
         } finally {
