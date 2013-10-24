@@ -13,11 +13,21 @@ public class DatabaseManager {
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public static void initalizeDatabase() throws ClassNotFoundException, SQLException {
+	static {
 		// By having a different method to initialize the database, it removes the need for 
 		// each method to handle the exceptions that could occur from loading the DB.
 
-		primaryDB = createDatabaseConnection();
+		try {
+			
+			primaryDB = createDatabaseConnection();
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
