@@ -33,6 +33,10 @@ public class Runway {
 		throw new UnsupportedOperationException();
 	}
 	
+	public String[] getDefaultValues(Field field){
+		throw new UnsupportedOperationException();
+	}
+	
 	/**
 	 * Used to change the value of a field. Pass new value for the
 	 * for the field. Returns true if a change occurred and false if no
