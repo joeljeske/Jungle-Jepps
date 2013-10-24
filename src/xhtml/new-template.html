@@ -1,0 +1,335 @@
+<html>
+
+<!--
+Custom Template Notice
+
+Tags to inject into
+	<data>
+	<label>
+	<img>
+	<unit>
+	
+Atrributes used in custom tags
+	field		(the db column name of the field. all lower case, spaces by '_')
+	type		(used in units to specify units for different purposes.)
+	removable	(used to specify which nodes should be removed if the field does not exist)
+	
+-->
+
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/styles.css"/>
+	</head>
+	<body>
+
+		<!-- START PAGE 1 -->
+		<div class="page" id="page1">
+			<!-- START HEADER TABLE -->
+			<table class="header center" width="100%">
+				<tr class="label">
+					<td class="label" removable="true" field="classification">
+						<label field="classification">Class</label>
+					</td>
+					<td class="label" removable="true" field="frequency_1">
+						<label field="frequency_1">VHF</label>
+					</td>
+					<td class="label" removable="true" field="frequency_2">
+						<label field="frequency_2">HF</label>
+					</td>
+					<td rowspan="2" class="right float label">
+						<data class="important " field="runway_name">Kiwi</data>
+						<space ></space>
+						<data class="most-important " field="runway_identifier">KIW</data>
+					</td>
+				</tr>
+				<tr>
+					<td removable="true" field="classification">
+						<data field="classification">SP</data>					
+					</td>
+					<td removable="true" field="frequency_1">
+						<data field="frequency_1">122.5</data>					
+					</td>
+					<td field="frequency_2" removable="true">
+						<data field="frequency_2">122.5</data>					
+					</td>
+				</tr>
+			</table>
+			<table class="header" width="100%">
+				<tr class="minor">
+					<td class="right">
+						<data removable="true" field="latitude">S 04:41:85</data> 
+						<data removable="true" field="longitude">E 140:43:32</data>
+					</td>
+					<td class="right" removable="true" field="language_greeting">
+						<data field="language_greeting" class="special">Ngalum/Yepmum</data>
+					</td>
+				</tr>
+			</table>
+			<!-- END HEADER TABLE -->
+	
+			<!-- START MAIN TABLE -->
+			<table width="100%" border="1" class="center">
+				<tr class="label">
+					<td class="label" >
+						<span removable="true" field="elevation">
+							<label field="elevation">Elevation</label>
+							(<unit type="altitude">ft</unit>)
+						</span>
+						
+					</td>
+					<td class="label">
+						<span removable="true" field="length" >
+							<label field="length">Length</label>
+							(<unit type="dimension">m</unit>)
+						</span>
+					</td>
+					<td class="label">
+						<span removable="true" field="width_text">
+							<label field="width_text">Width</label>
+							(<unit type="dimension">m</unit>)
+						</span>
+					</td>
+					<td class="label">
+						<span removable="true" field="tdz_slope">
+							<label field="tdz_slope">TD Zone Slope</label>
+						</span>
+					</td>
+					<td class="label">
+						<span removable="true" field="ias_adjustment">
+							<label field="ias_adjustment">Gnd Speed</label>
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<data removable="true" field="elevation"></data>
+					</td>
+					<td>
+						<data removable="true" field="length">419</data>
+					</td>
+					<td>
+						<data removable="true" field="width_text">31/Ditch</data>
+					</td>
+					<td>
+						<data removable="true" field="tdz_slope">2%</data>
+					</td>
+					<td>
+						<data removable="true" field="ias_adjustment">KIAS +8</data>
+					</td>
+				</tr>
+				<tr>
+					<td class="label" >
+						<label removable="true" field="precipitation_on_screen">Land With Precipitation?</label>
+					</td>
+					<td id="map" class="tight" colspan="4" rowspan="6">
+						<img id="topo_map" src="images/kiwi_image.png"/>
+					</td>
+				</tr>
+				<tr removable="true" field="precipitation_on_screen">
+					<td>
+						<data field="precipitation_on_screen">NO</data>
+					</td>
+				</tr>
+				
+				<tr >
+					<td class="label">
+						<data field="aircraft_identifier">PC-6</data>
+						<br />
+						<label field="a_landing_restrictions">Landing Weight</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					
+						<data class="note-header" removable="true" field="runway_a">Rwy 31</data>		
+						<br removable="true" field="a_landing_restrictions"/>					
+						<data class="note-header" removable="true" field="a_landing_restrictions"></data>
+						<br removable="true" field="a_landing_note"/>
+						<data class="note" removable="true" field="a_landing_note">No Restrictions</data>
+						<br />
+						<hr removable="true" field="runway_b"/>
+						<data class="note-header" removable="true" field="runway_b">Rwy 13</data>		
+						<br removable="true" field="b_landing_restrictions"/>
+						<data class="note-header" removable="true" field="b_landing_restrictions"></data>
+						<br removable="true" field="b_landing_note"/>
+						<data class="note" removable="true" field="b_landing_note">No Restrictions</data>
+					</td>
+				</tr>
+				<tr >
+					<td class="label">
+						<data field="aircraft_identifier">PC-6</data>
+						<br />
+						<label field="a_takeoff_restrictions">Landing Weight</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					
+						<data class="note-header" removable="true" field="runway_a">Rwy 31</data>		
+						<br removable="true" field="a_takeoff_restrictions"/>					
+						<data class="note-header" removable="true" field="a_takeoff_restrictions"></data>
+						<br removable="true" field="a_takeoff_note"/>
+						<data class="note" removable="true" field="a_takeoff_note">No Restrictions</data>
+						<br />
+						<hr removable="true" field="runway_b"/>
+						<data class="note-header" removable="true" field="runway_b">Rwy 13</data>		
+						<br removable="true" field="b_takeoff_restrictions"/>
+						<data class="note-header" removable="true" field="b_takeoff_restrictions">-200k / 2700GW</data>
+						<br removable="true" field="b_takeoff_note"/>
+						<data class="note" removable="true" field="b_takeoff_note">Temp until further experience</data>
+					</td>
+				</tr>
+	
+			</table>
+			
+			<!-- START NOTES SECTION -->
+			<table class="notes">
+				<tr removable="true" field="p1_text_1">
+					<td>
+						<img field="p1_text_1" class="icon" src="" />
+					</td>
+					<td class="float">
+						<span class="note-header">
+							<label field="p1_text_1" >Committal Point</label>:
+						</span>
+						<data field="p1_text_1" class="note">Before the River at 5050 ft</data>
+					</td>
+				</tr>
+				<tr removable="true" field="p1_text_2">
+					<td>
+						<img field="p1_text_2" class="icon" src="" />
+					</td>
+					<td class="float">
+						<span class="note-header">
+							<label field="p1_text_2" >Go Around</label>:
+						</span>
+						<data field="p1_text_2" class="note">Right turn down valley</data>
+					</td>
+				</tr>
+				<tr removable="true" field="p1_text_3">
+					<td>
+						<img field="p1_text_3" class="icon" src="" />
+					</td>
+					<td class="float">
+						<span class="note-header">
+							<label field="p1_text_3" >If Unable to Stop After Landing</label>:
+						</span>
+						<data field="p1_text_3" class="note">Describe location/procedure for least injury/damage. </data>
+					</td>
+				</tr>	
+				<tr removable="true" field="p1_text_4">
+					<td>
+						<img field="p1_text_4" class="icon" src="" />
+					</td>
+					<td class="float">
+						<span class="note-header">
+							<label field="p1_text_4" >Surface</label>:
+						</span>
+						<data field="p1_text_4" class="note">Grass over packed gravel, smooth even surface</data>
+					</td>
+				</tr>
+				<tr removable="true" field="p1_text_5">
+					<td>
+						<img field="p1_text_5" class="icon" src="" />
+					</td>
+					<td class="float">
+						<span class="note-header">
+							<label field="p1_text_5" >Hazards and Additional Info</label>:
+						</span>
+						<data field="p1_text_5" class="note"></data>
+					</td>
+				</tr>
+				<tr removable="true" field="p1_text_6">
+					<td>
+						<img field="p1_text_6" class="icon" src="" />
+					</td>
+					<td class="float">
+						<span class="note-header">
+							<label field="p1_text_6" >Aborted Takeoff</label>:
+						</span>
+						<data field="p1_text_6" class="note">50m into takeoff roll. At 2/3 the rwy, turn left into the embankment. DO NOT GO OFF THE END</data>
+					</td>
+				</tr>
+				<tr removable="true" field="p1_text_7">
+					<td>
+						<img field="p1_text_7" class="icon" src="" />
+					</td>
+					<td class="float">
+						<span class="note-header">
+							<label field="p1_text_7" >Departure Engine Failure Options</label>:
+						</span>
+						<data field="p1_text_7" class="note">Description of pre-determined emergency landing options</data>
+					</td>
+				</tr>																				
+			</table>
+		</div>
+		<!-- END PAGE 1 -->
+
+		<!-- START PAGE 2 -->		
+		<div class="page" id="page2" >
+			<!-- START NOTES PAGE 2 SECTION -->
+			<h1>
+				<data class="important " field="runway_name">Kiwi</data>
+				<space ></space>
+				<span  class="most-important">
+					(<data field="runway_identifier">KIW</data>)
+				</span>
+			</h1>
+			
+			<note removable="true" field="p2_text_1">
+				<h2>
+					<label field="p2_text_1" >Weather Patterns</label>
+				</h2>
+				<data field="p2_text_1" class="note indent">Before the River at 5050 ft</data>
+			</note>
+
+			<note removable="true" field="p2_text_2">
+				<hr />
+				<h2>
+					<label field="p2_text_2" >Restrictions</label>
+				</h2>
+				<data field="p2_text_2" class="note indent">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</data>
+			</note>
+
+			<note removable="true" field="p2_text_3">
+				<hr/>		
+				<h2>	
+					<label field="p2_text_3" >Chief Pilot Notes</label>
+				</h2>
+				<data field="p2_text_3" class="note indent">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </data>
+			</note>
+
+			<note removable="true" field="p2_text_4">
+				<hr/>
+				<h2>
+					<label field="p2_text_4" >Minimum number and type of wind indicators</label>
+				</h2>
+				<data field="p2_text_4" class="note indent">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</data>
+			</note>
+
+			<note removable="true" field="p2_text_5">
+				<hr/>
+				<h2>
+					<label field="p2_text_5" >Minimum standard to which the airstrip is to be maintained</label>
+				</h2>
+				<data field="p2_text_5" class="note indent">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</data>
+			</note>
+
+			<note removable="true" field="p2_text_6">
+				<hr/>
+				<h2>
+					<label field="p2_text_6" >Blank Notes</label>
+				</h2>
+				<data field="p2_text_6" class="note indent"></data>
+			</note>
+
+			<note removable="true" field="p2_text_7">
+				<hr/>
+				<h2>		
+					<label field="p2_text_7" >Authority of pilot if minimum conditions do not exist/abnormal conditions exist</label>
+				</h2>
+				<data field="p2_text_7" class="note indent">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</data>
+			</note>
+		</div>
+		<!-- END PAGE 2 -->
+	</body>
+</html>
