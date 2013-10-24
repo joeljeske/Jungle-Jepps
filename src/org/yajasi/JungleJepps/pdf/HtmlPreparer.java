@@ -2,61 +2,84 @@ package org.yajasi.JungleJepps.pdf;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.*;
 import org.xhtmlrenderer.simple.PDFRenderer;
 import org.xml.sax.SAXException;
 
+import org.yajasi.JungleJepps.Field;
+import org.yajasi.JungleJepps.Runway;
+import org.yajasi.JungleJepps.pdf.Repository;
+
 import com.lowagie.text.DocumentException;
 
 public class HtmlPreparer {
 	
-	private static final String HOOK_TAG = "hook"; 
-	private static final String HOOK_NAME_ATTR = "id";
+	private static final String HOOK_TAG = "data";
+	private static final String LABEL_TAG = "label";
+	private static final String FIELD_ATTR = "field";
+	private static final String REMOVED_ATTR = "removable='true'";
+	
 	private static final String TOPO_DOM_ID = "topo_image";
-	private static final String TEMPLATE_URI = "src/xhtml/template.html";
+	private static final String TEMPLATE_URI = "src/xhtml/new-template.html";
 	
 	private Document dom;
 	private String parentUrl;
 	
 	// Does simple test to demo functionality
 	public static void main(String[] args) {
-		Map<String, String> dataMap = new HashMap<String, String>();
-		dataMap.put("strip_name", "PREPARED");
-		String outputURL = "./pdf-repo/output.pdf"; 
-		String imageURL = "./images/kiwi_image.png"; 
-		
-		HtmlPreparer prep = new HtmlPreparer();
-		prep.prepareAndPublish(dataMap, imageURL, outputURL);
+		Runway runway = null;
+		publish(runway);
 	}
 	
+	
+	public static File publish(Runway runway){
+		File output = Repository.getPublishLocation(runway);
+		return publish(runway, output);
+	}
+	
+	public static File publish(Runway runway, File output){
+		String imageUrl = runway.getField(Field.IMAGE_PATH);
+		return new HtmlPreparer().prepareAndPublish(runway, imageUrl, output);
+	}
+	
+	/**
+	 * Private constructor to simulate static use
+	 */
+	private HtmlPreparer(){}
+
 	/**
 	 * Single front end to PDF preparer. Can overload method with other
 	 * options. To change parameters, the constants must be modified.
 	 * @param dataMap
 	 * @param outputUrl
 	 */
-	public void prepareAndPublish(Map<String,String> dataMap, String imageUrl, String outputUrl){
+	public File prepareAndPublish(Runway runway, String imageUrl, File output){
 		dom = null;
 		parentUrl = null;
 		
 		loadTemplate();
-		injectData(dataMap);
-		injectImage(imageUrl);
+		injectData(runway);
 
-		try {
-			publishPDF(outputUrl);
+		injectImage(imageUrl);
+		
+		try {			
+			publishPDF(output);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
+		
+		return output;
 	}
 	
 	/**
@@ -65,10 +88,9 @@ public class HtmlPreparer {
 	 * @throws IOException
 	 * @throws DocumentException
 	 */
-	private void publishPDF(String outputUrl) throws IOException, DocumentException{
+	private void publishPDF(File output) throws IOException, DocumentException{
 		if(dom == null) return;
-		
-		PDFRenderer.renderToPDF(dom, parentUrl, outputUrl);
+		PDFRenderer.renderToPDF(dom, parentUrl, output.getAbsolutePath());
 	}
 	
 	/**
@@ -116,8 +138,8 @@ public class HtmlPreparer {
 	 * The value found in dataMap replaces the textNode in the DOM.
 	 * @param dataMap
 	 */
-	private void injectData(Map<String, String> dataMap){
-		injectData(dataMap, HOOK_TAG, HOOK_NAME_ATTR);
+	private void injectData(Runway runway){
+		injectData(runway, HOOK_TAG, LABEL_TAG, FIELD_ATTR, REMOVED_ATTR);
 	}
 	
 	/**
@@ -129,25 +151,78 @@ public class HtmlPreparer {
 	 * @param tagName
 	 * @param idAttribute
 	 */
-	private void injectData(Map<String, String> dataMap, final String tagName, final String idAttribute){
-		if(dom == null) return;
-		NodeList hooks = dom.getElementsByTagName( tagName );
-        int numHooks = hooks.getLength();
-
-        for(int i = 0; i < numHooks; i++)
+	private void injectData(Runway runway, final String TAG, final String LABEL_TAG, final String ID_ATTRIBUTE, final String REMOVED_ATTR){
+		// Setup a XPath evaluator to query through the DOM
+		XPath xPath = XPathFactory.newInstance().newXPath();
+		
+		// Get all the tags to loop through to inject data
+		NodeList tags = dom.getElementsByTagName( TAG );	
+		
+		// Go through every node
+        for(int i = 0; i < tags.getLength(); i++)
         {
+        	Node tag = tags.item(i);
 
-        	Node hook = hooks.item(i);
-
-        	if(hook.getNodeType() == Node.ELEMENT_NODE)
+        	if(tag.getNodeType() == Node.ELEMENT_NODE)
         	{
-            	String id = hook.getAttributes().getNamedItem( idAttribute ).getNodeValue();
-            	String textNode = dataMap.get( id );
+            	String id = tag.getAttributes().getNamedItem( ID_ATTRIBUTE ).getNodeValue();
+            	String text = runway.getField( Field.valueOf(id) );
             	
-            	textNode = ( textNode == null ? "" : textNode );
-            	hook.setTextContent( textNode );
-        	}
-        }
+            	// FOR TESTING WITHOUT DATA ONLY
+            	text = tag.getTextContent(); 
+            	
+            	if( text == null || text.trim().isEmpty() ) // If there is no data to inject
+            	{
+            		// Example:  //*[@field='<field_name>'][@removable='true']
+            		String xPathString = "//*[@" + ID_ATTRIBUTE + "='" + id + "'][@" + REMOVED_ATTR + "]";
+            		
+            		try {
+            			NodeList removables = (NodeList) xPath.evaluate(xPathString, dom.getDocumentElement(), XPathConstants.NODESET);
+						hideElements(removables);
+					} catch (XPathExpressionException e) {
+						e.printStackTrace();
+					}
+            	}
+            	else // If there is data to inject
+            	{
+            		text = ( text == null ? "" : text );
+            		tag.setTextContent( text );
+            	}
+        	} // if element node
+        } // for all data tags
+        
+        tags = dom.getElementsByTagName(LABEL_TAG);
+        
+        for(int i = 0; i < tags.getLength(); i++)
+        {
+        	Node tag = tags.item(i);
+        	if(tag.getNodeType() == Node.ELEMENT_NODE)
+        	{
+        		
+        		
+        	} // tag is element node
+        } //for all label tags
+    	
+	}
+	
+	// Adds css to node list to display:none
+	private void hideElements(NodeList nodes){
+		String css = "display:none";
+		addCss( nodes, css );
+	}
+	
+	// Adds specified css to the style attribute on a nodelist
+	private void addCss(NodeList nodes, String css){
+		for(int i = 0; i < nodes.getLength(); i++)
+		{
+			Element node = (Element) nodes.item(i);
+			Node styleAttr = node.getAttributes().getNamedItem("style");
+			String style = styleAttr == null ? ""  : styleAttr.getTextContent();
+		
+			style = (style == null || style.isEmpty() ) ? "" : style + "; ";
+			style += css;
+			node.setAttribute("style", css);
+		}
 	}
 	
 	private void injectImage(String imageUrl){
@@ -174,7 +249,7 @@ public class HtmlPreparer {
 				NamedNodeMap attrs = img.getAttributes();
 				
 				// Get the attribute with the name matching HOOK_NAME_ATTR (e.g. "id")
-				Node id = attrs.getNamedItem( HOOK_NAME_ATTR );
+				Node id = attrs.getNamedItem( FIELD_ATTR );
 				
 				// If there is and ID attribute node and the text equals TOPO_DOM_ID
 				if( id != null && TOPO_DOM_ID.equalsIgnoreCase( id.getTextContent() ) )
