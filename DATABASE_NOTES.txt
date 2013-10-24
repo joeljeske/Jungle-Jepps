@@ -1,0 +1,42 @@
+Database Notes
+--------------
+Notes table should be related to aircraft-runway relationship table, not the aircraft
+
+
+
+Settings
+--------
+-Field Labels
+-Primary/Secondary (e.g. true/false
+-Repository location (e.g. C:\Users\Public\JungleJepps\repository)
+-Primary DB 
+	jdbc uri (e.g. jdbc:mysql://<host>:<port>/<db_name>)
+	class path (e.g. com.mysql.DriverJdbc)
+-Using Third Party DB (e.g.true/false)
+-Third Party DB
+	jdbc uri
+	table name
+	class path
+	column=>field mapping
+	active (e.g. true/false)
+-JJ Desktop Password
+-Last used aircraft
+-Last used runway
+-Diagram manager email address (for ios notes sending)
+-Default units for field types
+	Altitude (ft)
+	Weight (kg)
+	Dimension (m)
+	Distance conversion factor (km/nm) --Nautical Miles
+	Longitude latitude format (just used for calculating and parsing?)
+	True or magnetic course (do we calc?)
+	Magnetic variation?
+-Home runway
+-Secondary runway
+-Page 1 disclaimer
+-Page 2 disclaimer
+-Default expiration period
+
+
+	
+
