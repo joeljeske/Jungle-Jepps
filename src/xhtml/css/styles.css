@@ -1,43 +1,180 @@
 @page {
 	size: letter;
+	margin: 0px;
+	margin-right: 1px;
 }
 
 body {
 	font-family: sans-serif;
+	padding: 0px;
+	margin: 0px;
 }
 
+.page {
+	page-break-inside: avoid;
+	margin: 0px;	
+}
+
+#page1 {
+	page-break-after: always; 
+}
+
+#page2 {
+	margin-top: 30px;
+}
+
+/* START TABLE CSS */
 table {
 	border-collapse: collapse;
-	border: 1px solid black;
+	border: 4px solid black;
 	border-style: solid;
 }
 
-table td {
-	padding: 3px;
+table.header td {
+	background: black;
+	color: white;
 }
+
+table.notes tr {
+}
+table.notes td {
+	border-left: none;
+	border-right: none;
+	padding-top: 3px;
+	padding-bottom: 10px;
+}
+
+table td{
+	font-size: 20px;
+	width:1%; 
+	height: 1%;
+/*	white-space:nowrap; */
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border: 2px solid black;
+}
+
+table td.float {
+	width: auto;
+}
+
+table td.tall {
+	height: auto;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.tight {
+	padding: 0px;
+}
+
+tr.label {
+	height: 12px;
+}
+
+
+
+tr.minor {
+	height: 10px;
+}
+
+tr.minor td {
+	font-size: 12px;
+}
+
+
+.label {
+	font-size: 12px;
+	background: #DDDDDD;
+	font-weight: bold;
+}
+
+/* END TABLE CSS */
 
 label {
 	margin-right: 3px;	
 }
 
-hook {
+
+data {
 	display: inline;
+	font-weight: 600;
+}
+
+/* Text importance classes */
+h1, h2 {
+	text-align: center
+}
+
+h1 {
+	font-size: 22px;
+}
+
+h2 {
+	font-size: 18px;
 }
 
 .important {
 	font-weight: bold;
-	font-size: 120%;
+	font-size: 25px;
 }
+
+.most-important {
+	font-weight: bolder;
+	font-size: 30px;
+	text-transform: capitalize;
+}
+
 
 .note {
 	font-weight: normal;
-	font-size: small;
+	font-size: 15px;
 }
 
+.note-header {
+	font-style: italic;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.special {
+	font-style: italic;
+}
+
+.indent {
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-bottom: 20px;
+	display: block;
+}
+
+space {
+	padding-left: 5px;
+}
+
+/* Alignment */
 .right {
 	text-align: right;
 }
 
 .center {
 	text-align: center;
+}
+
+hr {
+	width: 100%;
+}
+
+footer {
+	margin-bottom: 0px;
+}
+
+/* Special */
+img#topo_map {
+/*	width: 430px;
+	height: 380px;
+	*/
+	width: 100%;
 }

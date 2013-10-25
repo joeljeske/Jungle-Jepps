@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 
 
 
-public class Client implements DatabaseConnection{
+public class Client implements DatabaseConnection {
 	private HttpClient client; 
 	
 	/**

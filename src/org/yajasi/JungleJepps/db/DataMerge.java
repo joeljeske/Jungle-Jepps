@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 
@@ -20,16 +21,14 @@ public class DataMerge implements DatabaseConnection{
 		this.settings = settings;
  
 		// Load third party and set to merge with existing source
-		String dbDriverClass = settings.getStringForKey("generic-jdbc-driver-classpath");
-		String dbUrl = settings.getStringForKey("generic-jdbc-url");
-		String dbUsername = settings.getStringForKey("generic-db-username");
-		String dbPassword = settings.getStringForKey("generic-db-password");		
+		String dbDriverClass = settings.getStringForKey(Settings.OPERATIONS_JDBC_CLASS_PATH);
+		String dbUrl = settings.getStringForKey(Settings.OPERATIONS_JDBC_URI);
 		
 		// Load JDBC class into runtime
 		Class.forName( dbDriverClass );
 		
 		// Request class from Driver Manager
-		this.connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+		this.connection = DriverManager.getConnection(dbUrl);
 	}
 	
 	@Override
@@ -44,6 +43,10 @@ public class DataMerge implements DatabaseConnection{
 
 	@Override
 	public boolean updateRunway(Runway runway) {
+		throw new UnsupportedOperationException();
+	}
+	
+	private boolean isFieldOutsourced(Field field){
 		throw new UnsupportedOperationException();
 	}
 

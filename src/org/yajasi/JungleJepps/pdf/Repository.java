@@ -10,6 +10,7 @@ import java.util.Calendar;
 import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseManager;
+import org.yajasi.JungleJepps.db.Settings;
 
 public class Repository {
 
@@ -20,7 +21,7 @@ public class Repository {
 	private static final String DOCUMENT_EXTENSION = ".pdf";
 	
 	static {
-		String path = DatabaseManager.getSettings().getStringForKey("repository_path");
+		String path = DatabaseManager.getSettings().getStringForKey(Settings.REPOSITORY_PATH);
 		REPOSITORY = new File(path);
 	}
 	

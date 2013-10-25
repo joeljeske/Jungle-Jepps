@@ -59,8 +59,8 @@ public class DatabaseManager {
 		SettingsManager settings = getSettings();
 		
 
-		boolean isPrimary = settings.getBooleanForKey("is-primary-instance");
-		boolean isUsingThirdParty = settings.getBooleanForKey("using-third-party-source");
+		boolean isPrimary = settings.getBooleanForKey(Settings.IS_PRIMARY);
+		boolean isUsingThirdParty = settings.getBooleanForKey(Settings.IS_OPERATIONS_DB);
 
 		// Should this instance connect to db directly or through primary instance?		
 		if( isPrimary )

@@ -1,13 +1,13 @@
 package org.yajasi.JungleJepps.db;
 
+import java.sql.Array;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
+import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.Runway;
 
 public class PrimaryJdbcSource implements DatabaseConnection {
@@ -15,20 +15,35 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	
 	public PrimaryJdbcSource(SettingsManager settings) throws ClassNotFoundException, SQLException {
 		
-		String dbDriverClass = settings.getStringForKey("primary-jdbc-driver-classpath");
-		String dbUrl = settings.getStringForKey("primary-jdbc-url");
-		String dbUsername = settings.getStringForKey("primary-db-username");
-		String dbPassword = settings.getStringForKey("primary-db-password");		
+		String dbDriverClass = settings.getStringForKey(Settings.PRIMARY_JDBC_CLASS_PATH);
+		String dbUrl = settings.getStringForKey(Settings.PRIMARY_JDBC_URI);		
 		
 		// Load JDBC class into runtime
 		Class.forName( dbDriverClass );
 		
 		// Request class from Driver Manager
-		this.connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+		this.connection = DriverManager.getConnection(dbUrl);
 	}
 
 	@Override
 	public String[] getAllRunwayIds() {
+		/*
+		String sql = String.format("SELECT %s, %s FROM runways", 
+				Field.RUNWAY_IDENTIFIER.toString(), 
+				Field.RUNWAY_NAME.toString());
+		
+		Statement statement;
+		ResultSet result;
+		Array ids;
+		try {
+			statement = connection.createStatement();
+			result = statement.executeQuery(sql);
+			ids = result.getArray(Field.RUNWAY_IDENTIFIER.toString());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		*/
 		throw new UnsupportedOperationException();
 	}
 
@@ -42,30 +57,6 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 		throw new UnsupportedOperationException();
 	}
 	
-	
-	// This method is an example of how to query and work in a JDBC Context
-	public static void main(String[] args) throws SQLException, ClassNotFoundException{
-	    Class.forName("rssbus.jdbc.excel.ExcelDriver");
-
-		setupRelationships();
-	}
-	
-	public static void setupRelationships() throws SQLException{
-		System.out.println("setup ");
-		Properties prop = new Properties();
-		prop.put("ExcelFile", "test.xls");
-		Connection con = DriverManager.getConnection("jdbc:excel:", prop); //NOTICE==> :sqlite:
-		Statement statement = con.createStatement();
-		statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
-		statement.executeUpdate("CREATE TABLE customers (      customer_id INT AUTO_INCREMENT PRIMARY KEY,      customer_name VARCHAR(100)   );");  
-		statement.executeUpdate("CREATE TABLE orders (      order_id INT AUTO_INCREMENT PRIMARY KEY,     customer_id INT,      amount DOUBLE,      FOREIGN KEY (customer_id) REFERENCES customers(customer_id) );");  
-		statement.executeUpdate("INSERT INTO `customers` (`customer_id`, `customer_name`) VALUES  (1, 'Adam'),  (2, 'Andy'),  (3, 'Joe'), (4, 'Sandy');");  
-		statement.executeUpdate("INSERT INTO `orders` (`order_id`, `customer_id`, `amount`) VALUES  (1, 1, 19.99),  (2, 1, 35.15),  (3, 3, 17.56),  (4, 4, 12.34);");
-		DatabaseMetaData meta = con.getMetaData();
-	
-		return;
-	}
 	
 	public static void runSample() throws SQLException{
 		
