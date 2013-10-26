@@ -10,11 +10,14 @@ import org.yajasi.JungleJepps.Runway;
  */
 public interface DatabaseConnection {
 	
+	public String[] getAllAircraftIds();
+	
+	
 	/**
 	 * Get a list of every runway Id available in the database.
 	 * @return String[] Array of runway Ids
 	 */
-	public String[] getAllRunwayIds();
+	public String[] getAllRunwayIds(String aircraftId);
 	
 	
 	/**
@@ -23,7 +26,7 @@ public interface DatabaseConnection {
 	 * @param String runwayId
 	 * @return Runway runway from database
 	 */
-	public Runway getRunway(String runwayId);
+	public Runway getRunway(String runwayId, String aircraftId);
 	
 	
 	/**
