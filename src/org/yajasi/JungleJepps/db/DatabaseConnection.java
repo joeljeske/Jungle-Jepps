@@ -1,6 +1,8 @@
 package org.yajasi.JungleJepps.db;
 
 import org.yajasi.JungleJepps.Runway;
+import java.sql.*;
+import com.sun.rowset.CachedRowSetImpl;
 
 /**
  * Defines abstract connection to a database used for Jungle Jepps.
@@ -10,13 +12,16 @@ import org.yajasi.JungleJepps.Runway;
  */
 public interface DatabaseConnection {
 
-	public String[] getAllAircraftIds();
+	
+	public String[] getAllAircraftIds()throws SQLException;
+	
+
 	
 	/**
 	 * Get a list of every runway Id available in the database.
 	 * @return String[] Array of runway Ids
 	 */
-	public String[] getAllRunwayIds(String aircraftId);
+	public String[] getAllRunwayIds(String aircraftId)throws SQLException;
 	
 	
 	/**
@@ -25,7 +30,7 @@ public interface DatabaseConnection {
 	 * @param String runwayId
 	 * @return Runway runway from database
 	 */
-	public Runway getRunway(String runwayId, String aircraftId);
+	public Runway getRunway(String runwayId, String aircraftId)throws SQLException;
 	
 	
 	/**
@@ -33,6 +38,14 @@ public interface DatabaseConnection {
 	 * @param Runway the runway to Update
 	 * @return boolean true if updated successfully 
 	 */
-	public boolean updateRunway(Runway runway);
+	public boolean updateRunway(Runway runway)throws SQLException;
+        
+      
+        
+    /**
+     * closes the database;
+     * @return 1 if data base is closed. 0 if no data base was open
+     */
+    public boolean close();
 
 }
