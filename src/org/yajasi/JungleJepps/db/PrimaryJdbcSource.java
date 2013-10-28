@@ -89,10 +89,10 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 		CachedRowSetImpl crs = new CachedRowSetImpl();
                 Runway results = new Runway();
                 
-                crs = SQLquery("SELECT *"
-                            + "FROM Runway JOIN Aircraft"
-                            + "ORDER BY Aircraft.RUNWAY_IDENTIFIER"
-                            + "WHERE Aircraft.RUNWAY_IDENTIFIER = 'KWI' AND Aircraft.AIRCRAFT_IDENTIFIER = 'PC-6'"
+                crs = SQLquery("SELECT * "
+                            + "FROM Runway JOIN Aircraft "
+                            + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_IDENTIFIER "
+                            + "WHERE Aircraft.RUNWAY_IDENTIFIER = \"KIW\" AND Aircraft.AIRCRAFT_IDENTIFIER = \"PC-6\" "
                             );
                 
                 if(crs.next()){
@@ -156,7 +156,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             //DB.runSample();
             DB.getAllRunwayIds();
             DB.getAllAircraftIds();
-            //DB.getRunway("KWI", "PC-6");
+            DB.getRunway("KIW", "PC-6");
         }
 	
 	public void setupRelationships() throws SQLException{
