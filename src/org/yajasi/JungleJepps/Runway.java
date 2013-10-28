@@ -1,37 +1,52 @@
 package org.yajasi.JungleJepps;
 
 import java.io.File;
-import java.sql.Date;
 import java.util.HashMap;
-import java.util.Map;
 
+import org.yajasi.JungleJepps.db.DatabaseManager;
 import org.yajasi.JungleJepps.pdf.HtmlPreparer;
 
-public class Runway {
-	
-	private Map<Field, String> runway;
+public class Runway extends HashMap<Field, String> {
+
 	private boolean isModified;
 	
 	public Runway(){
-		 runway = new HashMap<Field, String>();
+		super();
 		 isModified = false;
 	}
 	
-	public void empty(){
-		runway = new HashMap<Field, String>();
+	public void removeAll(){
+		for(Field key : this.keySet())
+			this.remove(key);
 	}
 	
-	public String getField(Field field){
-		String val = runway.get(field);
-		return val == null ? "" : val; 
+	@Override
+	public String get(Object key){
+		Field field;
+		if(key instanceof Field)
+			field  = (Field) key;
+		else if(key instanceof String)
+			field = Field.valueOf( (String) key);
+		else
+			throw new ClassCastException("Key is not of type enum org.yajasi.JungleJepps.Field or java.lang.String");
+		
+		String val = super.get(field);
+		return val == null ? "" : val; //Return empty string instead of null
 	}
 	
-	public void putField(Field field, String value){
-		value = value == "" ? null : value;
-		runway.put(field, value);
+	@Override
+	public String put(Field field, String value){
+		if( isFieldReadonly(field) )
+			throw new java.lang.IllegalAccessError("Field is readonly. Field: " + field.toString());
+		
+		//Store null instead of empty string
+		value = value.isEmpty() ? null : value; 
+		value = super.put(field, value);
+		
+		isModified = true;
+		
+		return value;
 	}
-	
-
 	
 	/**
 	 * Used to determine if the settings indicate that this field
@@ -41,7 +56,7 @@ public class Runway {
 	 * @return
 	 */
 	public boolean isFieldReadonly(Field field){
-		throw new UnsupportedOperationException();	
+		return DatabaseManager.getSettings().isFieldOverriden(field);
 	}
 	
 	/**
@@ -57,7 +72,8 @@ public class Runway {
 	 * Used to save the current state of the runway to the database
 	 */
 	public void save(){
-		throw new UnsupportedOperationException();		
+		throw new UnsupportedOperationException();
+		// isModified = false;		
 	}
 	
 	/**
