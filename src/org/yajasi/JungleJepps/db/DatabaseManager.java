@@ -48,6 +48,7 @@ public class DatabaseManager {
 		// By running this static function, the static block has already run
 		// and therefore the database connection has been made and the settings have 
 		// been initialized. If the instance is primary, the Server has been started a well. 
+	/*
 		SettingsManager settings;
 		settings = getSettings();
 				
@@ -60,7 +61,7 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 		System.out.println(settings.getStringForKey(Settings.PRIMARY_JDBC_URI));
-		
+		*/
 		
 	}
 	
