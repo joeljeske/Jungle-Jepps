@@ -1,8 +1,13 @@
 package org.yajasi.JungleJepps.db;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.sql.SQLException;
 
 import org.yajasi.JungleJepps.jjtp.Client;
+import org.yajasi.JungleJepps.jjtp.JungleJeppsmDNS;
+import org.yajasi.JungleJepps.jjtp.Server;
 
 public class DatabaseManager {
 	
@@ -14,7 +19,7 @@ public class DatabaseManager {
 	 * @throws SQLException
 	 */
 	static {
-		// By having a different method to initialize the database, it removes the need for 
+		// By having a static block to initialize the database, it removes the need for 
 		// each method to handle the exceptions that could occur from loading the DB.
 
 		try {
@@ -22,12 +27,41 @@ public class DatabaseManager {
 			primaryDB = createDatabaseConnection();
 			
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		/* Start up Server if primary instance */
+		boolean isPrimary = getSettings().getBooleanForKey(Settings.IS_PRIMARY);
+		if(isPrimary)
+		{
+			try {
+				Server.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void main(String[] args){
+		// By running this static function, the static block has already run
+		// and therefore the database connection has been made and the settings have 
+		// been initialized. If the instance is primary, the Server has been started a well. 
+		SettingsManager settings;
+		settings = getSettings();
+				
+		System.out.println(settings.getStringForKey(Settings.PRIMARY_JDBC_URI));
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println(settings.getStringForKey(Settings.PRIMARY_JDBC_URI));
+		
+		
 	}
 	
 	/**
@@ -55,6 +89,7 @@ public class DatabaseManager {
 	 * @throws SQLException
 	 */
 	private static DatabaseConnection createDatabaseConnection() throws ClassNotFoundException, SQLException{
+		System.out.println("Making initial connection to database...");
 		DatabaseConnection newConnection;
 		SettingsManager settings = getSettings();
 		
@@ -75,10 +110,21 @@ public class DatabaseManager {
 		}
 		else
 		{
-			newConnection = new Client();
+			Client client = new Client();
+			newConnection = (DatabaseConnection) client;
+			
+			JungleJeppsmDNS.registerChangeListener(new JungleJeppsmDNS.ProviderStatusListener() {
+
+				@Override
+				public void newPrimaryProvider(URI newProvider) {
+					Client client = (Client) getDatabase();
+					InputStream stream = client.getSettingsStream();
+					SettingsManager.loadFromInputStream(stream);
+				}
+			});
+			
 		}
 		
-
 		return newConnection;
 	}
 

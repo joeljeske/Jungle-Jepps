@@ -1,5 +1,6 @@
 package org.yajasi.JungleJepps.jjtp;
 
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import org.xhtmlrenderer.util.IOUtil;
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 import org.yajasi.JungleJepps.db.DatabaseManager;
+import org.yajasi.JungleJepps.db.Settings;
+import org.yajasi.JungleJepps.db.SettingsManager;
 
 import sun.misc.IOUtils;
 
@@ -28,16 +31,25 @@ import com.sun.net.httpserver.*;
 
 public class Server { 
 	private HttpServer server;
+	private static Server instance;
+
 	private static final File WEB_ROOT = new File("/src/xhtml/");
 
-
 	public static void main(String[] args) throws IOException{
-		new Server().startServer();
+		start();
 	}
 	
-	public Server(){
-		
+	public static void start() throws IOException{
+		instance = new Server();
+		instance.startServer();
 	}
+	
+	public static void stop(){
+		instance.stopServer();
+	}
+	
+	
+	private Server(){}
 	
 	public void startServer() throws IOException{
 		DatabaseConnection db = DatabaseManager.getDatabase();
@@ -118,24 +130,27 @@ public class Server {
 		 * @throws IOException 
 		 */
 		private void doGet(HttpExchange exchange) throws IOException{
-			String type = exchange.getRequestHeaders().getFirst("Accepts");
+			String type = exchange.getRequestHeaders().getFirst("Accept");
 			System.out.println("Handling GET...");
 			
 			if( type.equalsIgnoreCase( "application/json" ) )
 			{
 				handleGetDatabaseRequest( exchange );
 			}
+			else if(type.equalsIgnoreCase( "text/plain" ) && 
+					exchange.getRequestURI().toASCIIString().equalsIgnoreCase("/settings") )
+			{
+				handleGetSettingsRequest( exchange );
+			} 
 			else 
 			{
-				//handle html and pdf requests
-				
+				// handle general http html/pdf requests
 			}
 			
-			if( exchange.getRequestURI().toASCIIString().equals("/") )
+		/*	if(  )
 				writeDefault(exchange);
 			else if( exchange.getRequestURI().toASCIIString().endsWith(".pdf") )
-				writePdf(exchange);
-				
+			*/	
 		}
 		
 		private void handleGetDatabaseRequest(HttpExchange exchange) throws IOException{
@@ -186,8 +201,20 @@ public class Server {
 			else {
 				templateResponse(exchange, HttpStatus.SC_NOT_FOUND);
 			}
-	
 		}
+		
+		private void handleGetSettingsRequest(HttpExchange exchange) throws IOException {
+			//SettingsManager.sentToOutputStream(stream);
+			Long size = SettingsManager.getLength();
+			exchange.sendResponseHeaders(HttpStatus.SC_OK, size);
+			OutputStream os = exchange.getResponseBody(); 
+			InputStream is = SettingsManager.getSettingsStream();
+			
+			write( is, os, size.intValue() );
+			
+			os.close();
+		}
+		
 		
 		private void writeDefault(HttpExchange exchange) throws IOException{
 			File outputHtml = new File("src/xhtml/pdf-test.html");
@@ -213,18 +240,25 @@ public class Server {
 			File pdf = new File("pdf-repo/output.pdf");
 			InputStream input = new FileInputStream(pdf);
 
-			int size = (int) pdf.length();
+			Long size = pdf.length();
 			exchange.getResponseHeaders().add("content-type", "application/pdf");
 			exchange.sendResponseHeaders(200, size);
 			
-			OutputStream os = exchange.getResponseBody();
-			byte[] bytes = new byte[ size ];
-			input.read(bytes);
+			write(input, exchange.getResponseBody(), size.intValue() );
 			
-			os.write(bytes);
-			
-			os.close();			
+			exchange.getResponseBody().close();			
 		}
+		
+		private void write(InputStream is, OutputStream os, int size){
+			byte[] bytes = new byte[ size ];
+			try {
+				is.read(bytes);
+				os.write(bytes);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		
 		
 		/**

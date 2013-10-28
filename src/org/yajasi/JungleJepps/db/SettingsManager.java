@@ -6,34 +6,99 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.yajasi.JungleJepps.Field;
 
 public class SettingsManager {
 	
+	/**
+	 * The file where the .properties file will be stored
+	 */
 	private static final File DB;
+	
+	/**
+	 * The connection to the properties file where data transfer occurs 
+	 */
 	private static final Properties connection;
+	
+	/**
+	 * Each field has a label. This is the prefix to differentiate 
+	 * the field label from the field defaults or the field override. 
+	 */
 	private static final String LABEL_PREFIX = "label.";
+	
+	/**
+	 * Some fields are a drop down list that has default options. 
+	 * This is the prefix to differentiate the field defaults from 
+	 * the field label or the field override. 
+	 */
 	private static final String DEFAULTS_PREFIX = "defaults.";
+	
+	/**
+	 * Some fields may be overridden from a 3rd party db.
+	 * This is the prefix to differentiate the field override 
+	 * from the field label or the field defaults. 
+	 */
+	private static final String OVERRIDE_PREFIX = "override.";
+	
+	/**
+	 * The field defaults are stored a separated list with the 
+	 * following string as the separator. 
+	 */
 	private static final String LIST_SEPERATOR = ";";
+	
+	/////////////////////////////////////////////////////////////////////
+	/**
+	 * The handle to the settings manager instance
+	 */
+	private static SettingsManager instance;
+
 	
 	/**
 	 * The static reference to the instance. Used to keep only one 
 	 * instance during runtime.
 	 */
 	static {
-		DB = new File("settings.properties.db");
+		System.out.println("Loading settings...");
+		DB = new File("settings.properties.new");
 		connection = new Properties();
 	}
 	
-	private static SettingsManager instance;
-	
-	public static void main(String[] args){
-		getInstance().save();
+	public static void loadFromInputStream(InputStream stream){
+		System.out.println("Loading settings from primary source...");
+
+		try {
+			connection.load(stream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// Overriding fields from the primary source that do not apply.
+		instance.setValue(Settings.IS_PRIMARY, false);
 		
 	}
+	
+	public static InputStream getSettingsStream(){
+		InputStream is = null;
+		getInstance().save();
+		try {
+			is = new FileInputStream(DB);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		
+		return is;
+	}
+	
+	public static Long getLength(){
+		getInstance().save();
+		return DB.length();
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////	
 	/**
 	 * Singleton model. Use to retrieve an instance of this class. 
 	 * Used to prevent multiple instances trying to modify or read from a single file.
@@ -46,27 +111,33 @@ public class SettingsManager {
 	}
 	
 	/**
-	 * Private constructor 
+	 * Private constructor. Sets up connection and initializes defaults if
+	 * no file is found.
 	 */
 	private SettingsManager(){
 		if( DB.exists() )
 		{
+			InputStream is;
 			try {
-				connection.load( new FileInputStream( DB ) );
-			} catch (FileNotFoundException e) {
+				is = new FileInputStream( DB );
+				connection.load( is );
+				is.close();
+			} catch (Exception e) {
 				e.printStackTrace();
 				initialize();
-			} catch (IOException e) {
-				e.printStackTrace();
-				initialize();
+				save();
 			}
 		}
 		else
 		{
 			initialize();
+			save();
 		}
 	}
 	
+	/**
+	 * Use to make changes persistent
+	 */
 	public void save(){
 		try {
 			connection.store(new FileOutputStream(DB), "Jungle Jepps Settings List");
@@ -77,8 +148,11 @@ public class SettingsManager {
 		}
 	}
 	
-	
+	/**
+	 * Called to setup defaults settings
+	 */
 	private void initialize(){
+		System.out.println("Loading default settings!");
 		/* Initialize Labels */
 		setLabel(Field.RUNWAY_IDENTIFIER, 		"Runway");
 		setLabel(Field.RUNWAY_NAME, 			"");
@@ -128,11 +202,11 @@ public class SettingsManager {
 		
 		/* Initialize Settings Defaults */
 		String defaultHomeDirectory = System.getProperty("user.home") + File.separator + "JungleJepps" + File.separator;
-		setValue(Settings.IS_PRIMARY, 				true);
+		setValue(Settings.IS_PRIMARY, 				false);
 		setValue(Settings.REPOSITORY_PATH, 			defaultHomeDirectory);
 		setValue(Settings.PRIMARY_JDBC_URI, 		"jdbc:sqlite:JJDB.db");
 		setValue(Settings.PRIMARY_JDBC_CLASS_PATH, 	"org.sqlite.JDBC");
-		setValue(Settings.IS_OPERATIONS_DB, 		false);
+		setValue(Settings.IS_OPERATIONS_DB, 		true);
 		setValue(Settings.ALITUDE_UNITS, 			"ft");
 		setValue(Settings.WEIGHT_UNITS, 			"kg");
 		setValue(Settings.DIMENSION_UNITS, 			"nm");
@@ -141,10 +215,10 @@ public class SettingsManager {
 		setValue(Settings.PAGE_1_DISCLAIMER, 		"Use of this diagram is strictly prohibited for aviation operators other than Jungle Jepps mission users. This diagram MAY CONTAIN ERRORS.");
 		setValue(Settings.PAGE_2_DISCLAIMER, 		"No diagram can substitute for a proper runway checkout. Use of this diagram is strictly prohibited for aviation operators other than Jungle Jepps mission users. This diagram MAY CONTAIN ERRORS. Report all safety concerns to the Chief Pilot or designated Safety Officer.");
 		setValue(Settings.DEFAULT_EXPIRATION_PERIOD, 12);
-		
 	}
 	
-	/* GETTERS AND SETTERS */
+	//////////////////////////////////////////////////////////////////
+	/* Methods to interact with properties files */
 	/**
 	 * Get literal string for key 
 	 * @param key
@@ -163,15 +237,8 @@ public class SettingsManager {
 		connection.put(key, value);
 	}
 	
-	/**
-	 * Get string value for key
-	 * @param key
-	 * @return
-	 */
-	public String getStringForKey(Settings key){
-		return getStringForKey(key.toString());
-	}
-	
+	//////////////////////////////////////////////////////////////////
+	/* GETTERS AND SETTERS */
 	/**
 	 * Get the field label for a given field 
 	 * @param field
@@ -181,7 +248,6 @@ public class SettingsManager {
 		return getStringForKey(LABEL_PREFIX + field.toString() );
 	}
 	
-	
 	/**
 	 * Set label for field
 	 * @param field
@@ -189,6 +255,62 @@ public class SettingsManager {
 	 */
 	public void setLabel(Field field, String label){
 		setValue(LABEL_PREFIX + field.toString(), label);
+	}
+	
+	/**
+	 * Get the defaults for a particular field
+	 * @param field
+	 * @return
+	 */
+	public String[] getDefaults(Field field){
+		String defaults = getStringForKey(DEFAULTS_PREFIX + field.toString());
+		return defaults.split( LIST_SEPERATOR );
+	}
+	
+	/**
+	 * Used to set the defaults for a drop down list. 
+	 * Defaults are passed in as a String[]
+	 * @param field
+	 * @param defaults
+	 */
+	public void setDefaults(Field field, String[] defaults){
+		String joined = "";
+		for(String str : defaults)
+			joined += str + LIST_SEPERATOR;
+		
+		if(joined != "")
+			joined.substring(0, joined.lastIndexOf(LIST_SEPERATOR));
+		setValue(field.toString(), joined);
+	}
+	
+	/**
+	 * Used to get the name of the column of the overriding field
+	 * in the operations database. If the field is not being overridden, 
+	 * the method returns an empty string.
+	 * @param field
+	 * @return columnName
+	 */
+	public String getOverrideColumn(Field field){
+		return getStringForKey( OVERRIDE_PREFIX + field.toString() );
+	}
+	
+	/**
+	 * Used to set the name of the column of the overriding field
+	 * in the operations database. 
+	 * @param field
+	 * @return columnName
+	 */
+	public void setOverrideColumn(Field field, String columnName){
+		setValue(OVERRIDE_PREFIX + field.toString(), columnName );
+	}
+	
+	/**
+	 * Get string value for key
+	 * @param key
+	 * @return
+	 */
+	public String getStringForKey(Settings key){
+		return getStringForKey(key.toString());
 	}
 	
 	/**
@@ -254,5 +376,14 @@ public class SettingsManager {
 		setValue(key.toString(), String.valueOf(value) );
 	}
 
+	///////////////////////////////////////////////////////////////////////
+	/**
+	 * Test method for running class
+	 * @param args
+	 */
+	public static void main(String[] args){
+		SettingsManager settings = getInstance();
+		System.out.println( settings.getLabel(Field.IAS_ADJUSTMENT));
+	}
 
 }

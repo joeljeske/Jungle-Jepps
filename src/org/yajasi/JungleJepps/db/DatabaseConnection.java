@@ -9,9 +9,8 @@ import org.yajasi.JungleJepps.Runway;
  *
  */
 public interface DatabaseConnection {
-	
+
 	public String[] getAllAircraftIds();
-	
 	
 	/**
 	 * Get a list of every runway Id available in the database.

@@ -2,76 +2,36 @@ package org.yajasi.JungleJepps;
 
 import java.io.File;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.yajasi.JungleJepps.pdf.HtmlPreparer;
 
 public class Runway {
 	
+	private Map<Field, String> runway;
 	private boolean isModified;
 	
-	public Runway(){	
+	public Runway(){
+		 runway = new HashMap<Field, String>();
+		 isModified = false;
 	}
 	
-	/**
-	 * Used to get the current value of Field for the loaded runway.
-	 * It will return the most recently edited value, not necessarily 
-	 * the value in the database. 
-	 * @param field
-	 * @return fieldValue
-	 */
+	public void empty(){
+		runway = new HashMap<Field, String>();
+	}
+	
 	public String getField(Field field){
-		throw new UnsupportedOperationException();
+		String val = runway.get(field);
+		return val == null ? "" : val; 
 	}
 	
-	/**
-	 * Used to get the label for a specific field. If the field does not have a 
-	 * label it returns an empty string.
-	 * @param field
-	 * @return label
-	 */
-	public String getLabel(Field field){
-		throw new UnsupportedOperationException();
+	public void putField(Field field, String value){
+		value = value == "" ? null : value;
+		runway.put(field, value);
 	}
 	
-	public String[] getDefaultValues(Field field){
-		throw new UnsupportedOperationException();
-	}
-	
-	/**
-	 * Used to change the value of a field. Pass new value for the
-	 * for the field. Returns true if a change occurred and false if no
-	 * change occurred. 
-	 * @param field
-	 * @param value
-	 * @return modified
-	 */
-	public boolean setField(Field field, String value){
-		throw new UnsupportedOperationException();
-	}
-	
-	/**
-	 * Used to change the value of a field. Pass new value for the
-	 * for the field. Returns true if a change occurred and false if no
-	 * change occurred. 
-	 * @param field
-	 * @param value
-	 * @return modified
-	 */
-	public boolean setField(Field field, Boolean value){
-		throw new UnsupportedOperationException();
-	}
-	
-	/**
-	 * Used to change the value of a field. Pass new value for the
-	 * for the field. Returns true if a change occurred and false if no
-	 * change occurred. 
-	 * @param field
-	 * @param value
-	 * @return modified
-	 */
-	public boolean setField(Field field, Date value){
-		throw new UnsupportedOperationException();	
-	}
+
 	
 	/**
 	 * Used to determine if the settings indicate that this field

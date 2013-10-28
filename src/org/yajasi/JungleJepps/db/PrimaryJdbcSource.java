@@ -26,7 +26,12 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	}
 
 	@Override
-	public String[] getAllRunwayIds() {
+	public String[] getAllAircraftIds() {
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public String[] getAllRunwayIds(String aircraftId) {
 		/*
 		String sql = String.format("SELECT %s, %s FROM runways", 
 				Field.RUNWAY_IDENTIFIER.toString(), 
@@ -48,7 +53,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	}
 
 	@Override
-	public Runway getRunway(String runwayId) {
+	public Runway getRunway(String runwayId, String aircraftId) {
 		throw new UnsupportedOperationException();
 	}
 

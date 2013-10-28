@@ -1,5 +1,7 @@
 package org.yajasi.JungleJepps;
-
+/*
+ * Add highlight fields as on db pdf
+ */
 public enum Field {
 	  RUNWAY_IDENTIFIER,
 	  RUNWAY_NAME,

@@ -2,6 +2,7 @@ package org.yajasi.JungleJepps.jjtp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,7 +13,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
-
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 
@@ -32,7 +32,8 @@ public class Client implements DatabaseConnection {
 	public static void main(String[] args) throws InterruptedException{
 		Client client = new Client();
 		Thread.sleep(1000);
-		String[] runways = client.getAllRunwayIds();
+		String aircraftId = "C-5";
+		String[] runways = client.getAllRunwayIds(aircraftId);
 		for(String runway : runways){
 			System.out.println(runway);
 		}
@@ -51,18 +52,18 @@ public class Client implements DatabaseConnection {
 	/////////////////////////////////////////////////////////////////////////////////
 	// START DatabaseConnection Implementation
 	//
-	//
-	// 	public String[] getAllRunwayIds()
-	//
-	// 	public Runway getRunway(String runwayId)
-	//
-	// 	public boolean updateRunway(Runway runway) 
 	/////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	public String[] getAllAircraftIds() {
+		throw new UnsupportedOperationException();
+	}
+	
 	/**
 	 * This method will return all the runway Ids for this database connection
 	 */
 	@Override
-	public String[] getAllRunwayIds() {
+	public String[] getAllRunwayIds(String aircraftId) {
 		String[] list; // To store all the Ids
 		URI uri = null; //The URI that will be built
 		HttpResponse response = null; // The response from the Server
@@ -71,12 +72,13 @@ public class Client implements DatabaseConnection {
 		HttpGet request = new HttpGet(); // Using HTTP method GET
 		
 		// Application requests over LAN will only use JSON
-		request.addHeader("Accepts", "application/json");
+		request.addHeader("Accept", "application/json");
 		
 		try {
 			uri = new URIBuilder( JungleJeppsmDNS.getProvider() ) // Partial URI containing host and port <host>:<port> 
 						.setScheme("http") // Not secure
 						.setPath("/*") // Request to list all runway ids
+						.addParameter("aid", aircraftId) //For a specific aircraft id
 						.build();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -107,14 +109,14 @@ public class Client implements DatabaseConnection {
 	}
 
 	@Override
-	public Runway getRunway(String runwayId) {
+	public Runway getRunway(String runwayId, String aircraftId) {
 		Runway runway;
 		HttpResponse response = null;
 		BufferedReader reader = null;
 		Gson gson = new Gson();
 		HttpGet request = new HttpGet();
 		
-		request.addHeader("Accepts", "application/json");
+		request.addHeader("Accept", "application/json");
 
 		URI uri = null;
 		try {
@@ -122,6 +124,7 @@ public class Client implements DatabaseConnection {
 						.setScheme("http")
 						.setPath("/runway")
 						.addParameter("rid", runwayId)
+						.addParameter("aid", aircraftId)
 						.build();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -154,9 +157,50 @@ public class Client implements DatabaseConnection {
 	@Override
 	public boolean updateRunway(Runway runway) {
 		HttpPatch request = new HttpPatch();
-		request.addHeader("Accepts", "application/json");
+		request.addHeader("Accept", "application/json");
 
 		throw new UnsupportedOperationException();
+	}
+	
+	public InputStream getSettingsStream(){
+		URI uri = null; //The URI that will be built
+		HttpResponse response = null; // The response from the Server
+		InputStream is = null; // What will read the response from the server 
+		HttpGet request = new HttpGet(); // Using HTTP method GET
+		
+		// Application requests for settings sends it as plain text to load directly into the settings manager
+		request.addHeader("Accept", "text/plain");
+		
+		try {
+			uri = new URIBuilder( JungleJeppsmDNS.getProvider() ) // Partial URI containing host and port <host>:<port> 
+						.setScheme("http") // Not secure
+						.setPath("/settings") // Request to list all runway ids
+						.build();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+					
+		request.setURI(uri); // Use this URI for the request
+		
+		try {
+			response = client.execute(request); // Execute HTTP method 
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			// Create reader for the response data
+			is = response.getEntity().getContent();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// Return the raw InputStream 
+		return is;
 	}
 
 	

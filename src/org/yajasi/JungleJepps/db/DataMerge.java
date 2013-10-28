@@ -32,12 +32,17 @@ public class DataMerge implements DatabaseConnection{
 	}
 	
 	@Override
-	public String[] getAllRunwayIds() {
+	public String[] getAllAircraftIds() {
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public String[] getAllRunwayIds(String aircraftId) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Runway getRunway(String runwayId) {
+	public Runway getRunway(String runwayId, String aircraftId) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -47,7 +52,7 @@ public class DataMerge implements DatabaseConnection{
 	}
 	
 	private boolean isFieldOutsourced(Field field){
-		throw new UnsupportedOperationException();
+		return settings.getOverrideColumn(field).isEmpty();
 	}
-
+	
 }
