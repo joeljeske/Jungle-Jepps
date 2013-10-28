@@ -162,12 +162,12 @@ public class Server {
 			
 			String path = exchange.getRequestURI().getPath();
 			
-			if( path.equals( "/*" ) )
+			if( path.startsWith( "/*" ) )
 			{
 				System.out.println("Getting Runway Names...");
 				// Get all runway names 
 				String[] runwayIds;
-				//runwayIds = db.getAllRunwayIds();
+				//runwayIds = db.getAllRunwayIds(aircraftId);
 				runwayIds = new String[]{"KIWI", "AMA","JFK"};
 				String json = gson.toJson(runwayIds);
 				

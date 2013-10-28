@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -201,6 +202,14 @@ public class Client implements DatabaseConnection {
 		
 		// Return the raw InputStream 
 		return is;
+	}
+
+
+	@Override
+	public boolean close() {
+		JungleJeppsmDNS.stopDiscovery();
+		client = null;
+		return true;
 	}
 
 	
