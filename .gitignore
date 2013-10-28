@@ -2,3 +2,5 @@
 /sample.db
 .DS_Store
 .gitignore_global
+/nbproject/private/
+/build/
