@@ -28,7 +28,7 @@ public class DataMerge implements DatabaseConnection{
 		Class.forName( dbDriverClass );
 		
 		// Request class from Driver Manager
-		this.connection = DriverManager.getConnection(dbUrl);
+		this.connection = DriverManager.getConnection( dbUrl );
 	}
 	
 	@Override
@@ -51,8 +51,13 @@ public class DataMerge implements DatabaseConnection{
 		throw new UnsupportedOperationException();
 	}
 	
+	@Override
+	public boolean close() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	private boolean isFieldOutsourced(Field field){
 		return settings.getOverrideColumn(field).isEmpty();
 	}
-	
 }
