@@ -48,9 +48,9 @@ public enum Field {
 	  P2_TEXT_7,
 	  PDF_PATH,
 	  IMAGE_PATH;
-
-  public String toString(){
-	  return super.toString().toLowerCase();
-  }
+	  
+	public String toString(){
+		return super.toString().toLowerCase();
+	}
 
 }

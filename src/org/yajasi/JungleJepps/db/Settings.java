@@ -27,8 +27,6 @@ public enum Settings {
 	DEFAULT_EXPIRATION_PERIOD;
 	
 	
-	
-	
 	public String toString(){
 		return super.toString().toLowerCase();
 	}
