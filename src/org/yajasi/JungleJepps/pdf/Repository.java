@@ -139,8 +139,8 @@ public class Repository {
 		 * 01 is a sequential number for the iteration of that file, should more than one file with the same name be created on the same date.
 		 */
 		return String.format("%s-%s_%d%02d%02d", 
-				runway.getField(Field.RUNWAY_IDENTIFIER),
-				runway.getField(Field.RUNWAY_NAME),
+				runway.get(Field.RUNWAY_IDENTIFIER),
+				runway.get(Field.RUNWAY_NAME),
 				today.get( Calendar.YEAR ),
 				today.get( Calendar.MONTH ),
 				today.get( Calendar.DAY_OF_MONTH ));
@@ -155,9 +155,9 @@ public class Repository {
 		String runwayPath;
 		
 		runwayPath  = File.pathSeparator;
-		runwayPath += runway.getField(Field.AIRCRAFT_IDENTIFIER);
+		runwayPath += runway.get(Field.AIRCRAFT_IDENTIFIER);
 		runwayPath += File.pathSeparator;
-		runwayPath += runway.getField(Field.RUNWAY_IDENTIFIER);
+		runwayPath += runway.get(Field.RUNWAY_IDENTIFIER);
 		runwayPath += File.pathSeparator;
 		
 		return new File(REPOSITORY, runwayPath);
