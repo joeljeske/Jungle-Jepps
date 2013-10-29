@@ -1,0 +1,23 @@
+1) JDBC maybe not working with some types of DBs
+2) Should all runway specific info be matched or should be copies
+3) Good ui sketches and helpful
+
+NOTES FROM PREM DESIGN DOC
+--------------------------
+4) Do we need a shared folder location?
+5) Need to change labels and settings without closing program? 
+6) Can everything go through server? Publishing and DB calls? (Unusable without server)
+7) JDBC may not do excel/access
+8) Download basic modules, yes
+
+
+
+
+9) Change settings (units or latitude conversion) 
+	Re-calc all? 
+	Batch? 
+	Calc upon view? (e.g. db contains only meters)
+
+10) We may not have the iOS
+
+
