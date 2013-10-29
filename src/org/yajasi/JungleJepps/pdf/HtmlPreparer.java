@@ -2,6 +2,7 @@ package org.yajasi.JungleJepps.pdf;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,9 +15,12 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.*;
 import org.xhtmlrenderer.simple.PDFRenderer;
 import org.xml.sax.SAXException;
-
 import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.Runway;
+import org.yajasi.JungleJepps.ValueByEnum;
+import org.yajasi.JungleJepps.db.DatabaseManager;
+import org.yajasi.JungleJepps.db.Settings;
+import org.yajasi.JungleJepps.db.SettingsManager;
 import org.yajasi.JungleJepps.pdf.Repository;
 
 import com.lowagie.text.DocumentException;
@@ -25,7 +29,10 @@ public class HtmlPreparer {
 	
 	private static final String HOOK_TAG = "data";
 	private static final String LABEL_TAG = "label";
+	private static final String UNIT_TAG = "unit";
+	
 	private static final String FIELD_ATTR = "field";
+	private static final String UNIT_ATTR = "type";
 	private static final String REMOVED_ATTR = "removable='true'";
 	
 	private static final String TOPO_DOM_ID = "topo_image";
@@ -47,7 +54,7 @@ public class HtmlPreparer {
 	}
 	
 	public static File publish(Runway runway, File output){
-		String imageUrl = runway.getField(Field.IMAGE_PATH);
+		String imageUrl = runway.get(Field.IMAGE_PATH);
 		return new HtmlPreparer().prepareAndPublish(runway, imageUrl, output);
 	}
 	
@@ -139,7 +146,11 @@ public class HtmlPreparer {
 	 * @param dataMap
 	 */
 	private void injectData(Runway runway){
-		injectData(runway, HOOK_TAG, LABEL_TAG, FIELD_ATTR, REMOVED_ATTR);
+		SettingsManager settings = DatabaseManager.getSettings();
+		
+		inject( runway, HOOK_TAG, FIELD_ATTR, Field.class, true);
+		inject( settings, LABEL_TAG, FIELD_ATTR, Field.class, false);
+		inject( settings, UNIT_TAG, UNIT_ATTR, Settings.class, false);
 	}
 	
 	/**
@@ -147,11 +158,11 @@ public class HtmlPreparer {
 	 * tag that's name matches tagName and looks for a value for the key of the 
 	 * attribute value for the attribute with the name that matches idAttribute.
 	 * The value found in dataMap replaces the textNode in the DOM.
-	 * @param dataMap
+	 * @param source
 	 * @param tagName
 	 * @param idAttribute
 	 */
-	private void injectData(Runway runway, final String TAG, final String LABEL_TAG, final String ID_ATTRIBUTE, final String REMOVED_ATTR){
+	private void inject(ValueByEnum source, final String TAG, final String ATTR, Class type, Boolean removeNulls){
 		// Setup a XPath evaluator to query through the DOM
 		XPath xPath = XPathFactory.newInstance().newXPath();
 		
@@ -165,23 +176,26 @@ public class HtmlPreparer {
 
         	if(tag.getNodeType() == Node.ELEMENT_NODE)
         	{
-            	String id = tag.getAttributes().getNamedItem( ID_ATTRIBUTE ).getNodeValue();
-            	String text = runway.getField( Field.valueOf(id) );
+            	String id = tag.getAttributes().getNamedItem( ATTR ).getNodeValue();
+            	Field val = Enum.valueOf(type, id);
+            	String text = source.get( val ); 
             	
-            	// FOR TESTING WITHOUT DATA ONLY
-            	text = tag.getTextContent(); 
             	
             	if( text == null || text.trim().isEmpty() ) // If there is no data to inject
             	{
-            		// Example:  //*[@field='<field_name>'][@removable='true']
-            		String xPathString = "//*[@" + ID_ATTRIBUTE + "='" + id + "'][@" + REMOVED_ATTR + "]";
-            		
-            		try {
-            			NodeList removables = (NodeList) xPath.evaluate(xPathString, dom.getDocumentElement(), XPathConstants.NODESET);
-						hideElements(removables);
-					} catch (XPathExpressionException e) {
-						e.printStackTrace();
-					}
+            		if( removeNulls )
+                	{
+	            		// Example:  //*[@field='<field_name>'][@removable='true']
+	            		String xPathString = "//*[@" + ATTR + "='" + id + "'][@" + REMOVED_ATTR + "]";
+	            		
+	            		try {
+	            			NodeList removables = (NodeList) xPath.evaluate(xPathString, dom.getDocumentElement(), XPathConstants.NODESET);
+							hideElements(removables);
+						} catch (XPathExpressionException e) {
+							e.printStackTrace();
+						}
+	            		
+                	}// If remove nulls
             	}
             	else // If there is data to inject
             	{
@@ -190,19 +204,6 @@ public class HtmlPreparer {
             	}
         	} // if element node
         } // for all data tags
-        
-        tags = dom.getElementsByTagName(LABEL_TAG);
-        
-        for(int i = 0; i < tags.getLength(); i++)
-        {
-        	Node tag = tags.item(i);
-        	if(tag.getNodeType() == Node.ELEMENT_NODE)
-        	{
-        		
-        		
-        	} // tag is element node
-        } //for all label tags
-    	
 	}
 	
 	// Adds css to node list to display:none
