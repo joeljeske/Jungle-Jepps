@@ -1,37 +1,33 @@
 package org.yajasi.JungleJepps.jjtp;
 
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.File;
+
 import java.net.InetSocketAddress;
-import java.net.URI;
-import java.nio.channels.WritableByteChannel;
 import java.util.List;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
-import org.xhtmlrenderer.util.IOUtil;
+
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 import org.yajasi.JungleJepps.db.DatabaseManager;
-import org.yajasi.JungleJepps.db.Settings;
 import org.yajasi.JungleJepps.db.SettingsManager;
 
-import sun.misc.IOUtils;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.sun.net.httpserver.*;
 
 
 public class Server { 
 	private HttpServer server;
 	private static Server instance;
+	private static boolean started = false;
 
 	private static final File WEB_ROOT = new File("/src/xhtml/");
 
@@ -40,12 +36,20 @@ public class Server {
 	}
 	
 	public static void start() throws IOException{
-		instance = new Server();
-		instance.startServer();
+		if( !started )
+		{
+			started = true;
+			instance = new Server();
+			instance.startServer();
+		}
 	}
 	
 	public static void stop(){
-		instance.stopServer();
+		if( started )
+		{
+			started = false;
+			instance.stopServer();
+		}
 	}
 	
 	
@@ -88,12 +92,13 @@ public class Server {
 		@Override
 		public void handle(HttpExchange exchange) throws IOException {
 			String method = exchange.getRequestMethod().toUpperCase().trim();
-			
+			System.out.println("# HTTP REQUEST ###########################");
 			System.out.print(exchange.getRequestMethod() + ' ');
 			System.out.print(exchange.getRequestURI().toString() + ' ');
 			System.out.println(exchange.getProtocol());
 			for(String key : exchange.getRequestHeaders().keySet()) 
 				System.out.println(key + ": " + exchange.getRequestHeaders().get(key));
+			System.out.println("##########################################\n");
 
 
 			if( method.equals("GET") )
