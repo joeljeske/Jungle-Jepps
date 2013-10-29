@@ -10,8 +10,9 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.yajasi.JungleJepps.Field;
+import org.yajasi.JungleJepps.ValueByEnum;
 
-public class SettingsManager {
+public class SettingsManager implements ValueByEnum{
 	
 	/**
 	 * The file where the .properties file will be stored
@@ -62,7 +63,7 @@ public class SettingsManager {
 	 */
 	static {
 		System.out.println("Loading settings...");
-		DB = new File("settings.properties.new");
+		DB = new File("settings.properties.txt");
 		connection = new Properties();
 	}
 	
@@ -202,11 +203,11 @@ public class SettingsManager {
 		
 		/* Initialize Settings Defaults */
 		String defaultHomeDirectory = System.getProperty("user.home") + File.separator + "JungleJepps" + File.separator;
-		setValue(Settings.IS_PRIMARY, 				false);
+		setValue(Settings.IS_PRIMARY, 				true);
 		setValue(Settings.REPOSITORY_PATH, 			defaultHomeDirectory);
 		setValue(Settings.PRIMARY_JDBC_URI, 		"jdbc:sqlite:JJDB.db");
 		setValue(Settings.PRIMARY_JDBC_CLASS_PATH, 	"org.sqlite.JDBC");
-		setValue(Settings.IS_OPERATIONS_DB, 		true);
+		setValue(Settings.IS_OPERATIONS_DB, 		false);
 		setValue(Settings.ALITUDE_UNITS, 			"ft");
 		setValue(Settings.WEIGHT_UNITS, 			"kg");
 		setValue(Settings.DIMENSION_UNITS, 			"nm");
@@ -304,6 +305,10 @@ public class SettingsManager {
 		setValue(OVERRIDE_PREFIX + field.toString(), columnName );
 	}
 	
+	public boolean isFieldOverridden(Field field){
+		return !getOverrideColumn(field).isEmpty();
+	}
+	
 	/**
 	 * Get string value for key
 	 * @param key
@@ -384,6 +389,17 @@ public class SettingsManager {
 	public static void main(String[] args){
 		SettingsManager settings = getInstance();
 		System.out.println( settings.getLabel(Field.IAS_ADJUSTMENT));
+	}
+
+	@Override
+	public String get(Enum key) {
+		if(key instanceof Field)
+			return getLabel( (Field) key );
+		
+		if(key instanceof Settings)
+			return getStringForKey( (Settings) key);
+		
+		return "";
 	}
 
 }

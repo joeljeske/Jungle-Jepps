@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.yajasi.JungleJepps.db.DatabaseManager;
 import org.yajasi.JungleJepps.pdf.HtmlPreparer;
 
-public class Runway extends HashMap<Field, String> {
+public class Runway extends HashMap<Field, String> implements ValueByEnum {
 
 	private boolean isModified;
 	
@@ -40,7 +40,9 @@ public class Runway extends HashMap<Field, String> {
 			throw new java.lang.IllegalAccessError("Field is readonly. Field: " + field.toString());
 		
 		//Store null instead of empty string
-		value = value.isEmpty() ? null : value; 
+		if(value != null && value.isEmpty())
+			value = null;
+		
 		value = super.put(field, value);
 		
 		isModified = true;
@@ -56,10 +58,10 @@ public class Runway extends HashMap<Field, String> {
 	 * @return
 	 */
 	public boolean isFieldReadonly(Field field){
-		return DatabaseManager.getSettings().isFieldOverriden(field);
+		return DatabaseManager.getSettings().isFieldOverridden(field);
 	}
 	
-	/**
+	/** 
 	 * Used to indicate if this Runway object in current runtime reflects
 	 * what is stored in the database. 
 	 * @return
@@ -91,6 +93,12 @@ public class Runway extends HashMap<Field, String> {
 	public File preview(){
 		File temp = new File("temp.pdf");
 		return HtmlPreparer.publish(this, temp);		
+	}
+
+	@Override
+	public String get(Enum key) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 
