@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.sql.SQLException;
 
+import org.yajasi.JungleJepps.Field;
+import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.jjtp.Client;
 import org.yajasi.JungleJepps.jjtp.JungleJeppsmDNS;
 import org.yajasi.JungleJepps.jjtp.Server;
@@ -44,24 +46,30 @@ public class DatabaseManager {
 		}
 	}
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws SQLException{
 		// By running this static function, the static block has already run
 		// and therefore the database connection has been made and the settings have 
 		// been initialized. If the instance is primary, the Server has been started a well. 
-	/*
-		SettingsManager settings;
-		settings = getSettings();
-				
-		System.out.println(settings.getStringForKey(Settings.PRIMARY_JDBC_URI));
 		
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(settings.getStringForKey(Settings.PRIMARY_JDBC_URI));
-		*/
+        DatabaseConnection db = DatabaseManager.getDatabase();
+        String[] aircraftIds, runwayIds;
+        Runway runway;
+        
+        aircraftIds = db.getAllAircraftIds();
+        runwayIds = db.getAllRunwayIds( aircraftIds[0] );
+        runway = db.getRunway(runwayIds[0], aircraftIds[0]);
+        
+        System.out.print("\nAircraft IDs: ");
+        for(String aid : aircraftIds)
+        	System.out.print(aid + ", ");
+
+        System.out.print("\nRunway IDs: ");
+        for(String rid : runwayIds)
+        	System.out.print(rid + ", ");
+        
+    	System.out.print("\n\n-----Field Printouts-----\n");
+        for(Field f : runway.keySet())
+        	System.out.println(f.toString() + ": " + runway.get(f) );
 		
 	}
 	
