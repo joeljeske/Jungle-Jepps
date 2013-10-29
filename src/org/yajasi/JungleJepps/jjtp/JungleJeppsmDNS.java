@@ -99,12 +99,22 @@ public class JungleJeppsmDNS {
 			e.printStackTrace();
 		}
 	 }
-	 
+	
 	 /**
 	  * This method starts a new thread to broadcast JungleJepps service 
 	  * name over multicast DNS (mDNS). 
 	  */
 	 public static void startBroadcasting(){
+		 Thread startBroadcast = new Thread(){
+			 public void run(){
+				 _startBroadcasting();
+			 }
+		 };
+		 
+		 startBroadcast.start();
+	 }
+	 
+	 private static void _startBroadcasting(){
 		 ServiceInfo jjtpService, httpService;
 
 		 if(broadcasting == null)
