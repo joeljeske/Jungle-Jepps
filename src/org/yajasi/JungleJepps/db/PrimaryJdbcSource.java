@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 import java.io.File;
+
 import com.sun.rowset.CachedRowSetImpl;
 
 import org.yajasi.JungleJepps.Runway;
@@ -101,45 +102,45 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                     );
         
         if(crs.next()){
-            results.putField(Field.RUNWAY_IDENTIFIER, crs.getString("RUNWAY_IDENTIFIER"));
-            results.putField(Field.RUNWAY_NAME, crs.getString("RUNWAY_NAME"));
-            results.putField(Field.AIRCRAFT_IDENTIFIER, crs.getString("AIRCRAFT_IDENTIFIER"));
-            results.putField(Field.LONGITUDE, crs.getString("LONGITUDE"));
-            results.putField(Field.LATITUDE, crs.getString("LATITUDE"));
-            results.putField(Field.INSPECTION_NA, crs.getString("INSPECTION_NA"));
-            results.putField(Field.INSPECTION_DATE, crs.getString("INSPECTION_DATE"));
-            results.putField(Field.INSPECTOR_NAME, crs.getString("INSPECTOR_NAME"));
-            results.putField(Field.INSPECTION_DUE, crs.getString("INSPECTION_DUE"));
-            results.putField(Field.CLASSIFICATION, crs.getString("CLASSIFICATION"));
-            results.putField(Field.FREQUENCY_1, crs.getString("FREQUENCY_1"));
-            results.putField(Field.FREQUENCY_2, crs.getString("FREQUENCY_2"));
-            results.putField(Field.LANGUAGE_GREET, crs.getString("LANGUAGE_GREET"));
-            results.putField(Field.ELEVATION, crs.getString("ELEVATION"));
-            results.putField(Field.LENGTH, crs.getString("LENGTH"));
-            results.putField(Field.WIDTH_TEXT, crs.getString("WIDTH_TEXT"));
-            results.putField(Field.TDZ_SLOPE, crs.getString("TDZ_SLOPE"));
-            results.putField(Field.IAS_ADJUSTMENT, crs.getString("IAS_ADJUSTMENT"));
-            results.putField(Field.PRECIPITATION_ON_SCREEN, crs.getString("PRECIPITATION_ON_SCREEN"));
-            results.putField(Field.RUNWAY_A, crs.getString("RUNWAY_A"));
-            results.putField(Field.A_TAKEOFF_RESTRICTION, crs.getString("A_TAKEOFF_RESTRICTION"));
-            results.putField(Field.A_TAKEOFF_NOTE, crs.getString("A_TAKEOFF_NOTE"));
-            results.putField(Field.A_LANDING_RESTRICTION, crs.getString("A_LANDING_RESTRICTION"));
-            results.putField(Field.A_LANDING_NOTE, crs.getString("A_LANDING_NOTE"));
-            results.putField(Field.RUNWAY_B, crs.getString("RUNWAY_B"));
-            results.putField(Field.B_TAKEOFF_RESTRICTION, crs.getString("B_TAKEOFF_RESTRICTION"));
-            results.putField(Field.B_TAKEOFF_NOTE, crs.getString("B_TAKEOFF_NOTE"));
-            results.putField(Field.B_LANDING_RESTRICTION, crs.getString("B_LANDING_RESTRICTION"));
-            results.putField(Field.B_LANDING_NOTE, crs.getString("B_LANDING_NOTE"));
-            results.putField(Field.PDF_PATH, crs.getString("PDF_PATH"));
-            results.putField(Field.IMAGE_PATH, crs.getString("IMAGE_PATH"));
-            results.putField(Field.P1_TEXT_1, crs.getString("P1_TEXT_1"));
-            results.putField(Field.P1_TEXT_2, crs.getString("P1_TEXT_2"));
-            results.putField(Field.P1_TEXT_3, crs.getString("P1_TEXT_3"));
-            results.putField(Field.P1_TEXT_4, crs.getString("P1_TEXT_4"));
-            results.putField(Field.P1_TEXT_5, crs.getString("P1_TEXT_5"));
-            results.putField(Field.P1_TEXT_6, crs.getString("P1_TEXT_6"));
-            results.putField(Field.P1_TEXT_7, crs.getString("P1_TEXT_7"));
-            results.putField(Field.IMAGE_PATH, crs.getString("IMAGE_PATH")); 
+            results.put(Field.RUNWAY_IDENTIFIER, crs.getString("RUNWAY_IDENTIFIER"));
+            results.put(Field.RUNWAY_NAME, crs.getString("RUNWAY_NAME"));
+            results.put(Field.AIRCRAFT_IDENTIFIER, crs.getString("AIRCRAFT_IDENTIFIER"));
+            results.put(Field.LONGITUDE, crs.getString("LONGITUDE"));
+            results.put(Field.LATITUDE, crs.getString("LATITUDE"));
+            results.put(Field.INSPECTION_NA, crs.getString("INSPECTION_NA"));
+            results.put(Field.INSPECTION_DATE, crs.getString("INSPECTION_DATE"));
+            results.put(Field.INSPECTOR_NAME, crs.getString("INSPECTOR_NAME"));
+            results.put(Field.INSPECTION_DUE, crs.getString("INSPECTION_DUE"));
+            results.put(Field.CLASSIFICATION, crs.getString("CLASSIFICATION"));
+            results.put(Field.FREQUENCY_1, crs.getString("FREQUENCY_1"));
+            results.put(Field.FREQUENCY_2, crs.getString("FREQUENCY_2"));
+            results.put(Field.LANGUAGE_GREET, crs.getString("LANGUAGE_GREET"));
+            results.put(Field.ELEVATION, crs.getString("ELEVATION"));
+            results.put(Field.LENGTH, crs.getString("LENGTH"));
+            results.put(Field.WIDTH_TEXT, crs.getString("WIDTH_TEXT"));
+            results.put(Field.TDZ_SLOPE, crs.getString("TDZ_SLOPE"));
+            results.put(Field.IAS_ADJUSTMENT, crs.getString("IAS_ADJUSTMENT"));
+            results.put(Field.PRECIPITATION_ON_SCREEN, crs.getString("PRECIPITATION_ON_SCREEN"));
+            results.put(Field.RUNWAY_A, crs.getString("RUNWAY_A"));
+            results.put(Field.A_TAKEOFF_RESTRICTION, crs.getString("A_TAKEOFF_RESTRICTION"));
+            results.put(Field.A_TAKEOFF_NOTE, crs.getString("A_TAKEOFF_NOTE"));
+            results.put(Field.A_LANDING_RESTRICTION, crs.getString("A_LANDING_RESTRICTION"));
+            results.put(Field.A_LANDING_NOTE, crs.getString("A_LANDING_NOTE"));
+            results.put(Field.RUNWAY_B, crs.getString("RUNWAY_B"));
+            results.put(Field.B_TAKEOFF_RESTRICTION, crs.getString("B_TAKEOFF_RESTRICTION"));
+            results.put(Field.B_TAKEOFF_NOTE, crs.getString("B_TAKEOFF_NOTE"));
+            results.put(Field.B_LANDING_RESTRICTION, crs.getString("B_LANDING_RESTRICTION"));
+            results.put(Field.B_LANDING_NOTE, crs.getString("B_LANDING_NOTE"));
+            results.put(Field.PDF_PATH, crs.getString("PDF_PATH"));
+            results.put(Field.IMAGE_PATH, crs.getString("IMAGE_PATH"));
+            results.put(Field.P1_TEXT_1, crs.getString("P1_TEXT_1"));
+            results.put(Field.P1_TEXT_2, crs.getString("P1_TEXT_2"));
+            results.put(Field.P1_TEXT_3, crs.getString("P1_TEXT_3"));
+            results.put(Field.P1_TEXT_4, crs.getString("P1_TEXT_4"));
+            results.put(Field.P1_TEXT_5, crs.getString("P1_TEXT_5"));
+            results.put(Field.P1_TEXT_6, crs.getString("P1_TEXT_6"));
+            results.put(Field.P1_TEXT_7, crs.getString("P1_TEXT_7"));
+            results.put(Field.IMAGE_PATH, crs.getString("IMAGE_PATH")); 
         }
                         
         return results;
@@ -154,13 +155,28 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	
 	
 	// This method is an example of how to query and work in a JDBC Context
-	public static void main(String[] args) throws SQLException, ClassNotFoundException{//DBbuild test
-        DatabaseConnection db = new PrimaryJdbcSource(SettingsManager.getInstance());
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {//DBbuild test
+		
+		System.out.println("Running PrimaryJdbcSource main()");
+        PrimaryJdbcSource db = (PrimaryJdbcSource) DatabaseManager.getDatabase();
         String[] aircraftIds, runwayIds;
+        Runway runway;
         
         aircraftIds = db.getAllAircraftIds();
         runwayIds = db.getAllRunwayIds( aircraftIds[0] );
-        db.getRunway(runwayIds[0], aircraftIds[0]);
+        runway = db.getRunway(runwayIds[0], aircraftIds[0]);
+        
+        System.out.print("\nAircraft IDs: ");
+        for(String aid : aircraftIds)
+        	System.out.print(aid + ", ");
+
+        System.out.print("\nRunway IDs: ");
+        for(String rid : runwayIds)
+        	System.out.print(rid + ", ");
+        
+    	System.out.print("\n\n-----Field Printouts-----\n");
+        for(Field f : runway.keySet())
+        	System.out.println(f.toString() + ": " + runway.get(f) );
     }
 	
 	public void setupRelationships() throws SQLException{
