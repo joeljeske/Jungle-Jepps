@@ -31,17 +31,18 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 			throw new ClassCastException("Key is not of type enum org.yajasi.JungleJepps.Field or java.lang.String");
 		
 		String val = super.get(field);
-		return val == null ? "" : val; //Return empty string instead of null
+                return val == null ? "" : val; //Return empty string instead of null
 	}
 	
 	@Override
 	public String put(Field field, String value){
-		if( isFieldReadonly(field) )
+		//System.out.println(value);
+                if( isFieldReadonly(field) )
 			throw new java.lang.IllegalAccessError("Field is readonly. Field: " + field.toString());
 		
 		//Store null instead of empty string
 		if(value != null && value.isEmpty())
-			value = null;
+			value = "nothing here";
 		
 		value = super.put(field, value);
 		
@@ -58,7 +59,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	 * @return
 	 */
 	public boolean isFieldReadonly(Field field){
-		return DatabaseManager.getSettings().isFieldOverridden(field);
+		return false;//DatabaseManager.getSettings().isFieldOverridden(field);
 	}
 	
 	/** 
@@ -98,7 +99,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	@Override
 	public String get(Enum key) {
 		// TODO Auto-generated method stub
-		return null;
+		return get(key.toString().toUpperCase());
 	}
 	
 
