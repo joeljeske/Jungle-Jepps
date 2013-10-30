@@ -7,9 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import java.util.ArrayList;
 import java.io.File;
 
-import com.sun.rowset.CachedRowSetImpl;
+//import com.sun.rowset.ResultSet;
 
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.Field;
@@ -19,165 +20,204 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	private Connection connection;
 	
 	public PrimaryJdbcSource(SettingsManager settings) throws ClassNotFoundException, SQLException {
-        String dbDriverClass = settings.getStringForKey(Settings.PRIMARY_JDBC_CLASS_PATH);
-		String dbUrl = settings.getStringForKey(Settings.PRIMARY_JDBC_URI);
-		
-		// Load JDBC class into runtime
+                this(settings.getStringForKey(Settings.PRIMARY_JDBC_CLASS_PATH), settings.getStringForKey(Settings.PRIMARY_JDBC_URI));
+                //this.PrimaryJdbcSource(dbDriverClass, dbUrl);
+                
+		/*// Load JDBC class into runtime
 		Class.forName( dbDriverClass );
 		
 		// Request class from Driver Manager
-		this.connection = DriverManager.getConnection(dbUrl);
-	}
-
-	/*
-	@Override
-	public String[] getAllRunwayIds(String aircraftId) {
-		
-		String sql = String.format("SELECT %s, %s FROM runways", 
-				Field.RUNWAY_IDENTIFIER.toString(), 
-				Field.RUNWAY_NAME.toString());
-                
+		//this.connection = DriverManager.getConnection(dbUrl);
+                dbInfo = dbUrl.split(":");
+                dbfile = new File(dbInfo[2]);//checks to see if the file is open
                 if(dbfile.exists() == false)
                 {
-                    this.connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+                    this.connection = DriverManager.getConnection(dbUrl);
                     System.out.println("here");
                     setupRelationships();
                 }
                 else{
-                    this.connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-                }        
+                    this.connection = DriverManager.getConnection(dbUrl);
+                }
+                */
 	}
-	*/
-    @Override
-    public String[] getAllAircraftIds()throws SQLException{
-        CachedRowSetImpl crs = new CachedRowSetImpl();
-        String[] results;
-        int I = 0;
         
-        crs = SQLquery("SELECT DISTINCT AIRCRAFT_IDENTIFIER FROM Aircraft");
-        
-        results = new String[crs.size()];
-        while(crs.next()){
-            results[I] = crs.getString("AIRCRAFT_IDENTIFIER");
-            I++;
+        private PrimaryJdbcSource(String dbDriverClass, String dbUrl) throws ClassNotFoundException, SQLException {
+            File dbfile;
+            String[] dbInfo = new String[3];
+            
+            // Load JDBC class into runtime
+            Class.forName( dbDriverClass );
+
+            // Request class from Driver Manager
+            //this.connection = DriverManager.getConnection(dbUrl);
+            dbInfo = dbUrl.split(":");
+            dbfile = new File(dbInfo[2]);//checks to see if the file is open
+            System.out.println("DBfile name: " + dbInfo[2]);
+            if(dbfile.exists() == false)
+            {
+                System.out.println("got here");
+                this.connection = DriverManager.getConnection(dbUrl);
+                System.out.println("here");
+                setupRelationships();
+            }
+            else{
+                this.connection = DriverManager.getConnection(dbUrl);
+            }
         }
-        
-        for(I = 0; I < results.length; I++){
-            System.out.println(results[I]);
+	
+        @Override
+        public String[] getAllAircraftIds()throws SQLException{
+            ResultSet rs ;
+            ArrayList<String> results = new ArrayList<String>();
+            int I = 0;
+
+            rs = SQLquery("SELECT DISTINCT AIRCRAFT_IDENTIFIER FROM Aircraft");
+            
+            while(rs.next()){
+                results.add(rs.getString("AIRCRAFT_IDENTIFIER"));
+                I++;
+            }
+
+            for(I = 0; I < results.size(); I++){
+                System.out.println(results.get(I));
+            }
+
+            return results.toArray(new String[results.size()]);
         }
-        
-        return results;
-    }
 
 	@Override
-	public String[] getAllRunwayIds(String aircraftId) throws SQLException{
-		CachedRowSetImpl crs = new CachedRowSetImpl();
-        String[] results;
-        int I = 0;
-        
-        crs = SQLquery("SELECT RUNWAY_IDENTIFIER FROM Runway");
-        
-        results = new String[crs.size()];
-        while(crs.next()){
-            results[I] = crs.getString("RUNWAY_IDENTIFIER");
-            I++;
+        public String[] getAllRunwayIds(String aircraftId) throws SQLException{
+            ResultSet rs ;
+            ArrayList<String> results = new ArrayList<String>();
+            int I = 0;
+
+            rs = SQLquery("SELECT RUNWAY_IDENTIFIER FROM Runway JOIN Aircraft "
+                    + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_ID "
+                    + "WHERE Aircraft." + Field.AIRCRAFT_IDENTIFIER.toString() + " =\"" + aircraftId +"\"");
+            
+            while(rs.next()){
+                results.add(rs.getString("RUNWAY_IDENTIFIER"));
+                I++;
+            }
+
+            for(I = 0; I < results.size(); I++){
+                System.out.println(results.get(I));
+            }
+
+            return results.toArray(new String[results.size()]);
         }
         
-        for(I = 0; I < results.length; I++){
-            System.out.println(results[I]);
+        @Override
+        public String[] getAllRunwayIds() throws SQLException{
+            ResultSet rs;
+            ArrayList<String> results = new ArrayList<String>();
+            int I = 0;
+
+            rs = SQLquery("SELECT RUNWAY_IDENTIFIER FROM Runway");
+
+            
+            while(rs.next()){
+                results.add(rs.getString("RUNWAY_IDENTIFIER"));
+                I++;
+            }
+
+            for(I = 0; I < results.size(); I++){
+                System.out.println(results.get(I));
+            }
+
+            return results.toArray(new String[results.size()]);
+            
         }
-        
-        return results;
-	}
 
 	@Override
 	public Runway getRunway(String runwayId, String aircraftId)throws SQLException{
-		CachedRowSetImpl crs = new CachedRowSetImpl();
-        Runway results = new Runway();
-        
-        crs = SQLquery("SELECT * "
-                    + "FROM Runway JOIN Aircraft "
-                    + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_IDENTIFIER "
-                    + "WHERE Aircraft.RUNWAY_IDENTIFIER = \"KIW\" AND Aircraft.AIRCRAFT_IDENTIFIER = \"PC-6\" "
-                    );
-        
-        if(crs.next()){
-            results.put(Field.RUNWAY_IDENTIFIER, crs.getString("RUNWAY_IDENTIFIER"));
-            results.put(Field.RUNWAY_NAME, crs.getString("RUNWAY_NAME"));
-            results.put(Field.AIRCRAFT_IDENTIFIER, crs.getString("AIRCRAFT_IDENTIFIER"));
-            results.put(Field.LONGITUDE, crs.getString("LONGITUDE"));
-            results.put(Field.LATITUDE, crs.getString("LATITUDE"));
-            results.put(Field.INSPECTION_NA, crs.getString("INSPECTION_NA"));
-            results.put(Field.INSPECTION_DATE, crs.getString("INSPECTION_DATE"));
-            results.put(Field.INSPECTOR_NAME, crs.getString("INSPECTOR_NAME"));
-            results.put(Field.INSPECTION_DUE, crs.getString("INSPECTION_DUE"));
-            results.put(Field.CLASSIFICATION, crs.getString("CLASSIFICATION"));
-            results.put(Field.FREQUENCY_1, crs.getString("FREQUENCY_1"));
-            results.put(Field.FREQUENCY_2, crs.getString("FREQUENCY_2"));
-            results.put(Field.LANGUAGE_GREET, crs.getString("LANGUAGE_GREET"));
-            results.put(Field.ELEVATION, crs.getString("ELEVATION"));
-            results.put(Field.LENGTH, crs.getString("LENGTH"));
-            results.put(Field.WIDTH_TEXT, crs.getString("WIDTH_TEXT"));
-            results.put(Field.TDZ_SLOPE, crs.getString("TDZ_SLOPE"));
-            results.put(Field.IAS_ADJUSTMENT, crs.getString("IAS_ADJUSTMENT"));
-            results.put(Field.PRECIPITATION_ON_SCREEN, crs.getString("PRECIPITATION_ON_SCREEN"));
-            results.put(Field.RUNWAY_A, crs.getString("RUNWAY_A"));
-            results.put(Field.A_TAKEOFF_RESTRICTION, crs.getString("A_TAKEOFF_RESTRICTION"));
-            results.put(Field.A_TAKEOFF_NOTE, crs.getString("A_TAKEOFF_NOTE"));
-            results.put(Field.A_LANDING_RESTRICTION, crs.getString("A_LANDING_RESTRICTION"));
-            results.put(Field.A_LANDING_NOTE, crs.getString("A_LANDING_NOTE"));
-            results.put(Field.RUNWAY_B, crs.getString("RUNWAY_B"));
-            results.put(Field.B_TAKEOFF_RESTRICTION, crs.getString("B_TAKEOFF_RESTRICTION"));
-            results.put(Field.B_TAKEOFF_NOTE, crs.getString("B_TAKEOFF_NOTE"));
-            results.put(Field.B_LANDING_RESTRICTION, crs.getString("B_LANDING_RESTRICTION"));
-            results.put(Field.B_LANDING_NOTE, crs.getString("B_LANDING_NOTE"));
-            results.put(Field.PDF_PATH, crs.getString("PDF_PATH"));
-            results.put(Field.IMAGE_PATH, crs.getString("IMAGE_PATH"));
-            results.put(Field.P1_TEXT_1, crs.getString("P1_TEXT_1"));
-            results.put(Field.P1_TEXT_2, crs.getString("P1_TEXT_2"));
-            results.put(Field.P1_TEXT_3, crs.getString("P1_TEXT_3"));
-            results.put(Field.P1_TEXT_4, crs.getString("P1_TEXT_4"));
-            results.put(Field.P1_TEXT_5, crs.getString("P1_TEXT_5"));
-            results.put(Field.P1_TEXT_6, crs.getString("P1_TEXT_6"));
-            results.put(Field.P1_TEXT_7, crs.getString("P1_TEXT_7"));
-            results.put(Field.IMAGE_PATH, crs.getString("IMAGE_PATH")); 
-        }
-                        
+            ResultSet rs;
+            Runway results = new Runway();
+
+            rs = SQLquery("SELECT * "
+                        + "FROM Runway JOIN Aircraft "
+                        + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_ID "
+                        + "WHERE Runway.RUNWAY_IDENTIFIER = \"KIW\" AND Aircraft.AIRCRAFT_IDENTIFIER = \"PC-6\" "
+                        );
+
+            if(rs.next()){
+                results.put(Field.RUNWAY_IDENTIFIER, rs.getString(Field.RUNWAY_IDENTIFIER.toString()));//Field.RUNWAY_IDENTIFIER.toString().toUpperCase()));
+                results.put(Field.RUNWAY_NAME, rs.getString(Field.RUNWAY_NAME.toString()));
+                results.put(Field.AIRCRAFT_IDENTIFIER, rs.getString(Field.AIRCRAFT_IDENTIFIER.toString()));
+                results.put(Field.LONGITUDE, rs.getString(Field.LONGITUDE.toString()));
+                results.put(Field.LATITUDE, rs.getString(Field.LATITUDE.toString()));
+                results.put(Field.INSPECTION_NA, rs.getString(Field.INSPECTION_NA.toString()));
+                results.put(Field.INSPECTION_DATE, rs.getString(Field.INSPECTION_DATE.toString()));
+                results.put(Field.INSPECTOR_NAME, rs.getString(Field.INSPECTOR_NAME.toString()));
+                results.put(Field.INSPECTION_DUE, rs.getString(Field.INSPECTION_DUE.toString()));
+                results.put(Field.CLASSIFICATION, rs.getString(Field.CLASSIFICATION.toString()));
+                results.put(Field.FREQUENCY_1, rs.getString(Field.FREQUENCY_1.toString()));
+                results.put(Field.FREQUENCY_2, rs.getString(Field.FREQUENCY_2.toString()));
+                results.put(Field.LANGUAGE_GREET, rs.getString(Field.LANGUAGE_GREET.toString()));
+                results.put(Field.ELEVATION, rs.getString(Field.ELEVATION.toString()));
+                results.put(Field.LENGTH, rs.getString(Field.LENGTH.toString()));
+                results.put(Field.WIDTH_TEXT, rs.getString(Field.WIDTH_TEXT.toString()));
+                results.put(Field.TDZ_SLOPE, rs.getString(Field.TDZ_SLOPE.toString()));
+                results.put(Field.IAS_ADJUSTMENT, rs.getString(Field.IAS_ADJUSTMENT.toString()));
+                results.put(Field.PRECIPITATION_ON_SCREEN, rs.getString(Field.PRECIPITATION_ON_SCREEN.toString()));
+                results.put(Field.RUNWAY_A, rs.getString(Field.RUNWAY_A.toString()));
+                results.put(Field.A_TAKEOFF_RESTRICTION, rs.getString(Field.A_TAKEOFF_RESTRICTION.toString()));
+                results.put(Field.A_TAKEOFF_NOTE, rs.getString(Field.A_TAKEOFF_NOTE.toString()));
+                results.put(Field.A_LANDING_RESTRICTION, rs.getString(Field.A_LANDING_RESTRICTION.toString()));
+                results.put(Field.A_LANDING_NOTE, rs.getString(Field.A_LANDING_NOTE.toString()));
+                results.put(Field.RUNWAY_B, rs.getString(Field.RUNWAY_B.toString()));
+                results.put(Field.B_TAKEOFF_RESTRICTION, rs.getString(Field.B_TAKEOFF_RESTRICTION.toString()));
+                results.put(Field.B_TAKEOFF_NOTE, rs.getString(Field.B_TAKEOFF_NOTE.toString()));
+                results.put(Field.B_LANDING_RESTRICTION, rs.getString(Field.B_LANDING_RESTRICTION.toString()));
+                results.put(Field.B_LANDING_NOTE, rs.getString(Field.B_LANDING_NOTE.toString()));
+                results.put(Field.PDF_PATH, rs.getString(Field.PDF_PATH.toString()));
+                results.put(Field.IMAGE_PATH, rs.getString(Field.IMAGE_PATH.toString()));
+                results.put(Field.P1_TEXT_1, rs.getString(Field.P1_TEXT_1.toString()));
+                results.put(Field.P1_TEXT_2, rs.getString(Field.P1_TEXT_2.toString()));
+                results.put(Field.P1_TEXT_3, rs.getString(Field.P1_TEXT_3.toString()));
+                results.put(Field.P1_TEXT_4, rs.getString(Field.P1_TEXT_4.toString()));
+                results.put(Field.P1_TEXT_5, rs.getString(Field.P1_TEXT_5.toString()));
+                results.put(Field.P1_TEXT_6, rs.getString(Field.P1_TEXT_6.toString()));
+                results.put(Field.P1_TEXT_7, rs.getString(Field.P1_TEXT_7.toString()));
+                results.put(Field.IMAGE_PATH, rs.getString(Field.IMAGE_PATH.toString()));
+            }
+
         return results;
 	}
 
 	@Override
 	public boolean updateRunway(Runway runway)throws SQLException{
         ///this currently does nothing.
-        ///CachedRowSetImpl crs = new CachedRowSetImpl();
+        ///ResultSet rs ;
         throw new UnsupportedOperationException();
 	}
 	
 	
 	// This method is an example of how to query and work in a JDBC Context
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {//DBbuild test
-		
-		System.out.println("Running PrimaryJdbcSource main()");
-        PrimaryJdbcSource db = (PrimaryJdbcSource) DatabaseManager.getDatabase();
-        String[] aircraftIds, runwayIds;
-        Runway runway;
-        
-        aircraftIds = db.getAllAircraftIds();
-        runwayIds = db.getAllRunwayIds( aircraftIds[0] );
-        runway = db.getRunway(runwayIds[0], aircraftIds[0]);
-        
-        System.out.print("\nAircraft IDs: ");
-        for(String aid : aircraftIds)
-        	System.out.print(aid + ", ");
+            
+            PrimaryJdbcSource db = new PrimaryJdbcSource("org.sqlite.JDBC", "jdbc:sqlite:JJDB.db");
+            String[] aircraftIds, runwayIds;
+            Runway runway;
 
-        System.out.print("\nRunway IDs: ");
-        for(String rid : runwayIds)
-        	System.out.print(rid + ", ");
-        
-    	System.out.print("\n\n-----Field Printouts-----\n");
-        for(Field f : runway.keySet())
-        	System.out.println(f.toString() + ": " + runway.get(f) );
-    }
+            aircraftIds = db.getAllAircraftIds();
+            runwayIds = db.getAllRunwayIds( aircraftIds[0] );
+            runway = db.getRunway(runwayIds[0], aircraftIds[0]); 
+
+            System.out.print("\nAircraft IDs: ");
+            for(String aid : aircraftIds)
+                    System.out.print(aid + ", ");
+
+            System.out.print("\nRunway IDs: ");
+            for(String rid : runwayIds)
+                    System.out.print(rid + ", ");
+
+            System.out.print("\n\n-----Field Printouts-----\n");
+            for(Field f : runway.keySet())
+                    System.out.println(f.toString() + ": " + runway.get(f) );
+            
+        }
 	
 	public void setupRelationships() throws SQLException{
 		System.out.println("setup... ");
@@ -189,28 +229,27 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                 "CREATE TABLE Runway"
                 +"(RUNWAY_IDENTIFIER            String  PRIMARY KEY,"
                 + "RUNWAY_NAME                  String             ,"
-                + "LONGITUDE                    Float              ,"
-                + "LATITUDE                     Float              ,"
-                + "INSPECTION_NA                Bool               ,"
-                + "INSPECTION_DATE              Date               ,"
+                + "LONGITUDE                    Float              ,"//Float so that we can calc distance from home
+                + "LATITUDE                     Float              ,"//Float so that we can calc distance from home
+                + "INSPECTION_NA                String             ,"
+                + "INSPECTION_DATE              String             ,"
                 + "INSPECTOR_NAME               String             ,"
-                + "INSPECTION_DUE               Date               ,"
+                + "INSPECTION_DUE               string             ,"
                 + "CLASSIFICATION               String             ,"
-                + "FREQUENCY_1                  Float              ,"
-                + "FREQUENCY_2                  Float              ,"
+                + "FREQUENCY_1                  String             ,"
+                + "FREQUENCY_2                  String             ,"
                 + "LANGUAGE_GREET               String             ,"
-                + "ELEVATION                    Int                ,"
+                + "ELEVATION                    String             ,"
                 + "ELEVATIONHL                  Int     default 0  ,"
-                + "LENGTH                       Int                ,"
+                + "LENGTH                       String             ,"
                 + "LENGTHHL                     Int     default 0  ,"
-                + "WIDTH                        String             ,"
                 + "WIDTH_TEXT                   String             ,"
                 + "WIDTH_TEXTHL                 Int     default 0  ,"
-                + "TDZ_SLOPE                    Int                ,"
+                + "TDZ_SLOPE                    String             ,"
                 + "TDZ_SLOPEHL                  Int     default 0  ,"
-                + "RUNWAY_A                     Int                ,"
+                + "RUNWAY_A                     String             ,"
                 + "RUNWAY_AHL                   Int     default 0  ,"
-                + "RUNWAY_B                     Int                ,"
+                + "RUNWAY_B                     String             ,"
                 + "RUNWAY_BHL                   Int     default 0  "
                 + ");"
                 );
@@ -218,10 +257,10 @@ public class PrimaryJdbcSource implements DatabaseConnection {
         statement.executeUpdate(
                 "CREATE TABLE Aircraft"
                 +"(AIRCRAFT_IDENTIFIER          String           ,"
-                + "RUNWAY_IDENTIFIER            String           ,"
+                + "RUNWAY_ID                    String           ,"
                 + "IAS_ADJUSTMENT               String           ,"
                 + "IAS_ADJUSTMENTHL             Int     default 0,"
-                + "PRECIPITATION_ON_SCREEN      Int              ,"
+                + "PRECIPITATION_ON_SCREEN      String           ,"
                 + "PRECIPITATION_ON_SCREENHL    Int     default 0,"
                 + "A_TAKEOFF_RESTRICTION        String           ,"
                 + "A_TAKEOFF_RESTRICTIONHL      Int     default 0,"
@@ -248,7 +287,15 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                 + "P1_TEXT_5                    String           ,"
                 + "P1_TEXT_6                    String           ,"
                 + "P1_TEXT_7                    String           ,"
-                + "PRIMARY KEY(AIRCRAFT_IDENTIFIER, RUNWAY_IDENTIFIER)"
+                + "P2_TEXT_1                    String           ,"
+                + "P2_TEXT_2                    String           ,"
+                + "P2_TEXT_3                    String           ,"
+                + "P2_TEXT_4                    String           ,"
+                + "P2_TEXT_5                    String           ,"
+                + "P2_TEXT_6                    String           ,"
+                + "P2_TEXT_7                    String           ,"
+                + "LAST_UPDATE                  Date             ,"
+                + "PRIMARY KEY(AIRCRAFT_IDENTIFIER, RUNWAY_ID)"
                 + ")"
                 );
         System.out.println("setup Note");
@@ -264,17 +311,37 @@ public class PrimaryJdbcSource implements DatabaseConnection {
         
         System.out.println("populate example runway");
         statement.executeUpdate(
-                "INSERT INTO Runway (RUNWAY_IDENTIFIER,RUNWAY_NAME,LONGITUDE,LATITUDE,INSPECTION_NA,INSPECTION_DATE,INSPECTOR_NAME,INSPECTION_DUE,CLASSIFICATION,FREQUENCY_1,FREQUENCY_2,LANGUAGE_GREET,ELEVATION,LENGTH,WIDTH,WIDTH_TEXT,TDZ_SLOPE,RUNWAY_A,RUNWAY_B)"
+                "INSERT INTO Runway (RUNWAY_IDENTIFIER,RUNWAY_NAME,LONGITUDE,LATITUDE,INSPECTION_NA,INSPECTION_DATE,INSPECTOR_NAME,INSPECTION_DUE,CLASSIFICATION,FREQUENCY_1,FREQUENCY_2,LANGUAGE_GREET,ELEVATION,LENGTH,WIDTH_TEXT,TDZ_SLOPE,RUNWAY_A,RUNWAY_B)"
                 + "VALUES('KIW','Kiwi',044185,1404332,1,2013-10-25,"
                 + "'Jesse','2013-10-25','SP',123.45,1,'Ngalum/Yepmum',"
-                + "3500,419,31,'Ditch',2,31,13)"
-                );
+                + "3500,419,'31/Ditch',2,31,13)"
+               );
         
         
         System.out.println("populate example aircraft");
         statement.executeUpdate(
-                "INSERT INTO Aircraft (AIRCRAFT_IDENTIFIER,RUNWAY_IDENTIFIER,IAS_ADJUSTMENT,PRECIPITATION_ON_SCREEN,A_TAKEOFF_RESTRICTION,A_TAKEOFF_NOTE,B_TAKEOFF_RESTRICTION,B_TAKEOFF_NOTE,PDF_PATH)"
-                + "VALUES('PC-6','KIW','KIAS +8',0,'-100k//2700GW','Reduced due to airstrip lenght','-200k//2600GW','Temp untill further experience','TBD')"
+                "INSERT INTO Aircraft (AIRCRAFT_IDENTIFIER,RUNWAY_ID,IAS_ADJUSTMENT,PRECIPITATION_ON_SCREEN,A_TAKEOFF_RESTRICTION,A_TAKEOFF_NOTE,B_TAKEOFF_RESTRICTION,B_TAKEOFF_NOTE,PDF_PATH,LAST_UPDATE,P1_TEXT_1,P1_TEXT_2,P1_TEXT_3,P1_TEXT_4,P1_TEXT_5,P1_TEXT_6,P1_TEXT_7,P2_TEXT_1,P2_TEXT_2,P2_TEXT_3,P2_TEXT_4,P2_TEXT_5,P2_TEXT_6,P2_TEXT_7)"
+                + "VALUES("
+                + "'PC-6',"
+                + "'KIW',"
+                + "'KIAS +8',"
+                + "0,"
+                + "'-100k//2700GW',"
+                + "'Reduced due to airstrip lenght','-200k//2600GW',"
+                + "'Temp untill further experience','TBD','2013-10-30',"
+                + "'Before the River at 5050 ft','Right turn down valley',"
+                + "'Describe location/procedure for least damage/injury',"
+                + "'Grass over packed gravel, smooth even surface.',"
+                + "'WIND CURFEW 9:00am. WAIVER Rwy for TDZ slope. If other than CALM winds, DO NOT LAND! CALM winds defined as Indicated by \"dead\" or slight movements of the WS. Sudden Verry Strong winds possible including tailwinds, updrafts, down drafts and rolling action on medium to short final. Other wind indicators at KWI include; turbulence at Kivi pass, flag at KP, smoke in the vally, and winds at KWR.',"
+                + "'50m into the takeoff roll. At 2/3 the Rwy. turn left into the embankment. DO NOT GO OFF THE END.',"
+                + "'Description of pre-determined emergency landing options.',"
+                + "'Ngalum/Yepmum',"
+                + "'<B>Non Typical<B> Deastern highland weather. WINDS funneled up vally or down vally past airstrip. Winds come up and change QUICKLEY!',"
+                + "'<B>9:00 WIND CURFEW.<B> With reliable CURRENT(while overhead) readio report of CALM winds, the wind time restriction may be waived. WAIVER AIRSTRIP DUE TO TDZ SLOPE',"
+                + "'DO NOT LAND with winds other than calm as defined by POH600D. Windsock DOES NOT always indicate winds accurately. Also look for flag movement on Keypoint ridge, and other wind indications. Agreement of Indicators required BEFORE committal point Airspeed 63(-0+5)kts, WSI 500-700, (Helio Power 10-12 inches)[PC6 7-9PSI]3 Landing Accidents and Multiple Landing scares over 40 years due to winds.',"
+                + "'Lots of text',"
+                + "'Surface should be smooth and free of ruts. Grass Height should not obstruct the clear view of each side marker',"
+                + "'Lots of text')"
                 );
 	
 		statement.close();
@@ -307,12 +374,10 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	    	
 	}
         
-    public CachedRowSetImpl SQLquery(String SQLstatement)throws SQLException{
-        CachedRowSetImpl crs = new CachedRowSetImpl();
+    public ResultSet SQLquery(String SQLstatement)throws SQLException{
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(SQLstatement);
-        crs.populate(rs);
-        return crs;
+        return rs;
     }
         
     @Override
