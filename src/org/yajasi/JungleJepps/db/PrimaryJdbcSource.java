@@ -72,7 +72,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             ArrayList<String> results = new ArrayList<String>();
             int I = 0;
 
-            rs = SQLquery("SELECT DISTINCT AIRCRAFT_IDENTIFIER FROM Aircraft");
+            rs = connection.createStatement().executeQuery("SELECT DISTINCT AIRCRAFT_IDENTIFIER FROM Aircraft");
             
             while(rs.next()){
                 results.add(rs.getString("AIRCRAFT_IDENTIFIER"));
@@ -92,9 +92,9 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             ArrayList<String> results = new ArrayList<String>();
             int I = 0;
 
-            rs = SQLquery("SELECT RUNWAY_IDENTIFIER FROM Runway JOIN Aircraft "
-                    + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_ID "
-                    + "WHERE Aircraft." + Field.AIRCRAFT_IDENTIFIER.toString() + " =\"" + aircraftId +"\"");
+            rs = connection.createStatement().executeQuery("SELECT RUNWAY_IDENTIFIER FROM Runway JOIN Aircraft "
+                                                        + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_ID "
+                                                        + "WHERE Aircraft." + Field.AIRCRAFT_IDENTIFIER.toString() + " =\"" + aircraftId +"\"");
             
             while(rs.next()){
                 results.add(rs.getString("RUNWAY_IDENTIFIER"));
@@ -114,7 +114,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             ArrayList<String> results = new ArrayList<String>();
             int I = 0;
 
-            rs = SQLquery("SELECT RUNWAY_IDENTIFIER FROM Runway");
+            rs = connection.createStatement().executeQuery("SELECT RUNWAY_IDENTIFIER FROM Runway");
 
             
             while(rs.next()){
@@ -135,63 +135,50 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             ResultSet rs;
             Runway results = new Runway();
 
-            rs = SQLquery("SELECT * "
-                        + "FROM Runway JOIN Aircraft "
-                        + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_ID "
-                        + "WHERE Runway.RUNWAY_IDENTIFIER = \"KIW\" AND Aircraft.AIRCRAFT_IDENTIFIER = \"PC-6\" "
-                        );
-
+            rs = connection.createStatement().executeQuery("SELECT * "
+                                                        + "FROM Runway JOIN Aircraft "
+                                                        + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_ID "
+                                                        + "WHERE Runway.RUNWAY_IDENTIFIER = \"KIW\" AND Aircraft.AIRCRAFT_IDENTIFIER = \"PC-6\" "
+                                                        );
             if(rs.next()){
-                results.put(Field.RUNWAY_IDENTIFIER, rs.getString(Field.RUNWAY_IDENTIFIER.toString()));//Field.RUNWAY_IDENTIFIER.toString().toUpperCase()));
-                results.put(Field.RUNWAY_NAME, rs.getString(Field.RUNWAY_NAME.toString()));
-                results.put(Field.AIRCRAFT_IDENTIFIER, rs.getString(Field.AIRCRAFT_IDENTIFIER.toString()));
-                results.put(Field.LONGITUDE, rs.getString(Field.LONGITUDE.toString()));
-                results.put(Field.LATITUDE, rs.getString(Field.LATITUDE.toString()));
-                results.put(Field.INSPECTION_NA, rs.getString(Field.INSPECTION_NA.toString()));
-                results.put(Field.INSPECTION_DATE, rs.getString(Field.INSPECTION_DATE.toString()));
-                results.put(Field.INSPECTOR_NAME, rs.getString(Field.INSPECTOR_NAME.toString()));
-                results.put(Field.INSPECTION_DUE, rs.getString(Field.INSPECTION_DUE.toString()));
-                results.put(Field.CLASSIFICATION, rs.getString(Field.CLASSIFICATION.toString()));
-                results.put(Field.FREQUENCY_1, rs.getString(Field.FREQUENCY_1.toString()));
-                results.put(Field.FREQUENCY_2, rs.getString(Field.FREQUENCY_2.toString()));
-                results.put(Field.LANGUAGE_GREET, rs.getString(Field.LANGUAGE_GREET.toString()));
-                results.put(Field.ELEVATION, rs.getString(Field.ELEVATION.toString()));
-                results.put(Field.LENGTH, rs.getString(Field.LENGTH.toString()));
-                results.put(Field.WIDTH_TEXT, rs.getString(Field.WIDTH_TEXT.toString()));
-                results.put(Field.TDZ_SLOPE, rs.getString(Field.TDZ_SLOPE.toString()));
-                results.put(Field.IAS_ADJUSTMENT, rs.getString(Field.IAS_ADJUSTMENT.toString()));
-                results.put(Field.PRECIPITATION_ON_SCREEN, rs.getString(Field.PRECIPITATION_ON_SCREEN.toString()));
-                results.put(Field.RUNWAY_A, rs.getString(Field.RUNWAY_A.toString()));
-                results.put(Field.A_TAKEOFF_RESTRICTION, rs.getString(Field.A_TAKEOFF_RESTRICTION.toString()));
-                results.put(Field.A_TAKEOFF_NOTE, rs.getString(Field.A_TAKEOFF_NOTE.toString()));
-                results.put(Field.A_LANDING_RESTRICTION, rs.getString(Field.A_LANDING_RESTRICTION.toString()));
-                results.put(Field.A_LANDING_NOTE, rs.getString(Field.A_LANDING_NOTE.toString()));
-                results.put(Field.RUNWAY_B, rs.getString(Field.RUNWAY_B.toString()));
-                results.put(Field.B_TAKEOFF_RESTRICTION, rs.getString(Field.B_TAKEOFF_RESTRICTION.toString()));
-                results.put(Field.B_TAKEOFF_NOTE, rs.getString(Field.B_TAKEOFF_NOTE.toString()));
-                results.put(Field.B_LANDING_RESTRICTION, rs.getString(Field.B_LANDING_RESTRICTION.toString()));
-                results.put(Field.B_LANDING_NOTE, rs.getString(Field.B_LANDING_NOTE.toString()));
-                results.put(Field.PDF_PATH, rs.getString(Field.PDF_PATH.toString()));
-                results.put(Field.IMAGE_PATH, rs.getString(Field.IMAGE_PATH.toString()));
-                results.put(Field.P1_TEXT_1, rs.getString(Field.P1_TEXT_1.toString()));
-                results.put(Field.P1_TEXT_2, rs.getString(Field.P1_TEXT_2.toString()));
-                results.put(Field.P1_TEXT_3, rs.getString(Field.P1_TEXT_3.toString()));
-                results.put(Field.P1_TEXT_4, rs.getString(Field.P1_TEXT_4.toString()));
-                results.put(Field.P1_TEXT_5, rs.getString(Field.P1_TEXT_5.toString()));
-                results.put(Field.P1_TEXT_6, rs.getString(Field.P1_TEXT_6.toString()));
-                results.put(Field.P1_TEXT_7, rs.getString(Field.P1_TEXT_7.toString()));
-                results.put(Field.IMAGE_PATH, rs.getString(Field.IMAGE_PATH.toString()));
+                for(Field f: Field.values()){
+                    results.put(f,rs.getString(f.toString()));
+                }
             }
-
+            
         return results;
 	}
 
 	@Override
 	public boolean updateRunway(Runway runway)throws SQLException{
-        ///this currently does nothing.
-        ///ResultSet rs ;
-        throw new UnsupportedOperationException();
-	}
+            String runwayID;
+            String aircraftID;
+            //ResultSet rs = connection.createStatement().executeQuery(runwayID)
+            ResultSet rs = connection.createStatement().executeQuery("SELECT RUNWAY_IDENTIFIER "
+                                                        + "FROM Runway "
+                                                        + "WHERE RUNWAY_IDENTIFIER = '" + runway.get(Field.RUNWAY_IDENTIFIER.toString()) + "' ");
+        
+            if(rs.next() == false){
+                connection.createStatement().executeQuery("INSTERT INTO Runway "
+                                                        + "("+ Field.RUNWAY_IDENTIFIER.toString() +") "
+                                                        + "VALUES (" + runway.get(Field.RUNWAY_IDENTIFIER.toString())+ ")");
+            }
+            
+            rs = connection.createStatement().executeQuery("SELECT Aircraft." + Field.AIRCRAFT_IDENTIFIER.toString() + " "
+                                                        + "FROM Runway JOIN Aircraft "
+                                                        + "ON Runway." + Field.RUNWAY_IDENTIFIER.toString() + " = Aircraft.RUNWAY_ID "
+                                                        + "WHERE Runway."+ Field.RUNWAY_IDENTIFIER.toString() + " = '" + runway.get(Field.RUNWAY_IDENTIFIER.toString()) +"' "
+                                                        + "AND Aircraft."+ Field.AIRCRAFT_IDENTIFIER.toString() +" = '" + runway.get(Field.AIRCRAFT_IDENTIFIER.toString()) + "'");
+            
+            if(rs.next() == false){
+                connection.createStatement().executeQuery("INSTERT INTO Aircraft "
+                                                        + "(RUNWAY_ID,"+ Field.AIRCRAFT_IDENTIFIER.toString() +") "
+                                                        + "VALUES ("+ runway.get(Field.RUNWAY_IDENTIFIER.toString())+"," + runway.get(Field.AIRCRAFT_IDENTIFIER.toString())+ ")");
+            }
+            
+            
+            return true;
+        }
 	
 	
 	// This method is an example of how to query and work in a JDBC Context
@@ -373,12 +360,6 @@ public class PrimaryJdbcSource implements DatabaseConnection {
         }
 	    	
 	}
-        
-    public ResultSet SQLquery(String SQLstatement)throws SQLException{
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(SQLstatement);
-        return rs;
-    }
         
     @Override
     public boolean close(){
