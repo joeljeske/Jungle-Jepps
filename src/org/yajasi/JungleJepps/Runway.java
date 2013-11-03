@@ -32,7 +32,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 			throw new ClassCastException("Key is not of type enum org.yajasi.JungleJepps.Field or java.lang.String");
 		
 		String val = super.get(field);
-		return val == null ? "" : val; //Return empty string instead of null
+                return val == null ? "" : val; //Return empty string instead of null
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	 * @return
 	 */
 	public boolean isFieldReadonly(Field field){
-		return DatabaseManager.getSettings().isFieldOverridden(field);
+		return false;//DatabaseManager.getSettings().isFieldOverridden(field);
 	}
 	
 	/** 
@@ -102,8 +102,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 		if(key instanceof Field)
 			return get( (Object) key );
 		
-		else
-			return null; 
+		return null; 
 	}
 	
 
