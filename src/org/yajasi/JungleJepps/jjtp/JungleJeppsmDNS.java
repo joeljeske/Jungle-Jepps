@@ -44,7 +44,9 @@ public class JungleJeppsmDNS {
 	// Demonstration function
 	public static void main(String[] args) throws InterruptedException {
 		 JungleJeppsmDNS.startBroadcasting();
-		 
+		 Thread.sleep(8000);
+		 JungleJeppsmDNS.stopBroadcasting();
+		 /*
 		 JungleJeppsmDNS.startDiscovery();
 		 Thread.sleep(1000);
 		 
@@ -55,6 +57,7 @@ public class JungleJeppsmDNS {
 		 
 		 
 		 JungleJeppsmDNS.stopBroadcasting();
+		 */
 	 }
 	
 	/**

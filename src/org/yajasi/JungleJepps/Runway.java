@@ -1,6 +1,7 @@
 package org.yajasi.JungleJepps;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.yajasi.JungleJepps.db.DatabaseManager;
@@ -81,8 +82,9 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	/**
 	 * Used to publish the Runway PDF to the repository.
 	 * @return publishedFile
+	 * @throws IOException 
 	 */
-	public File publish(){
+	public File publish() throws IOException{
 		return HtmlPreparer.publish(this);		
 	}
 
@@ -97,8 +99,11 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 
 	@Override
 	public String get(Enum key) {
-		// TODO Auto-generated method stub
-		return null;
+		if(key instanceof Field)
+			return get( (Object) key );
+		
+		else
+			return null; 
 	}
 	
 

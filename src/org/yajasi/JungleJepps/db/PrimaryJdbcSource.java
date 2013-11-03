@@ -69,6 +69,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
         return results;
     }
 
+
 	@Override
 	public String[] getAllRunwayIds(String aircraftId) throws SQLException{
 		CachedRowSetImpl crs = new CachedRowSetImpl();
@@ -307,7 +308,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	    	
 	}
         
-    public CachedRowSetImpl SQLquery(String SQLstatement)throws SQLException{
+    public CachedRowSetImpl SQLquery(String SQLstatement) throws SQLException{
         CachedRowSetImpl crs = new CachedRowSetImpl();
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(SQLstatement);

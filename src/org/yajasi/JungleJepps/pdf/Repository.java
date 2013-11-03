@@ -25,6 +25,16 @@ public class Repository {
 		REPOSITORY = new File(path);
 	}
 	
+	public static void main(String[] args){
+		Runway r = new Runway();
+		r.put(Field.RUNWAY_IDENTIFIER, "KIW");
+		r.put(Field.AIRCRAFT_IDENTIFIER, "PC-5");
+
+		File bFolder = getRunwayBaseFolder(r);
+		System.out.println(bFolder.getAbsolutePath());
+	}
+	
+	
 	/**
 	 * Used to get the file where the PDF should be published.
 	 * @param runway
@@ -50,6 +60,20 @@ public class Repository {
 		File archiveLocation = getNoConflictFile( new File(runwayBase, archiveName + descriptiveName + DOCUMENT_EXTENSION) );
 		
 		return archiveLocation;
+	}
+	
+	/**
+	 * Used to get a File handle on the image at the path
+	 * that is used in the Runway for the Field ENUM, Field.IMAGE_PATH 
+	 * @param runway
+	 * @return File photo file
+	 */
+	public static File getPhotoFile(Runway runway){
+		File base = getRunwayBaseFolder(runway);
+		String relPath = IMAGE_FOLDER + File.separator + runway.get(Field.IMAGE_PATH);
+		File image = new File(base, relPath);
+		
+		return image;
 	}
 	
 	/**
@@ -154,12 +178,15 @@ public class Repository {
 	private static File getRunwayBaseFolder(Runway runway){
 		String runwayPath;
 		
-		runwayPath  = File.pathSeparator;
+		runwayPath  = File.separator;
 		runwayPath += runway.get(Field.AIRCRAFT_IDENTIFIER);
-		runwayPath += File.pathSeparator;
+		runwayPath += File.separator;
 		runwayPath += runway.get(Field.RUNWAY_IDENTIFIER);
-		runwayPath += File.pathSeparator;
+		runwayPath += File.separator;
 		
-		return new File(REPOSITORY, runwayPath);
+		File base = new File(REPOSITORY, runwayPath);
+		
+		base.mkdirs();
+		return base;
 	}
 }

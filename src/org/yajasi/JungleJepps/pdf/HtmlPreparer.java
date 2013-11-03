@@ -2,7 +2,6 @@ package org.yajasi.JungleJepps.pdf;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,7 +26,7 @@ import com.lowagie.text.DocumentException;
 
 public class HtmlPreparer {
 	
-	private static final String HOOK_TAG = "data";
+	private static final String HOOK_TAG = "runway";
 	private static final String LABEL_TAG = "label";
 	private static final String UNIT_TAG = "unit";
 	
@@ -42,20 +41,27 @@ public class HtmlPreparer {
 	private String parentUrl;
 	
 	// Does simple test to demo functionality
-	public static void main(String[] args) {
-		Runway runway = null;
+	public static void main(String[] args) throws IOException {
+		Runway runway = new Runway();
+		for(Field f : Field.values())
+			runway.put(f, f.toString());
+		
+		runway.put(Field.IMAGE_PATH, "kiwi_image.png");
+
 		publish(runway);
 	}
 	
 	
-	public static File publish(Runway runway){
+	public static File publish(Runway runway) throws IOException{
 		File output = Repository.getPublishLocation(runway);
 		return publish(runway, output);
 	}
 	
 	public static File publish(Runway runway, File output){
-		String imageUrl = runway.get(Field.IMAGE_PATH);
-		return new HtmlPreparer().prepareAndPublish(runway, imageUrl, output);
+		File image = Repository.getPhotoFile(runway);
+		File out = new HtmlPreparer().prepareAndPublish(runway, image, output);
+		runway.put(Field.PDF_PATH, out.getAbsolutePath());
+		return out;
 	}
 	
 	/**
@@ -69,13 +75,14 @@ public class HtmlPreparer {
 	 * @param dataMap
 	 * @param outputUrl
 	 */
-	public File prepareAndPublish(Runway runway, String imageUrl, File output){
+	public File prepareAndPublish(Runway runway, File image, File output){
 		dom = null;
 		parentUrl = null;
 		
 		loadTemplate();
 		injectData(runway);
 
+		String imageUrl = image.getAbsolutePath();
 		injectImage(imageUrl);
 		
 		try {			
@@ -177,7 +184,16 @@ public class HtmlPreparer {
         	if(tag.getNodeType() == Node.ELEMENT_NODE)
         	{
             	String id = tag.getAttributes().getNamedItem( ATTR ).getNodeValue();
-            	Field val = Enum.valueOf(type, id);
+            	
+            	Enum val;
+            	try {
+            		val = Enum.valueOf(type, id.toUpperCase());
+            		
+            		//The value is not the ENUM
+            	} catch(IllegalArgumentException e){ 
+            		e.printStackTrace();
+            		continue;
+            	}
             	String text = source.get( val ); 
             	
             	
@@ -229,6 +245,7 @@ public class HtmlPreparer {
 	private void injectImage(String imageUrl){
 		final String IMAGE_URL_ATTRIBUTE_NAME = "src";
 		final String IMAGE_TAG_NAME = "img";
+		final String ID_ATTR = "id";
 		
 		if(dom == null) return;
 		
@@ -250,13 +267,14 @@ public class HtmlPreparer {
 				NamedNodeMap attrs = img.getAttributes();
 				
 				// Get the attribute with the name matching HOOK_NAME_ATTR (e.g. "id")
-				Node id = attrs.getNamedItem( FIELD_ATTR );
+				Node id = attrs.getNamedItem( ID_ATTR );
 				
 				// If there is and ID attribute node and the text equals TOPO_DOM_ID
 				if( id != null && TOPO_DOM_ID.equalsIgnoreCase( id.getTextContent() ) )
 				{
+					Node src;
 					// Find the src attribute
-					Node src = attrs.getNamedItem( IMAGE_URL_ATTRIBUTE_NAME );
+					src = attrs.getNamedItem( IMAGE_URL_ATTRIBUTE_NAME );
 					
 					// If there was not a source attribute
 					if( src == null)
@@ -267,7 +285,7 @@ public class HtmlPreparer {
 					}
 					
 					// Set the text node to contain the imageUrl 
-					// <img src="C:\Users\User\Public\JungleJepps\Repository\KIWI\B747\topo.jpg";
+					// <img src="C:\Users\User\Public\JungleJepps\Repository\KIWI\C-5\topo.jpg";
 					src.setTextContent( imageUrl );
 				}
 			}

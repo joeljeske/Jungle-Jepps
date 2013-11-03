@@ -203,12 +203,13 @@ public class SettingsManager implements ValueByEnum{
 		
 		/* Initialize Settings Defaults */
 		String defaultHomeDirectory = System.getProperty("user.home") + File.separator + "JungleJepps" + File.separator;
+		
 		setValue(Settings.IS_PRIMARY, 				true);
 		setValue(Settings.REPOSITORY_PATH, 			defaultHomeDirectory);
 		setValue(Settings.PRIMARY_JDBC_URI, 		"jdbc:sqlite:JJDB.db");
 		setValue(Settings.PRIMARY_JDBC_CLASS_PATH, 	"org.sqlite.JDBC");
 		setValue(Settings.IS_OPERATIONS_DB, 		false);
-		setValue(Settings.ALITUDE_UNITS, 			"ft");
+		setValue(Settings.ALTITUDE_UNITS, 			"ft");
 		setValue(Settings.WEIGHT_UNITS, 			"kg");
 		setValue(Settings.DIMENSION_UNITS, 			"nm");
 		setValue(Settings.DISTANCE_UNITS, 			"m");
