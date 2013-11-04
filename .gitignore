@@ -8,3 +8,5 @@
 /JJDB.db
 /build.xml
 /config
+/.classpath
+/.project
