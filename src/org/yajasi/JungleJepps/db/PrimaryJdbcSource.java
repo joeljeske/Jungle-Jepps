@@ -361,18 +361,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
         }
 	    	
 	}
-<<<<<<< HEAD
-        
-    public CachedRowSetImpl SQLquery(String SQLstatement) throws SQLException{
-        CachedRowSetImpl crs = new CachedRowSetImpl();
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(SQLstatement);
-        crs.populate(rs);
-        return crs;
-    }
-=======
->>>>>>> branch 'master' of https://joeljeske@bitbucket.org/junglejeppsteam/jungle-jepps.git
-        
+
     @Override
     public boolean close(){
         try
