@@ -19,10 +19,15 @@ public interface DatabaseConnection {
 	
 	/**
 	 * Get a list of every runway Id available in the database.
-	 * @return String[] Array of runway Ids
+	 * @return String[] Array of runway Ids available to an aircraft
 	 */
 	public String[] getAllRunwayIds(String aircraftId)throws SQLException;
 	
+        /**
+	 * Get a list of every runway Id available in the database.
+	 * @return String[] Array of runway Ids
+	 */
+        public String[] getAllRunwayIds()throws SQLException;
 	
 	/**
 	 * Get the runway with the corresponding runway.
