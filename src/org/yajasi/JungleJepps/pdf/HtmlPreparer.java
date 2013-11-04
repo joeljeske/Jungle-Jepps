@@ -26,7 +26,7 @@ import com.lowagie.text.DocumentException;
 
 public class HtmlPreparer {
 	
-	private static final String HOOK_TAG = "runway";
+	private static final String HOOK_TAG = "data";
 	private static final String LABEL_TAG = "label";
 	private static final String UNIT_TAG = "unit";
 	
@@ -217,6 +217,7 @@ public class HtmlPreparer {
             	{
             		text = ( text == null ? "" : text );
             		tag.setTextContent( text );
+            		System.out.println("--Injected--    " + id + ": " + text);
             	}
         	} // if element node
         } // for all data tags
