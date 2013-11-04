@@ -8,9 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 import java.util.ArrayList;
+import java.util.Date;
 import java.io.File;
-
-//import com.sun.rowset.ResultSet;
 
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.Field;
@@ -79,33 +78,29 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                 I++;
             }
 
-            for(I = 0; I < results.size(); I++){
-                System.out.println(results.get(I));
-            }
+            //for(I = 0; I < results.size(); I++){
+            //    System.out.println(results.get(I));
+            //}
 
             return results.toArray(new String[results.size()]);
         }
 
-
 	@Override
         public String[] getAllRunwayIds(String aircraftId) throws SQLException{
+            
             ResultSet rs ;
             ArrayList<String> results = new ArrayList<String>();
             int I = 0;
 
             rs = connection.createStatement().executeQuery("SELECT RUNWAY_IDENTIFIER FROM Runway JOIN Aircraft "
                                                         + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_ID "
-                                                        + "WHERE Aircraft." + Field.AIRCRAFT_IDENTIFIER.toString() + " =\"" + aircraftId +"\"");
+                                                        + "WHERE Aircraft." + Field.AIRCRAFT_IDENTIFIER + " = '" + aircraftId +"'");
             
             while(rs.next()){
                 results.add(rs.getString("RUNWAY_IDENTIFIER"));
                 I++;
             }
-
-            for(I = 0; I < results.size(); I++){
-                System.out.println(results.get(I));
-            }
-
+            
             return results.toArray(new String[results.size()]);
         }
         
@@ -123,10 +118,6 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                 I++;
             }
 
-            for(I = 0; I < results.size(); I++){
-                System.out.println(results.get(I));
-            }
-
             return results.toArray(new String[results.size()]);
             
         }
@@ -139,7 +130,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             rs = connection.createStatement().executeQuery("SELECT * "
                                                         + "FROM Runway JOIN Aircraft "
                                                         + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_ID "
-                                                        + "WHERE Runway.RUNWAY_IDENTIFIER = \"KIW\" AND Aircraft.AIRCRAFT_IDENTIFIER = \"PC-6\" "
+                                                        + "WHERE Runway.RUNWAY_IDENTIFIER ='" + runwayId + "' AND Aircraft.AIRCRAFT_IDENTIFIER = '" + aircraftId + "' "
                                                         );
             if(rs.next()){
                 for(Field f: Field.values()){
@@ -152,32 +143,98 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 
 	@Override
 	public boolean updateRunway(Runway runway)throws SQLException{
-            String runwayID;
-            String aircraftID;
+            Date date = new Date();
             //ResultSet rs = connection.createStatement().executeQuery(runwayID)
             ResultSet rs = connection.createStatement().executeQuery("SELECT RUNWAY_IDENTIFIER "
                                                         + "FROM Runway "
-                                                        + "WHERE RUNWAY_IDENTIFIER = '" + runway.get(Field.RUNWAY_IDENTIFIER.toString()) + "' ");
-        
+                                                        + "WHERE RUNWAY_IDENTIFIER = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' ");
+            
             if(rs.next() == false){
-                connection.createStatement().executeQuery("INSTERT INTO Runway "
+                
+                connection.createStatement().executeUpdate("INSERT INTO Runway "
                                                         + "("+ Field.RUNWAY_IDENTIFIER.toString() +") "
-                                                        + "VALUES (" + runway.get(Field.RUNWAY_IDENTIFIER.toString())+ ")");
+                                                        + "VALUES('" + runway.get(Field.RUNWAY_IDENTIFIER) + "')");
             }
             
             rs = connection.createStatement().executeQuery("SELECT Aircraft." + Field.AIRCRAFT_IDENTIFIER.toString() + " "
                                                         + "FROM Runway JOIN Aircraft "
                                                         + "ON Runway." + Field.RUNWAY_IDENTIFIER.toString() + " = Aircraft.RUNWAY_ID "
-                                                        + "WHERE Runway."+ Field.RUNWAY_IDENTIFIER.toString() + " = '" + runway.get(Field.RUNWAY_IDENTIFIER.toString()) +"' "
-                                                        + "AND Aircraft."+ Field.AIRCRAFT_IDENTIFIER.toString() +" = '" + runway.get(Field.AIRCRAFT_IDENTIFIER.toString()) + "'");
+                                                        + "WHERE Runway."+ Field.RUNWAY_IDENTIFIER.toString() + " = '" + runway.get(Field.RUNWAY_IDENTIFIER) +"' "
+                                                        + "AND Aircraft."+ Field.AIRCRAFT_IDENTIFIER.toString() +" = '" + runway.get(Field.AIRCRAFT_IDENTIFIER) + "'");
             
             if(rs.next() == false){
-                connection.createStatement().executeQuery("INSTERT INTO Aircraft "
+                connection.createStatement().executeUpdate("INSERT INTO Aircraft "
                                                         + "(RUNWAY_ID,"+ Field.AIRCRAFT_IDENTIFIER.toString() +") "
-                                                        + "VALUES ("+ runway.get(Field.RUNWAY_IDENTIFIER.toString())+"," + runway.get(Field.AIRCRAFT_IDENTIFIER.toString())+ ")");
+                                                        + "VALUES ('"+ runway.get(Field.RUNWAY_IDENTIFIER)+"','" + runway.get(Field.AIRCRAFT_IDENTIFIER)+ "')");
             }
             
-            
+            for(Field f: runway.keySet()){
+                int table = 0;//0 = skip 1 = item goes in the aircraft table 2 = item goes in the runway table. no other number should be set.
+                switch(f){
+                    case RUNWAY_IDENTIFIER: table = 0; break;
+                    case RUNWAY_NAME: table = 2; break;
+                    case AIRCRAFT_IDENTIFIER: table = 0; break;
+                    case LONGITUDE: table = 2; break;
+                    case LATITUDE: table = 2; break;
+                    case INSPECTION_NA: table = 2; break;
+                    case INSPECTION_DATE: table = 2; break;
+                    case INSPECTOR_NAME: table = 2; break;
+                    case INSPECTION_DUE: table = 2; break;
+                    case CLASSIFICATION: table = 2; break;
+                    case FREQUENCY_1: table = 2; break;
+                    case FREQUENCY_2: table = 2; break;
+                    case LANGUAGE_GREET: table = 2; break;
+                    case ELEVATION: table = 2; break;
+                    case LENGTH: table = 2; break;
+                    case WIDTH_TEXT: table = 2; break;
+                    case TDZ_SLOPE: table = 2; break;
+                    case IAS_ADJUSTMENT: table = 1; break;
+                    case PRECIPITATION_ON_SCREEN: table = 1; break;
+                    case RUNWAY_A: table = 2; break;
+                    case A_TAKEOFF_RESTRICTION: table = 1; break;
+                    case A_TAKEOFF_NOTE: table = 1; break;
+                    case A_LANDING_RESTRICTION: table = 1; break;
+                    case A_LANDING_NOTE: table = 1; break;
+                    case RUNWAY_B: table = 2; break;
+                    case B_TAKEOFF_RESTRICTION: table = 1; break;
+                    case B_TAKEOFF_NOTE: table = 1; break;
+                    case B_LANDING_RESTRICTION: table = 1; break;
+                    case B_LANDING_NOTE: table = 1; break;
+                    case P1_TEXT_1: table = 1; break;
+                    case P1_TEXT_2: table = 1; break;
+                    case P1_TEXT_3: table = 1; break;
+                    case P1_TEXT_4: table = 1; break;
+                    case P1_TEXT_5: table = 1; break;
+                    case P1_TEXT_6: table = 1; break;
+                    case P1_TEXT_7: table = 1; break;
+                    case P2_TEXT_1: table = 1; break;
+                    case P2_TEXT_2: table = 1; break;
+                    case P2_TEXT_3: table = 1; break;
+                    case P2_TEXT_4: table = 1; break;
+                    case P2_TEXT_5: table = 1; break;
+                    case P2_TEXT_6: table = 1; break;
+                    case P2_TEXT_7: table = 1; break;
+                    case PDF_PATH: table = 1; break;
+                    case IMAGE_PATH: table = 1; break;
+                }
+                
+                switch(table){
+                    case 0: break;
+                    case 1:connection.createStatement().executeUpdate("UPDATE Aircraft "
+                                                                    + "SET "+ f + " = '" + runway.get(f) + "' "
+                                                                    + "WHERE Aircraft.RUNWAY_ID = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' "
+                                                                    + "AND Aircraft.AIRCRAFT_IDENTIFIER = '" + runway.get(Field.AIRCRAFT_IDENTIFIER) + "' ");
+                                                                    break;
+                    case 2:connection.createStatement().executeUpdate("UPDATE Runway "
+                                                                    + "SET "+ f + " = '" + runway.get(f) + "' "
+                                                                    + "WHERE Runway." + Field.RUNWAY_IDENTIFIER + " = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' ");
+                                                                    break;
+                }
+            }
+            connection.createStatement().executeUpdate("UPDATE Aircraft "
+                                                    + "SET LAST_UPDATE = '" + new Date().toString() + "' "
+                                                    + "WHERE Aircraft.RUNWAY_ID = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' "
+                                                    + "AND Aircraft.AIRCRAFT_IDENTIFIER = '" + runway.get(Field.AIRCRAFT_IDENTIFIER) + "' ");
             return true;
         }
 	
@@ -185,14 +242,19 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	// This method is an example of how to query and work in a JDBC Context
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {//DBbuild test
             
+            System.out.println("This is the main method of the PrimaryJdbcCource Class\n");
             PrimaryJdbcSource db = new PrimaryJdbcSource("org.sqlite.JDBC", "jdbc:sqlite:JJDB.db");
             String[] aircraftIds, runwayIds;
             Runway runway;
 
             aircraftIds = db.getAllAircraftIds();
+            System.out.println("number of aircraft= " + aircraftIds.length);
+            System.out.println("aircraftIds[0]= " + aircraftIds[0]);
             runwayIds = db.getAllRunwayIds( aircraftIds[0] );
+            System.out.println("number of runway= " + runwayIds.length);
+            System.out.println("runwayIds[0]= " + runwayIds[0]);
             runway = db.getRunway(runwayIds[0], aircraftIds[0]); 
-
+            
             System.out.print("\nAircraft IDs: ");
             for(String aid : aircraftIds)
                     System.out.print(aid + ", ");
@@ -200,11 +262,41 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             System.out.print("\nRunway IDs: ");
             for(String rid : runwayIds)
                     System.out.print(rid + ", ");
-
+            
+            System.out.println("Updating database");
+            runway.clear();
+            runway.put(Field.AIRCRAFT_IDENTIFIER, "PC-6");
+            runway.put(Field.RUNWAY_IDENTIFIER, "KIW");
+            runway.put(Field.INSPECTOR_NAME, "Sam");
+            
+            db.updateRunway(runway);
+            
+            runway = db.getRunway(runwayIds[0], aircraftIds[0]);
             System.out.print("\n\n-----Field Printouts-----\n");
             for(Field f : runway.keySet())
                     System.out.println(f.toString() + ": " + runway.get(f) );
             
+            System.out.println("un-Updating database");
+            runway.clear();
+            runway.put(Field.AIRCRAFT_IDENTIFIER, "PC-6");
+            runway.put(Field.RUNWAY_IDENTIFIER, "KIW");
+            runway.put(Field.INSPECTOR_NAME, "Jesse");
+            
+            db.updateRunway(runway);
+            
+            System.out.println("adding row to database");
+            
+            runway.clear();
+            for(Field f: Field.values()){
+                runway.put(f, ""+(int)(Math.random()*100));
+            }
+            
+            /*runway.put(Field.RUNWAY_IDENTIFIER, r_id);
+            runway.put(Field.RUNWAY_NAME, "test");
+            runway.put(Field.INSPECTOR_NAME, "Joe");
+            runway.put(Field.IMAGE_PATH, "image file");*/
+            
+            db.updateRunway(runway);
         }
 	
 	public void setupRelationships() throws SQLException{
@@ -334,34 +426,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	
 		statement.close();
 	}
-	
-	public void runSample() throws SQLException{
-        System.out.println("sample...");
-        Statement statement = connection.createStatement();
-		
-		ResultSet rs = statement.executeQuery("SELECT * FROM runway");
-		System.out.println("Test of runway table:");
-		while( rs.next() )
-		{
-	       // read the result set
-            System.out.println("ID = " + rs.getString("RUNWAY_IDENTIFIER"));
-            System.out.println("LENGTH = " + rs.getInt("LENGTH"));
-            System.out.println("WIDTH = " + rs.getInt("WIDTH"));
-            System.out.println("ELEVATION = " + rs.getInt("LENGTH"));
-        }
-                
-        rs = statement.executeQuery("SELECT * FROM Aircraft");
-		
-		System.out.println("Test of Aircraft table:");
-		while( rs.next() )
-		{
-	        // read the result set
-            System.out.println("Runway = " + rs.getString("RUNWAY_IDENTIFIER"));
-            System.out.println("Aircraft = " + rs.getString("AIRCRAFT_IDENTIFIER"));
-        }
-	    	
-	}
-
+        
     @Override
     public boolean close(){
         try
