@@ -2,3 +2,9 @@
 /sample.db
 .DS_Store
 .gitignore_global
+/nbproject/private/
+/build/
+/nbproject
+/JJDB.db
+/build.xml
+/config
