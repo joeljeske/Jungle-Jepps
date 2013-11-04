@@ -35,6 +35,11 @@ public class DataMerge implements DatabaseConnection{
 	public String[] getAllAircraftIds() {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public String[] getAllRunwayIds() {
+		throw new UnsupportedOperationException();
+	}
 	
 	@Override
 	public String[] getAllRunwayIds(String aircraftId) {

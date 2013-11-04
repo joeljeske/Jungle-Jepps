@@ -60,6 +60,10 @@ public class Client implements DatabaseConnection {
 		throw new UnsupportedOperationException();
 	}
 	
+	public String[] getAllRunwayIds() {
+		throw new UnsupportedOperationException();
+	}
+	
 	/**
 	 * This method will return all the runway Ids for this database connection
 	 */
