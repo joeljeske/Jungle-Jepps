@@ -217,6 +217,7 @@ public class HtmlPreparer {
             	{
             		text = ( text == null ? "" : text );
             		tag.setTextContent( text );
+            		
             		System.out.println("--Injected--    " + id + ": " + text);
             	}
         	} // if element node
