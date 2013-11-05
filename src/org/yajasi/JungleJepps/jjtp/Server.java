@@ -1,24 +1,28 @@
 package org.yajasi.JungleJepps.jjtp;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.File;
-
 import java.net.InetSocketAddress;
+import java.net.URI;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
-
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 import org.yajasi.JungleJepps.db.DatabaseManager;
 import org.yajasi.JungleJepps.db.SettingsManager;
-
+import org.yajasi.JungleJepps.pdf.Repository;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.*;
@@ -29,7 +33,7 @@ public class Server {
 	private static Server instance;
 	private static boolean started = false;
 
-	private static final File WEB_ROOT = new File("/src/xhtml/");
+	private static final File WEB_ROOT = new File("src/xhtml/");
 
 	public static void main(String[] args) throws IOException{
 		start();
@@ -81,11 +85,6 @@ public class Server {
 		private DatabaseConnection db;
 		
 		public JJTPHandler(DatabaseConnection db){
-			/*
-			if(db == null)
-				throw new IllegalArgumentException();
-			*/
-			
 			this.db = db;
 		}
 
@@ -109,21 +108,14 @@ public class Server {
 			{
 				doPost( exchange );
 			}
-			else if( method.equals("PUT") )
+			else if( method.equals("PATCH") )
 			{
-				doPut( exchange );
+				doPatch( exchange );
 			}
 			else
 			{
-				String err405 = "<html><head><title>405 Method Not Allowed</title></head><body><h1>Method not allowed</h1><p>The requested HTTP method is not allowed on this server.</p><hr /></body></html>";
-				OutputStream os;
-
-				//HTTP Response Code 405: Method not allowed
-				exchange.sendResponseHeaders(405, err405.length()); 
-				
-				os = exchange.getResponseBody();
-				os.write( err405.getBytes() );
-				os.close();
+				//Method not allowed
+				templateResponse(exchange, HttpStatus.SC_METHOD_NOT_ALLOWED);
 			}
 	
 		}
@@ -135,186 +127,315 @@ public class Server {
 		 * @throws IOException 
 		 */
 		private void doGet(HttpExchange exchange) throws IOException{
-			String type = exchange.getRequestHeaders().getFirst("Accept");
+			String path = exchange.getRequestURI().getPath().toLowerCase();
 			System.out.println("Handling GET...");
 			
-			if( type.equalsIgnoreCase( "application/json" ) )
+			if( path.startsWith("/application/") )
 			{
 				handleGetDatabaseRequest( exchange );
 			}
-			else if(type.equalsIgnoreCase( "text/plain" ) && 
-					exchange.getRequestURI().toASCIIString().equalsIgnoreCase("/settings") )
+			else if( path.startsWith("/settings") )
 			{
 				handleGetSettingsRequest( exchange );
 			} 
-			else 
+			else if( path.startsWith("/repository/") )
 			{
-				// handle general http html/pdf requests
+				handleRepository(exchange);
 			}
-			
-		/*	if(  )
-				writeDefault(exchange);
-			else if( exchange.getRequestURI().toASCIIString().endsWith(".pdf") )
-			*/	
-		}
-		
-		private void handleGetDatabaseRequest(HttpExchange exchange) throws IOException{
-			System.out.println("Handling JSON GET...");
-			exchange.getResponseHeaders().add("content-type", "application/json");
-			Gson gson = new Gson();
-			DatabaseConnection db = DatabaseManager.getDatabase();
-			OutputStream os = exchange.getResponseBody();
-			
-			String path = exchange.getRequestURI().getPath();
-			
-			if( path.startsWith( "/*" ) )
+			else
 			{
-				System.out.println("Getting Runway Names...");
-				// Get all runway names 
-				String[] runwayIds;
-				//runwayIds = db.getAllRunwayIds(aircraftId);
-				runwayIds = new String[]{"KIWI", "AMA","JFK"};
-				String json = gson.toJson(runwayIds);
-				
-				System.out.println(json);
-
-				exchange.sendResponseHeaders(HttpStatus.SC_OK, json.length());
-				os.write( json.getBytes() );
-				os.close();
-			}
-			else if( path.startsWith( "/runway" ) )
-			{
-				String runwayId = null; 
-				List<NameValuePair> params = new URIBuilder(exchange.getRequestURI()).getQueryParams();
-				for(NameValuePair param : params)
-					if( param.getName().equalsIgnoreCase("rid") )
-						runwayId = param.getValue();
-				if(runwayId == null)
-				System.out.println("Getting Runway: " + runwayId);
-				// Get specific runway 
-				Runway runway;
-				//runway = db.getRunway(runwayId);
-				runway = new Runway();
-				String json = gson.toJson(runway);
-				
-				System.out.println(json);
-
-				exchange.sendResponseHeaders(HttpStatus.SC_OK, json.length());
-				os.write( json.getBytes() );
-				os.close();
-			}
-			else {
 				templateResponse(exchange, HttpStatus.SC_NOT_FOUND);
 			}
 		}
 		
-		private void handleGetSettingsRequest(HttpExchange exchange) throws IOException {
-			//SettingsManager.sentToOutputStream(stream);
-			Long size = SettingsManager.getLength();
-			exchange.sendResponseHeaders(HttpStatus.SC_OK, size);
-			OutputStream os = exchange.getResponseBody(); 
-			InputStream is = SettingsManager.getSettingsStream();
-			
-			write( is, os, size.intValue() );
-			
-			os.close();
-		}
-		
-		
-		private void writeDefault(HttpExchange exchange) throws IOException{
-			File outputHtml = new File("src/xhtml/pdf-test.html");
-			int size = (int) outputHtml.length();
-			InputStream input = new FileInputStream(outputHtml);
-
-			exchange.getResponseHeaders().add("content-type", "text/html");
-			exchange.sendResponseHeaders(200, size);
-			
-			OutputStream os = exchange.getResponseBody();
-			byte[] bytes = new byte[ size ];
-			input.read(bytes);
-			
-			os.write(bytes);
-			
-			//new FileInputStream( outputHtml ).getChannel().transferTo( Long.valueOf(0), (Long) outputHtml.length(), (WritableByteChannel) os);
-			os.close();
-		}
-		
-		private void writePdf(HttpExchange exchange) throws IOException{
-	
-			
-			File pdf = new File("pdf-repo/output.pdf");
-			InputStream input = new FileInputStream(pdf);
-
-			Long size = pdf.length();
-			exchange.getResponseHeaders().add("content-type", "application/pdf");
-			exchange.sendResponseHeaders(200, size);
-			
-			write(input, exchange.getResponseBody(), size.intValue() );
-			
-			exchange.getResponseBody().close();			
-		}
-		
-		private void write(InputStream is, OutputStream os, int size){
-			byte[] bytes = new byte[ size ];
-			try {
-				is.read(bytes);
-				os.write(bytes);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		
-		
-		/**
-		 * Handles Sync requests from JJ Mobile 
-		 * @param exchange
-		 * @throws IOException 
-		 */
-		private void doPost(HttpExchange exchange) throws IOException{
-			String resp = "<h1>METHOD: POST</h1>";
-			
-			exchange.sendResponseHeaders(200, resp.length());
-			
-			OutputStream os = exchange.getResponseBody();
-			os.write( resp.getBytes() );
-			os.close();
-		}
 		
 		/**
 		 * Handles upsert requests from client
 		 * @param exchange
 		 */
-		private void doPut(HttpExchange exchange){
+		private void doPatch(HttpExchange exchange){
+			Gson json = new Gson();
+			BufferedReader reader;
+			Runway runway;
+			reader = new BufferedReader( new InputStreamReader( exchange.getRequestBody() ) );
 			
-		}		
+			runway = json.fromJson(reader, Runway.class);
+			
+			try {
+				db.updateRunway(runway);
+				exchange.sendResponseHeaders(HttpStatus.SC_OK, 0L);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
+		
+		/**
+		 * Handles sync requests from JJ Mobile
+		 * @param exchange
+		 */
+		private void doPost(HttpExchange exchange){
+		}	
+		
+		private void handleGetDatabaseRequest(HttpExchange exchange) throws IOException{
+			OutputStream os = exchange.getResponseBody();
+			String output = null;
+			String path = exchange.getRequestURI().getPath().toLowerCase();
+			System.out.println("Handling application request...");
+			
+			if( path.startsWith("/application/runway/") )
+			{
+				output = getRunwayData(exchange);
+			}
+			
+			else if( path.startsWith( "/application/aircraft/" ) )
+			{
+				output = getAircraftData(exchange);
+			}
+			else if( path.startsWith( "/application/aircraft/" ) )
+			{
+				output = getAircraftData(exchange);
+			}
+			else 
+			{
+				templateResponse(exchange, HttpStatus.SC_NOT_FOUND);
+			}
+			
+			
+			exchange.sendResponseHeaders(HttpStatus.SC_OK, output.length());
+			os.write( output.getBytes() );
+			os.close();
+
+		}
+		
+		/**
+		 * This method handles sending the settings to the client.
+		 * It serializes all the settings and then sends it. 
+		 * @param exchange
+		 * @throws IOException
+		 */
+		private void handleGetSettingsRequest(HttpExchange exchange) throws IOException {
+			exchange.getResponseHeaders().add("Content-type", "application/json");
+			Long size = SettingsManager.getLength();
+			exchange.sendResponseHeaders(HttpStatus.SC_OK, size);
+			OutputStream output = exchange.getResponseBody(); 
+			InputStream input = SettingsManager.getSettingsStream();
+			write(input, output);
+		}
+		
+		private void handleRepository(HttpExchange exchange){
+			String repoBase = "/repository/";
+			String path = exchange.getRequestURI().getPath();
+			
+			if( path.equals( repoBase ) )
+			{
+				// Load repository view
+				OutputStream os = exchange.getResponseBody();
+				String output;
+				output = createHtmlRepoView();
+				try {
+					exchange.sendResponseHeaders(HttpStatus.SC_OK, output.length());
+					os.write( output.getBytes() );
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			else if( path.startsWith( repoBase ) )
+			{
+				String location = path.substring(repoBase.length(), path.length());
+				
+				location.replaceAll("/", File.separator); //Make file system independent				
+				location += Repository.PUBLISHED_NAME + Repository.DOCUMENT_EXTENSION;
+				
+				File pdf = new File(Repository.REPOSITORY, location);
+								
+				exchange.getResponseHeaders().add("Content-type", "application/pdf");
+				sendFile(exchange, pdf, HttpStatus.SC_OK);
+				
+			}
+		}
+		
+		/**
+		 * This method handles all requests made to /application/runway/
+		 * @param exchange
+		 * @return String serialized resultant to respond with
+		 */
+		private String getRunwayData(HttpExchange exchange){
+			exchange.getResponseHeaders().add("Content-type", "application/json");
+			Gson json = new Gson(); // Json serializer
+			URI uri = exchange.getRequestURI();
+			Map<String, String> params;
+			String output = null;
+
+			String q = uri.getQuery();
+			q = q == null ? "" : q;
+			params = parseParameters(q); //Get the parameters in a usable format
+
+			String aircraftId = params.get("aid");
+			String runwayId = params.get("rid");
+
+			// Find out what we are supposed do with this request bases on what parameters we have
+			// Once we know what to do, we make a db request and serialze the result
+			if( aircraftId != null && !aircraftId.isEmpty() ) 
+			{
+				// GET A SPECIFIC RUNWAY
+				if(runwayId != null && !runwayId.isEmpty() ) 
+				{
+					try {
+						Runway runway = db.getRunway(runwayId, aircraftId);
+						output = json.toJson(runway);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				// GET ALL RUNWAY IDS FOR AN AIRCRAFT
+				else 
+				{
+					try {
+						String[] runwayIds = db.getAllRunwayIds(aircraftId);
+						output = json.toJson(runwayIds);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			// GET ALL RUNWAY IDS
+			else 
+			{
+				System.out.println("Getting all runway ids");
+				try {
+					String[] runwayIds = db.getAllRunwayIds();
+					output = json.toJson(runwayIds);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			// Return the serialized result to send to the client
+			return output;
+		}
+		
+		/**
+		 * This method handles all requests made to /application/aircraft
+		 * @param exchange
+		 * @return String the serialized resultant of the request
+		 */
+		private String getAircraftData(HttpExchange exchange) {
+			exchange.getResponseHeaders().add("Content-type", "application/json");
+			//We can assume they only want all the aircraft ids until more methods are needed
+			Gson json = new Gson();
+			String output = null;
+			
+			try {
+				String[] aircraftIds = db.getAllAircraftIds();	// Get all ids
+				output = json.toJson(aircraftIds); //Serialize
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			return output;
+		}
+		
+		private String createHtmlRepoView() {
+			StringBuilder html = new StringBuilder();
+			html.append("<html><head><title>Jungle Jepps Repository</title></head>");
+			html.append("<body><h1>Jungle Jepps Repository Viewer</h1>");
+			html.append("<table style='width:100%; height:100%'><tr><td style='width: 15%; vertical-align:top;'>");
+			html.append("<h2>Runway Charts</h2><br /><div style='text-align:right'");
+			
+			String[] aids = null;
+			try {
+				aids = db.getAllAircraftIds();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			for(String aid : aids)
+			{
+				String[] rids = null;
+				try {
+					rids = db.getAllRunwayIds(aid);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				for(String rid : rids)
+				{
+					html.append("<div><a href='");
+					html.append(aid);
+					html.append("/");
+					html.append(rid);
+					html.append("/");
+					html.append("' target='pdf'>");
+					html.append(aid);
+					html.append(" -> ");
+					html.append(rid);
+					html.append("</a></div>");
+				}
+			}
+			
+			html.append("</div></td><td><iframe style='width:100%; height:100%' name='pdf'></td>");
+			html.append("</tr></table></body></html>");
+			
+			return html.toString();
+		}
+
+	
+	
+		
+		/////////////////////////////////////////////////////////////////////////////
+		/* HELPER FUNCTIONS*/
+		
+		private Map<String, String> parseParameters(String query){
+			Map<String, String> params = new HashMap<String, String>();
+			if(query == null || query.isEmpty())
+				return params;
+			
+			if(query.startsWith("?"))
+				query = query.substring(1, query.length());
+			
+			String[] splits = query.split("&");
+			for(String p : splits)
+			{
+				String[] param = p.split("=");
+				params.put(param[0], param[1]);
+			}
+			return params;
+		}
 		
 		private void templateResponse(HttpExchange exchange, int httpStatusCode){
+			exchange.getResponseHeaders().add("Content-type", "text/html");
 			File outputFile = new File(WEB_ROOT, httpStatusCode + ".html");
 			sendFile( exchange, outputFile, httpStatusCode );
 		}
 		
 		private void sendFile(HttpExchange exchange, File file, int status){
-			OutputStream os;
 			InputStream is;
-			Long size = file.length();
-			byte[] data = new byte[ size.intValue() ];
 
 			try {
-				is = new FileInputStream(file);
-				is.read( data );
-
-				exchange.sendResponseHeaders(status, size);
 				
-				os = exchange.getResponseBody();
-				os.write( data );
+				is = new FileInputStream(file); // Setup the input from the file
+				exchange.sendResponseHeaders(status, file.length()); //Send headers
+				write(is, exchange.getResponseBody()); //Send the body
 				
-				os.close();
 			} catch (FileNotFoundException e){
 				templateResponse(exchange, HttpStatus.SC_NOT_FOUND);
+				
 			} catch (IOException e) {
 				templateResponse(exchange, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 			}
+		}
+		
+		private void write(InputStream is, OutputStream os) throws IOException{
+			byte[] data = new byte[1024];
+			int length;
+
+			// Read until the amount read is 0
+			while( (length = is.read(data) ) > 0 )
+				os.write( data, 0, length ); //Write data at offset 0 with length
 		}
 	}
 }

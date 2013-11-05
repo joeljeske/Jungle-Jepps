@@ -7,13 +7,18 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 
@@ -57,11 +62,18 @@ public class Client implements DatabaseConnection {
 
 	@Override
 	public String[] getAllAircraftIds() {
-		throw new UnsupportedOperationException();
-	}
+		String[] list; // To store all the Ids
+		Gson gson = new Gson(); // Google's json parser
+		BufferedReader reader; // Reader from server json message
+
+		reader = getApplicationJson("/application/aircraft/", null);
+		
+		// Build the response data back into a String[] 
+		list = gson.fromJson(reader, String[].class);	
+		return list;	}
 	
 	public String[] getAllRunwayIds() {
-		throw new UnsupportedOperationException();
+		return getAllRunwayIds("");
 	}
 	
 	/**
@@ -70,43 +82,13 @@ public class Client implements DatabaseConnection {
 	@Override
 	public String[] getAllRunwayIds(String aircraftId) {
 		String[] list; // To store all the Ids
-		URI uri = null; //The URI that will be built
-		HttpResponse response = null; // The response from the Server
-		BufferedReader reader = null; // What will read the response from the server 
-		Gson gson = new Gson(); // Googles JSON parser
-		HttpGet request = new HttpGet(); // Using HTTP method GET
+		Gson gson = new Gson(); // Google's json parser
+		BufferedReader reader; // Reader from server json message
 		
-		// Application requests over LAN will only use JSON
-		request.addHeader("Accept", "application/json");
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
+		parameters.add(new BasicNameValuePair("aid", aircraftId));
 		
-		try {
-			uri = new URIBuilder( JungleJeppsmDNS.getProvider() ) // Partial URI containing host and port <host>:<port> 
-						.setScheme("http") // Not secure
-						.setPath("/*") // Request to list all runway ids
-						.addParameter("aid", aircraftId) //For a specific aircraft id
-						.build();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-					
-		request.setURI(uri); // Use this URI for the request
-		
-		try {
-			response = client.execute(request); // Execute HTTP method 
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			// Create reader for the response data
-			reader = new BufferedReader( new InputStreamReader(response.getEntity().getContent()));
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		reader = getApplicationJson("/application/runway/", parameters);
 		
 		// Build the response data back into a String[] 
 		list = gson.fromJson(reader, String[].class);	
@@ -115,46 +97,17 @@ public class Client implements DatabaseConnection {
 
 	@Override
 	public Runway getRunway(String runwayId, String aircraftId) {
-		Runway runway;
-		HttpResponse response = null;
-		BufferedReader reader = null;
-		Gson gson = new Gson();
-		HttpGet request = new HttpGet();
+		Runway runway; //The runway object to be deserialized into
+		Gson gson = new Gson(); // Google's json parser
+		BufferedReader reader; // Reader from server json message
 		
-		request.addHeader("Accept", "application/json");
-
-		URI uri = null;
-		try {
-			uri = new URIBuilder( JungleJeppsmDNS.getProvider() )
-						.setScheme("http")
-						.setPath("/runway")
-						.addParameter("rid", runwayId)
-						.addParameter("aid", aircraftId)
-						.build();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-					
-		request.setURI(uri);
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
+		parameters.add(new BasicNameValuePair("rid", runwayId));
+		parameters.add(new BasicNameValuePair("aid", aircraftId));
 		
-		try {
-			response = client.execute(request);
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		reader = getApplicationJson("/application/runway/", parameters);
 		
-		
-		try {
-			reader = new BufferedReader(
-						new InputStreamReader(response.getEntity().getContent()));
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		// Build the response data back into a Runway 
 		runway = gson.fromJson(reader, Runway.class);	
 		return runway;
 	}
@@ -214,6 +167,48 @@ public class Client implements DatabaseConnection {
 		JungleJeppsmDNS.stopDiscovery();
 		client = null;
 		return true;
+	}
+
+	
+	private BufferedReader getApplicationJson(String path, List<NameValuePair> parameters){		
+		URI uri = null; //The URI that will be built
+		HttpResponse response = null; // The response from the Server
+		BufferedReader reader = null; // What will read the response from the server 
+		HttpGet request = new HttpGet(); // Using HTTP method GET
+		
+		// Application requests over LAN will only use JSON
+		request.addHeader("Accept", "application/json");
+		
+		try {
+			uri = new URIBuilder( JungleJeppsmDNS.getProvider() ) // Partial URI containing host and port <host>:<port> 
+						.setScheme("http") // Not secure
+						.setPath(path) // Request path
+						.addParameters(parameters) //Add url parameters
+						.build();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+					
+		request.setURI(uri); // Use this URI for the request
+		
+		try {
+			response = client.execute(request); // Execute HTTP method 
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			// Create reader for the response data
+			reader = new BufferedReader( new InputStreamReader(response.getEntity().getContent()));
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return reader;
 	}
 
 	
