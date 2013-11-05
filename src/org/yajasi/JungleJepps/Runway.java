@@ -1,7 +1,11 @@
 package org.yajasi.JungleJepps;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,6 +14,7 @@ import java.util.Set;
 
 import org.yajasi.JungleJepps.db.DatabaseManager;
 import org.yajasi.JungleJepps.pdf.HtmlPreparer;
+import org.yajasi.JungleJepps.pdf.Repository;
 
 public class Runway extends HashMap<Field, String> implements ValueByEnum {
 
@@ -145,7 +150,26 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	 * @throws IOException 
 	 */
 	public File publish() throws IOException{
-		return HtmlPreparer.publish(this);		
+		File published =  HtmlPreparer.publish(this);
+		File copy = Repository.getArchiveLocation(this);
+		
+	    InputStream is = null;
+	    OutputStream os = null;
+	    try {
+	        is = new FileInputStream(published);
+	        os = new FileOutputStream(copy);
+	        
+	        byte[] buffer = new byte[1024];
+	        int length;
+	        while ((length = is.read(buffer)) > 0) {
+	            os.write(buffer, 0, length);
+	        }
+	    } finally {
+	        is.close();
+	        os.close();
+	    }
+	    
+	    return published;
 	}
 
 	/**
