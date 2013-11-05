@@ -14,11 +14,11 @@ import org.yajasi.JungleJepps.db.Settings;
 
 public class Repository {
 
-	private static final File REPOSITORY;
-	private static final String PUBLISHED_NAME = "diagram";
-	private static final String ARCHIVE_FOLDER = "archive";
-	private static final String IMAGE_FOLDER = "photos";
-	private static final String DOCUMENT_EXTENSION = ".pdf";
+	public static final File REPOSITORY;
+	public static final String PUBLISHED_NAME = "diagram";
+	public static final String ARCHIVE_FOLDER = "archive";
+	public static final String IMAGE_FOLDER = "photos";
+	public static final String DOCUMENT_EXTENSION = ".pdf";
 	
 	static {
 		String path = DatabaseManager.getSettings().getStringForKey(Settings.REPOSITORY_PATH);
@@ -54,10 +54,12 @@ public class Repository {
 	 */
 	public static File getArchiveLocation(Runway runway){
 		File runwayBase = getRunwayBaseFolder(runway); //Base runway folder
-		String archiveName = File.pathSeparator + ARCHIVE_FOLDER + File.pathSeparator; // ==> "/archive/"
+		File archive = new File(runwayBase, ARCHIVE_FOLDER); // ==> "archive"
 		String descriptiveName = getDescriptiveName(runway);
 		
-		File archiveLocation = getNoConflictFile( new File(runwayBase, archiveName + descriptiveName + DOCUMENT_EXTENSION) );
+		archive.mkdirs();
+		
+		File archiveLocation = getNoConflictFile( new File(archive, descriptiveName + DOCUMENT_EXTENSION) );
 		
 		return archiveLocation;
 	}
