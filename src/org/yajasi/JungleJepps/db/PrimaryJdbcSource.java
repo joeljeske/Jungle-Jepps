@@ -283,13 +283,37 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             return true;
         }
 	
+	/**
+	 * Added by Joel.
+	 * Possible example of testing added tables to provide cross
+	 * Database type portability. 
+	 * If the DB was tested here, we could find if we needed to run our setup
+	 * function or not. 
+	 * Also, we can always assume with Server DBs (mysql, mssql) that the 
+	 * Database Name given in the JDBC URI 
+	 * (i.e. JJDB in the URI jdbc:mysql://localhost/JJDB?user=jepps&password=jepps")
+	 * already exists, we do not need to create it which should help.  
+	 * @param db
+	 * @throws SQLException
+	 */
+	public static void printDbTables(PrimaryJdbcSource db) throws SQLException {
+		
+		DatabaseMetaData meta = db.connection.getMetaData();
+		ResultSet res = meta.getTables(null, null, null, new String[]{"TABLE"});
+		
+		while (res.next()) {
+		     System.out.println( res.getString("TABLE_NAME") ); 
+		  }
+		
+	}
 	
 	// This method is an example of how to query and work in a JDBC Context
-	public static void main(String[] args) throws ClassNotFoundException, SQLException {//DBbuild test
-            
+	public static void mafin(String[] args) throws ClassNotFoundException, SQLException {//DBbuild test
             System.out.println("This is the main method of the PrimaryJdbcCource Class\n");
             PrimaryJdbcSource db = new PrimaryJdbcSource("org.sqlite.JDBC", "jdbc:sqlite:JJDB.db");
             //PrimaryJdbcSource db = new PrimaryJdbcSource("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/JJDB?user=jepps&password=jepps");
+            printDbTables(db);
+            
             String[] aircraftIds, runwayIds;
             Runway runway;
 
