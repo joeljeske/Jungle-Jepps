@@ -18,29 +18,23 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	
 	private Connection connection;
 	
-	public PrimaryJdbcSource(SettingsManager settings) throws ClassNotFoundException, SQLException {
+	/**
+         * Public constructor 
+         * @param settings DB location and type info
+         * @throws ClassNotFoundException
+         * @throws SQLException 
+         */
+        public PrimaryJdbcSource(SettingsManager settings) throws ClassNotFoundException, SQLException {
                 this(settings.getStringForKey(Settings.PRIMARY_JDBC_CLASS_PATH), settings.getStringForKey(Settings.PRIMARY_JDBC_URI));
-                //this.PrimaryJdbcSource(dbDriverClass, dbUrl);
-                
-		/*// Load JDBC class into runtime
-		Class.forName( dbDriverClass );
-		
-		// Request class from Driver Manager
-		//this.connection = DriverManager.getConnection(dbUrl);
-                dbInfo = dbUrl.split(":");
-                dbfile = new File(dbInfo[2]);//checks to see if the file is open
-                if(dbfile.exists() == false)
-                {
-                    this.connection = DriverManager.getConnection(dbUrl);
-                    System.out.println("here");
-                    setupRelationships();
-                }
-                else{
-                    this.connection = DriverManager.getConnection(dbUrl);
-                }
-                */
 	}
         
+        /**
+         * Private constructor: do not use directly except when needing to test this class in isolation
+         * @param dbDriverClass drive/db type
+         * @param dbUrl location
+         * @throws ClassNotFoundException
+         * @throws SQLException 
+         */
         private PrimaryJdbcSource(String dbDriverClass, String dbUrl) throws ClassNotFoundException, SQLException {
             File dbfile;
             String[] dbInfo = new String[3];
@@ -65,63 +59,82 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             }
         }
 	
+        /**
+         * returns all Aircraft IDs
+         * @return array of Aircraft IDs in String format
+         * @throws SQLException 
+         */
         @Override
         public String[] getAllAircraftIds()throws SQLException{
             ResultSet rs ;
             ArrayList<String> results = new ArrayList<String>();
             int I = 0;
 
-            rs = connection.createStatement().executeQuery("SELECT DISTINCT AIRCRAFT_IDENTIFIER FROM Aircraft");
+            rs = connection.createStatement().executeQuery("SELECT DISTINCT " + Field.AIRCRAFT_IDENTIFIER + " FROM Aircraft");
             
             while(rs.next()){
-                results.add(rs.getString("AIRCRAFT_IDENTIFIER"));
+                results.add(rs.getString(Field.AIRCRAFT_IDENTIFIER.toString()));
                 I++;
             }
-
-            //for(I = 0; I < results.size(); I++){
-            //    System.out.println(results.get(I));
-            //}
-
+            
             return results.toArray(new String[results.size()]);
         }
 
-	@Override
+	/**
+         * Gets only the runways that aircraftId can use
+         * @param aircraftId aircraft of interest
+         * @return array of Runway IDs in String format
+         * @throws SQLException 
+         */
+        @Override
         public String[] getAllRunwayIds(String aircraftId) throws SQLException{
             
             ResultSet rs ;
             ArrayList<String> results = new ArrayList<String>();
             int I = 0;
 
-            rs = connection.createStatement().executeQuery("SELECT RUNWAY_IDENTIFIER FROM Runway JOIN Aircraft "
-                                                        + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_ID "
+            rs = connection.createStatement().executeQuery("SELECT " + Field.RUNWAY_IDENTIFIER + " FROM Runway JOIN Aircraft "
+                                                        + "ON Runway." + Field.RUNWAY_IDENTIFIER + " = Aircraft.RUNWAY_ID "
                                                         + "WHERE Aircraft." + Field.AIRCRAFT_IDENTIFIER + " = '" + aircraftId +"'");
             
             while(rs.next()){
-                results.add(rs.getString("RUNWAY_IDENTIFIER"));
+                results.add(rs.getString(Field.RUNWAY_IDENTIFIER.toString()));
                 I++;
             }
             
             return results.toArray(new String[results.size()]);
         }
         
+        /**
+         * Gets all runways IDs in the DataBase
+         * @return array of Runway IDs in String format
+         * @throws SQLException 
+         */
         @Override
         public String[] getAllRunwayIds() throws SQLException{
             ResultSet rs;
             ArrayList<String> results = new ArrayList<String>();
             int I = 0;
 
-            rs = connection.createStatement().executeQuery("SELECT RUNWAY_IDENTIFIER FROM Runway");
+            rs = connection.createStatement().executeQuery("SELECT " + Field.RUNWAY_IDENTIFIER + " FROM Runway");
 
             
             while(rs.next()){
-                results.add(rs.getString("RUNWAY_IDENTIFIER"));
+                results.add(rs.getString(Field.RUNWAY_IDENTIFIER.toString()));
                 I++;
             }
 
             return results.toArray(new String[results.size()]);
             
         }
-
+        
+        /**
+         * Gets all Fields from A Runway Aircraft combination
+         * @param runwayId
+         * @param aircraftId
+         * @return Runway containing all info needed to build a PDF
+         * @throws SQLException 
+         */
 	@Override
 	public Runway getRunway(String runwayId, String aircraftId)throws SQLException{
             ResultSet rs;
@@ -129,8 +142,8 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 
             rs = connection.createStatement().executeQuery("SELECT * "
                                                         + "FROM Runway JOIN Aircraft "
-                                                        + "ON Runway.RUNWAY_IDENTIFIER = Aircraft.RUNWAY_ID "
-                                                        + "WHERE Runway.RUNWAY_IDENTIFIER ='" + runwayId + "' AND Aircraft.AIRCRAFT_IDENTIFIER = '" + aircraftId + "' "
+                                                        + "ON Runway." + Field.RUNWAY_IDENTIFIER + " = Aircraft.RUNWAY_ID "
+                                                        + "WHERE Runway." + Field.RUNWAY_IDENTIFIER + " ='" + runwayId + "' AND " + Field.AIRCRAFT_IDENTIFIER + " = '" + aircraftId + "' "
                                                         );
             if(rs.next()){
                 for(Field f: Field.values()){
@@ -140,16 +153,20 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             
         return results;
 	}
-
+        
+        /**
+         * Makes changes to the database both new rows and row updates
+         * @param runway
+         * @return pointless return value. returns true unless it crashes
+         * @throws SQLException 
+         */
 	@Override
 	public boolean updateRunway(Runway runway)throws SQLException{
-            Date date = new Date();
-            //ResultSet rs = connection.createStatement().executeQuery(runwayID)
-            ResultSet rs = connection.createStatement().executeQuery("SELECT RUNWAY_IDENTIFIER "
+            ResultSet rs = connection.createStatement().executeQuery("SELECT " + Field.RUNWAY_IDENTIFIER + " "
                                                         + "FROM Runway "
-                                                        + "WHERE RUNWAY_IDENTIFIER = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' ");
+                                                        + "WHERE " + Field.RUNWAY_IDENTIFIER + " = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' ");
             
-            if(rs.next() == false){
+            if(rs.next() == false){//if row is not found in Runway table, build the row
                 
                 connection.createStatement().executeUpdate("INSERT INTO Runway "
                                                         + "("+ Field.RUNWAY_IDENTIFIER.toString() +") "
@@ -162,14 +179,14 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                                                         + "WHERE Runway."+ Field.RUNWAY_IDENTIFIER.toString() + " = '" + runway.get(Field.RUNWAY_IDENTIFIER) +"' "
                                                         + "AND Aircraft."+ Field.AIRCRAFT_IDENTIFIER.toString() +" = '" + runway.get(Field.AIRCRAFT_IDENTIFIER) + "'");
             
-            if(rs.next() == false){
+            if(rs.next() == false){//if row is not found in Aircraft table, build the row
                 connection.createStatement().executeUpdate("INSERT INTO Aircraft "
                                                         + "(RUNWAY_ID,"+ Field.AIRCRAFT_IDENTIFIER.toString() +") "
                                                         + "VALUES ('"+ runway.get(Field.RUNWAY_IDENTIFIER)+"','" + runway.get(Field.AIRCRAFT_IDENTIFIER)+ "')");
             }
             
             for(Field f: runway.keySet()){
-                int table = 0;//0 = skip 1 = item goes in the aircraft table 2 = item goes in the runway table. no other number should be set.
+                int table = 0;//0 = skip item, 1 = item goes in the aircraft table, 2 = item goes in the runway table. NO other number should be set.
                 switch(f){
                     case RUNWAY_IDENTIFIER: table = 0; break;
                     case RUNWAY_NAME: table = 2; break;
@@ -224,17 +241,23 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                                                                     + "SET "+ f + " = '" + runway.get(f) + "' "
                                                                     + "WHERE Aircraft.RUNWAY_ID = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' "
                                                                     + "AND Aircraft.AIRCRAFT_IDENTIFIER = '" + runway.get(Field.AIRCRAFT_IDENTIFIER) + "' ");
+                           connection.createStatement().executeUpdate("INSERT INTO log("+Field.RUNWAY_IDENTIFIER+","+Field.AIRCRAFT_IDENTIFIER+",user,field_updated,time)"
+                                                                    + "VALUES('"+ runway.get(Field.RUNWAY_IDENTIFIER) +"','"+runway.get(Field.AIRCRAFT_IDENTIFIER) +"','"+System.getProperty("user.name")+"','"+ f +"','"+ new Date() +"')");
                                                                     break;
                     case 2:connection.createStatement().executeUpdate("UPDATE Runway "
                                                                     + "SET "+ f + " = '" + runway.get(f) + "' "
                                                                     + "WHERE Runway." + Field.RUNWAY_IDENTIFIER + " = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' ");
+                           connection.createStatement().executeUpdate("INSERT INTO log("+Field.RUNWAY_IDENTIFIER+",user,field_updated,time)"
+                                                                    + "VALUES('"+ runway.get(Field.RUNWAY_IDENTIFIER) +"','"+System.getProperty("user.name")+"','"+ f +"','"+ new Date() +"')");
                                                                     break;
                 }
+                
             }
-            connection.createStatement().executeUpdate("UPDATE Aircraft "
+            connection.createStatement().executeUpdate("UPDATE Aircraft "//sets time of last update
                                                     + "SET LAST_UPDATE = '" + new Date().toString() + "' "
                                                     + "WHERE Aircraft.RUNWAY_ID = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' "
                                                     + "AND Aircraft.AIRCRAFT_IDENTIFIER = '" + runway.get(Field.AIRCRAFT_IDENTIFIER) + "' ");
+            
             return true;
         }
 	
@@ -247,12 +270,11 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             String[] aircraftIds, runwayIds;
             Runway runway;
 
+            ///getting runway and aircraft IDs
             aircraftIds = db.getAllAircraftIds();
             System.out.println("number of aircraft= " + aircraftIds.length);
-            System.out.println("aircraftIds[0]= " + aircraftIds[0]);
             runwayIds = db.getAllRunwayIds( aircraftIds[0] );
             System.out.println("number of runway= " + runwayIds.length);
-            System.out.println("runwayIds[0]= " + runwayIds[0]);
             runway = db.getRunway(runwayIds[0], aircraftIds[0]); 
             
             System.out.print("\nAircraft IDs: ");
@@ -263,6 +285,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             for(String rid : runwayIds)
                     System.out.print(rid + ", ");
             
+            ///updating a row
             System.out.println("Updating database");
             runway.clear();
             runway.put(Field.AIRCRAFT_IDENTIFIER, "PC-6");
@@ -271,10 +294,12 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             
             db.updateRunway(runway);
             
+            ///row display
             runway = db.getRunway(runwayIds[0], aircraftIds[0]);
-            System.out.print("\n\n-----Field Printouts-----\n");
+            System.out.print("\n\n-----" + runwayIds[0] + "---" + aircraftIds[0] + "---Field Printouts-----\n");
             for(Field f : runway.keySet())
                     System.out.println(f.toString() + ": " + runway.get(f) );
+            
             
             System.out.println("un-Updating database");
             runway.clear();
@@ -284,6 +309,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             
             db.updateRunway(runway);
             
+            ///adding a new row
             System.out.println("adding row to database");
             
             runway.clear();
@@ -291,14 +317,14 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                 runway.put(f, ""+(int)(Math.random()*100));
             }
             
-            /*runway.put(Field.RUNWAY_IDENTIFIER, r_id);
-            runway.put(Field.RUNWAY_NAME, "test");
-            runway.put(Field.INSPECTOR_NAME, "Joe");
-            runway.put(Field.IMAGE_PATH, "image file");*/
-            
             db.updateRunway(runway);
+            
+            db.close();
         }
-	
+	/**
+         * This method does all the work of setting up the schema. This will not run if database is already built
+         * @throws SQLException 
+         */
 	public void setupRelationships() throws SQLException{
 		System.out.println("setup... ");
 		Statement statement = connection.createStatement();
@@ -380,16 +406,17 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                 );
         System.out.println("setup Note");
         statement.executeUpdate(
-                "CREATE TABLE Note"
-                +"(NoteID                   INTEGER PRIMARY KEY,"
-                + "AIRCRAFT_IDENTIFIER               String,"
-                + "RUNWAY_IDENTIFIER                 String,"
-                + "NameSoft                 String,"
-                + "NoteText                 String"//this needs to be Rich Text in end form
+                "CREATE TABLE Log"
+                +"(LogID                   INTEGER PRIMARY KEY,"
+                + "AIRCRAFT_IDENTIFIER                  String,"
+                + "RUNWAY_IDENTIFIER                    String,"
+                + "user                                 String,"
+                + "field_updated                        String,"//if multi update the will be the last field to be updated.
+                + "time                                 Date" 
                 + ")"
                 );
         
-        System.out.println("populate example runway");
+        System.out.println("populate example runway");//default dataset
         statement.executeUpdate(
                 "INSERT INTO Runway (RUNWAY_IDENTIFIER,RUNWAY_NAME,LONGITUDE,LATITUDE,INSPECTION_NA,INSPECTION_DATE,INSPECTOR_NAME,INSPECTION_DUE,CLASSIFICATION,FREQUENCY_1,FREQUENCY_2,LANGUAGE_GREET,ELEVATION,LENGTH,WIDTH_TEXT,TDZ_SLOPE,RUNWAY_A,RUNWAY_B)"
                 + "VALUES('KIW','Kiwi',044185,1404332,1,2013-10-25,"
@@ -398,7 +425,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                );
         
         
-        System.out.println("populate example aircraft");
+        System.out.println("populate example aircraft");//default dataset
         statement.executeUpdate(
                 "INSERT INTO Aircraft (AIRCRAFT_IDENTIFIER,RUNWAY_ID,IAS_ADJUSTMENT,PRECIPITATION_ON_SCREEN,A_TAKEOFF_RESTRICTION,A_TAKEOFF_NOTE,B_TAKEOFF_RESTRICTION,B_TAKEOFF_NOTE,PDF_PATH,LAST_UPDATE,P1_TEXT_1,P1_TEXT_2,P1_TEXT_3,P1_TEXT_4,P1_TEXT_5,P1_TEXT_6,P1_TEXT_7,P2_TEXT_1,P2_TEXT_2,P2_TEXT_3,P2_TEXT_4,P2_TEXT_5,P2_TEXT_6,P2_TEXT_7)"
                 + "VALUES("
