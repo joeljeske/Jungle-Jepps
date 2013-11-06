@@ -40,7 +40,12 @@ public class PrimaryJdbcSource implements DatabaseConnection {
         private PrimaryJdbcSource(String dbDriverClass, String dbUrl) throws ClassNotFoundException, SQLException {
             File dbfile;
             String[] dbInfo = new String[3];
-            String[] urlInfo = new String[2];
+            String[] urlInfo = new String[3];
+            String[] dbTablesFound = new String[3];
+            String[] dbTablesNeeded = new String[]{"Runway","Aircraft","Log"};
+            String dbname;
+            int tablesCorrect;
+            
             // Load JDBC class into runtime
             Class.forName( dbDriverClass );
             // Request class from Driver Manager
@@ -58,18 +63,35 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                     this.connection = DriverManager.getConnection(dbUrl);
                 }
             }
-            if(dbInfo[1].compareTo("mysql") == 0){
+            if(dbInfo[1].compareTo("mysql") == 0 || dbInfo[1].compareTo("sqlserver") == 0){
                 try{
-                    
+                    tablesCorrect = 0;
                     this.connection = DriverManager.getConnection(dbUrl);
+                    ///////this has not been tested yet: START
+                    dbTablesFound = printDbTables(this);
+                    for(String N:dbTablesNeeded){
+                        for(String F: dbTablesFound){
+                            if(N.compareTo(F) == 0){
+                                tablesCorrect++;
+                            }
+                        }
+                    }
+                    switch(tablesCorrect){
+                        case 0: System.out.println("Database Tables not found. Building schema now.");setupRelationships(); break;
+                        case 1: System.out.println("Two Database Table were not found. Unable to repaire. Please check Database"); System.exit(1);
+                        case 2: System.out.println("One Database Table was not found. Unable to repaire. Please check Database"); System.exit(1);
+                        case 3: System.out.println("Database schema is correct. Makeing connection."); break;
+                    }
+                    ///////this has not been tested yet: END
                 }
                 catch(java.sql.SQLException e){
-                    urlInfo = dbInfo[2].split("JJDB");
+                    System.out.println("Exception: " + e.toString() + ": Trying to fix...");
+                    dbname = dbInfo[2].split("/")[1];
+                    urlInfo = dbInfo[2].split(dbname);
                     this.connection = DriverManager.getConnection(dbInfo[0]+":"+dbInfo[1]+":"+urlInfo[0] + urlInfo[1]);
-                    connection.createStatement().executeUpdate("CREATE DATABASE JJDB");
+                    connection.createStatement().executeUpdate("CREATE DATABASE " + dbname);
                     this.connection = DriverManager.getConnection(dbUrl);
-                    setupRelationships();
-                    
+                    setupRelationships();    
                 }
             }          
         }
@@ -296,19 +318,24 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	 * @param db
 	 * @throws SQLException
 	 */
-	public static void printDbTables(PrimaryJdbcSource db) throws SQLException {
+	public static String[] printDbTables(PrimaryJdbcSource db) throws SQLException {
 		
 		DatabaseMetaData meta = db.connection.getMetaData();
 		ResultSet res = meta.getTables(null, null, null, new String[]{"TABLE"});
+		String[] results = new String[3];
+                int I = 0;
 		
-		while (res.next()) {
-		     System.out.println( res.getString("TABLE_NAME") ); 
-		  }
+                while (res.next()) {
+                    results[I] = res.getString("TABLE_NAME");
+                    System.out.println( results[I] );
+                    I++;
+		}
+                return results;
 		
 	}
 	
 	// This method is an example of how to query and work in a JDBC Context
-	public static void mafin(String[] args) throws ClassNotFoundException, SQLException {//DBbuild test
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {//DBbuild test
             System.out.println("This is the main method of the PrimaryJdbcCource Class\n");
             PrimaryJdbcSource db = new PrimaryJdbcSource("org.sqlite.JDBC", "jdbc:sqlite:JJDB.db");
             //PrimaryJdbcSource db = new PrimaryJdbcSource("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/JJDB?user=jepps&password=jepps");
