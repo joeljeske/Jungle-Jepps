@@ -22,6 +22,7 @@ import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 import org.yajasi.JungleJepps.db.DatabaseException;
 import org.yajasi.JungleJepps.db.DatabaseManager;
+import org.yajasi.JungleJepps.db.Settings;
 import org.yajasi.JungleJepps.db.SettingsManager;
 import org.yajasi.JungleJepps.pdf.Repository;
 
@@ -34,7 +35,12 @@ public class Server {
 	private static Server instance;
 	private static boolean started = false;
 
-	private static final File WEB_ROOT = new File("src/xhtml/");
+	private static final File WEB_ROOT;
+	
+	static {
+		String root = DatabaseManager.getSettings().getStringForKey(Settings.WEB_ROOT);
+		WEB_ROOT = new File(root);
+	}
 
 	public static void main(String[] args) throws IOException{
 		start();
