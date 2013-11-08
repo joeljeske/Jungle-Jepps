@@ -8,4 +8,8 @@ public class DatabaseException extends Exception{
 		super(message);
 	}
 	
+	public DatabaseException(Exception excp){
+		this(excp.getMessage());
+	}
+	
 }
