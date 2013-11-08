@@ -5,18 +5,19 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import org.yajasi.JungleJepps.db.DatabaseConnection;
+import org.yajasi.JungleJepps.db.DatabaseException;
 import org.yajasi.JungleJepps.db.DatabaseManager;
 
 public class Main {
 
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) throws SQLException, DatabaseException {
 		System.out.println("Running main...");
 
 		
 		DatabaseConnection db = DatabaseManager.getDatabase();
 		
 		String[] aids = db.getAllAircraftIds();
-		String[] rids = db.getAllRunwayIds();
+		String[] rids = db.getAllRunwayIds( aids[0] );
 		
 
 		
