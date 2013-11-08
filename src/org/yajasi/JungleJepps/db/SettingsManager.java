@@ -217,6 +217,7 @@ public class SettingsManager implements ValueByEnum{
 		setValue(Settings.PAGE_1_DISCLAIMER, 		"Use of this diagram is strictly prohibited for aviation operators other than Jungle Jepps mission users. This diagram MAY CONTAIN ERRORS.");
 		setValue(Settings.PAGE_2_DISCLAIMER, 		"No diagram can substitute for a proper runway checkout. Use of this diagram is strictly prohibited for aviation operators other than Jungle Jepps mission users. This diagram MAY CONTAIN ERRORS. Report all safety concerns to the Chief Pilot or designated Safety Officer.");
 		setValue(Settings.DEFAULT_EXPIRATION_PERIOD, 12);
+		setValue(Settings.WEB_ROOT, 				"src/xhtml/");
 	}
 	
 	//////////////////////////////////////////////////////////////////
