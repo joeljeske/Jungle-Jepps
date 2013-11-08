@@ -170,7 +170,7 @@ public class Server {
 				e.printStackTrace();
 			} catch (DatabaseException e) {
 				e.printStackTrace();
-			}
+			} 
 		}	
 		
 		/**
