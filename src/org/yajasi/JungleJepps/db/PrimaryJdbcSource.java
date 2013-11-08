@@ -203,6 +203,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	@Override
 	public boolean updateRunway(Runway runway)throws SQLException{
             PreparedStatement statement = null; // if time, consider having all sql statements use this
+            String updateSet = new String();
             ResultSet rs = connection.createStatement().executeQuery("SELECT " + Field.RUNWAY_IDENTIFIER + " "
                                                         + "FROM Runway "
                                                         + "WHERE " + Field.RUNWAY_IDENTIFIER + " = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' ");
@@ -227,84 +228,26 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             }
             
             for(Field f: runway.keySet()){
-                int table = 0;//0 = skip item, 1 = item goes in the aircraft table, 2 = item goes in the runway table. NO other number should be set.
-                switch(f){
-                    case RUNWAY_IDENTIFIER: table = 0; break;
-                    case RUNWAY_NAME: table = 2; break;
-                    case AIRCRAFT_IDENTIFIER: table = 0; break;
-                    case LONGITUDE: table = 2; break;
-                    case LATITUDE: table = 2; break;
-                    case INSPECTION_NA: table = 2; break;
-                    case INSPECTION_DATE: table = 2; break;
-                    case INSPECTOR_NAME: table = 2; break;
-                    case INSPECTION_DUE: table = 2; break;
-                    case CLASSIFICATION: table = 2; break;
-                    case FREQUENCY_1: table = 2; break;
-                    case FREQUENCY_2: table = 2; break;
-                    case LANGUAGE_GREET: table = 2; break;
-                    case ELEVATION: table = 2; break;
-                    case LENGTH: table = 2; break;
-                    case WIDTH_TEXT: table = 2; break;
-                    case TDZ_SLOPE: table = 2; break;
-                    case IAS_ADJUSTMENT: table = 1; break;
-                    case PRECIPITATION_ON_SCREEN: table = 1; break;
-                    case RUNWAY_A: table = 2; break;
-                    case A_TAKEOFF_RESTRICTION: table = 1; break;
-                    case A_TAKEOFF_NOTE: table = 1; break;
-                    case A_LANDING_RESTRICTION: table = 1; break;
-                    case A_LANDING_NOTE: table = 1; break;
-                    case RUNWAY_B: table = 2; break;
-                    case B_TAKEOFF_RESTRICTION: table = 1; break;
-                    case B_TAKEOFF_NOTE: table = 1; break;
-                    case B_LANDING_RESTRICTION: table = 1; break;
-                    case B_LANDING_NOTE: table = 1; break;
-                    case P1_TEXT_1: table = 1; break;
-                    case P1_TEXT_2: table = 1; break;
-                    case P1_TEXT_3: table = 1; break;
-                    case P1_TEXT_4: table = 1; break;
-                    case P1_TEXT_5: table = 1; break;
-                    case P1_TEXT_6: table = 1; break;
-                    case P1_TEXT_7: table = 1; break;
-                    case P2_TEXT_1: table = 1; break;
-                    case P2_TEXT_2: table = 1; break;
-                    case P2_TEXT_3: table = 1; break;
-                    case P2_TEXT_4: table = 1; break;
-                    case P2_TEXT_5: table = 1; break;
-                    case P2_TEXT_6: table = 1; break;
-                    case P2_TEXT_7: table = 1; break;
-                    case PDF_PATH: table = 1; break;
-                    case IMAGE_PATH: table = 1; break;
+                if(f != Field.RUNWAY_IDENTIFIER || f != Field.AIRCRAFT_IDENTIFIER ){
+                    updateSet = updateSet + "," + f + " = '" + runway.get(f) + "' ";
                 }
-                
-                switch(table){
-                    case 0: break;
-                    case 1:connection.createStatement().executeUpdate("UPDATE Aircraft "
-                                                                    + "SET "+ f + " = '" + runway.get(f) + "' "
-                                                                    + "WHERE Aircraft.RUNWAY_ID = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' "
-                                                                    + "AND Aircraft.AIRCRAFT_IDENTIFIER = '" + runway.get(Field.AIRCRAFT_IDENTIFIER) + "' ");
-                           statement = connection.prepareStatement("INSERT INTO log("+Field.RUNWAY_IDENTIFIER+","+Field.AIRCRAFT_IDENTIFIER+",user,field_updated,time)"
-                                                                    + "VALUES('"+ runway.get(Field.RUNWAY_IDENTIFIER) +"','"+runway.get(Field.AIRCRAFT_IDENTIFIER) +"','"+System.getProperty("user.name")+"','"+ f +"',?)");
-                           statement.setTimestamp(1, new Timestamp(new Date().getTime()));
-                           statement.execute();
-                           break;
-                    case 2:connection.createStatement().executeUpdate("UPDATE Runway "
-                                                                    + "SET "+ f + " = '" + runway.get(f) + "' "
-                                                                    + "WHERE Runway." + Field.RUNWAY_IDENTIFIER + " = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' ");
-                           statement = connection.prepareStatement("INSERT INTO log("+Field.RUNWAY_IDENTIFIER+",user,field_updated,time)"
-                                                                    + "VALUES('"+ runway.get(Field.RUNWAY_IDENTIFIER) +"','"+System.getProperty("user.name")+"','"+ f +"',?)");
-                           statement.setTimestamp(1, new Timestamp(new Date().getTime()));
-                           statement.execute();
-                           break;
-                }
-                
             }
-            statement = connection.prepareStatement("UPDATE Aircraft "//sets time of last update
-                                    + "SET LAST_UPDATE = ? "
-                                    + "WHERE Aircraft.RUNWAY_ID = '" + runway.get(Field.RUNWAY_IDENTIFIER) + "' "
-                                    + "AND Aircraft.AIRCRAFT_IDENTIFIER = '" + runway.get(Field.AIRCRAFT_IDENTIFIER) + "' ");
-            
-            statement.setTimestamp(1, new Timestamp(new Date().getTime()));
-            statement.execute();
+            statement = connection.prepareStatement("UPDATE Runway LEFT JOIN Aircraft "
+                                                    + "ON Runway."+Field.RUNWAY_IDENTIFIER+" = Aircraft.RUNWAY_ID "
+                                                    + "SET LAST_UPDATE = ? " + updateSet
+                                                    + "WHERE Runway."+Field.RUNWAY_IDENTIFIER+" = ? AND Aircraft."+Field.AIRCRAFT_IDENTIFIER+" = ?");
+                                                    statement.setTimestamp(1, new Timestamp(new Date().getTime()));
+                                                    statement.setString(2, runway.get(Field.RUNWAY_IDENTIFIER));
+                                                    statement.setString(3, runway.get(Field.AIRCRAFT_IDENTIFIER));
+                                                    statement.execute();
+            statement = connection.prepareStatement("INSERT INTO log("+Field.RUNWAY_IDENTIFIER+","+Field.AIRCRAFT_IDENTIFIER+",user,field_updated,time)"
+                                                    + "VALUES(?,?,?,?,?)");
+                                                    statement.setString(1, runway.get(Field.RUNWAY_IDENTIFIER));
+                                                    statement.setString(2, runway.get(Field.AIRCRAFT_IDENTIFIER));
+                                                    statement.setString(3, System.getProperty("user.name"));
+                                                    statement.setString(4, updateSet);
+                                                    statement.setTimestamp(5, new Timestamp(new Date().getTime()));
+                                                    statement.execute();
             return true;
         }
 	
@@ -464,22 +407,22 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                         + "B_LANDING_RESTRICTIONHL      INTEGER     default 0,"
                         + "B_LANDING_NOTE               VARCHAR(255)            ,"
                         + "B_LANDING_NOTEHL             INTEGER     default 0,"
-                        + "PDF_PATH                     VARCHAR(700)            ,"
-                        + "IMAGE_PATH                   VARCHAR(700)            ,"
-                        + "P1_TEXT_1                    VARCHAR(700)            ,"
-                        + "P1_TEXT_2                    VARCHAR(700)            ,"
-                        + "P1_TEXT_3                    VARCHAR(700)            ,"
-                        + "P1_TEXT_4                    VARCHAR(700)            ,"
-                        + "P1_TEXT_5                    VARCHAR(700)            ,"
-                        + "P1_TEXT_6                    VARCHAR(700)            ,"
-                        + "P1_TEXT_7                    VARCHAR(700)            ,"
-                        + "P2_TEXT_1                    VARCHAR(700)            ,"
-                        + "P2_TEXT_2                    VARCHAR(700)            ,"
-                        + "P2_TEXT_3                    VARCHAR(700)            ,"
-                        + "P2_TEXT_4                    VARCHAR(700)            ,"
-                        + "P2_TEXT_5                    VARCHAR(700)            ,"
-                        + "P2_TEXT_6                    VARCHAR(700)            ,"
-                        + "P2_TEXT_7                    VARCHAR(700)            ,"
+                        + "PDF_PATH                     VARCHAR(1000)            ,"
+                        + "IMAGE_PATH                   VARCHAR(1000)            ,"
+                        + "P1_TEXT_1                    VARCHAR(1000)            ,"
+                        + "P1_TEXT_2                    VARCHAR(1000)            ,"
+                        + "P1_TEXT_3                    VARCHAR(1000)            ,"
+                        + "P1_TEXT_4                    VARCHAR(1000)            ,"
+                        + "P1_TEXT_5                    VARCHAR(1000)            ,"
+                        + "P1_TEXT_6                    VARCHAR(1000)            ,"
+                        + "P1_TEXT_7                    VARCHAR(1000)            ,"
+                        + "P2_TEXT_1                    VARCHAR(1000)            ,"
+                        + "P2_TEXT_2                    VARCHAR(1000)            ,"
+                        + "P2_TEXT_3                    VARCHAR(1000)            ,"
+                        + "P2_TEXT_4                    VARCHAR(1000)            ,"
+                        + "P2_TEXT_5                    VARCHAR(1000)            ,"
+                        + "P2_TEXT_6                    VARCHAR(1000)            ,"
+                        + "P2_TEXT_7                    VARCHAR(1000)            ,"
                         + "LAST_UPDATE                  TIMESTAMP             ,"
                         + "PRIMARY KEY(AIRCRAFT_IDENTIFIER, RUNWAY_ID)"
                         + ")"
@@ -491,7 +434,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                         + "AIRCRAFT_IDENTIFIER                  VARCHAR(255),"
                         + "RUNWAY_IDENTIFIER                    VARCHAR(255),"
                         + "user                                 VARCHAR(255),"
-                        + "field_updated                        VARCHAR(255),"//if multi update the will be the last field to be updated.
+                        + "field_updated                        VARCHAR(2400),"
                         + "time                                 TIMESTAMP" 
                         + ")"
                         );
