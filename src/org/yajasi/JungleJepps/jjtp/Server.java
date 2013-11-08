@@ -163,8 +163,9 @@ public class Server {
 			runway = json.fromJson(reader, Runway.class);
 			
 			try {
-				db.updateRunway(runway);
-				exchange.sendResponseHeaders(HttpStatus.SC_OK, 0L);
+				boolean success = db.updateRunway(runway);
+				int status = success ? HttpStatus.SC_OK : HttpStatus.SC_CONFLICT;
+				exchange.sendResponseHeaders(status, 0L);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (DatabaseException e) {
