@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.yajasi.JungleJepps.db.DatabaseException;
 import org.yajasi.JungleJepps.db.DatabaseManager;
 import org.yajasi.JungleJepps.pdf.HtmlPreparer;
 import org.yajasi.JungleJepps.pdf.Repository;
@@ -111,7 +112,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 		try {
 			DatabaseManager.getDatabase().updateRunway(run);
 			modifiedFields.clear();
-		} catch (SQLException e) {
+		} catch (DatabaseException e) {
 			e.printStackTrace();
 			
 		}		

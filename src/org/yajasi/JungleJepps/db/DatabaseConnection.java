@@ -51,6 +51,6 @@ public interface DatabaseConnection {
      * closes the database;
      * @return 1 if data base is closed. 0 if no data base was open
      */
-    public boolean close();
+    public boolean close() throws DatabaseException;
 
 }
