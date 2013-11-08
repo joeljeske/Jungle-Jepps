@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -12,15 +13,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
+import org.yajasi.JungleJepps.db.DatabaseException;
 
 import com.google.gson.Gson;
 
@@ -34,8 +39,9 @@ public class Client implements DatabaseConnection {
 	 * a LAN conected server.
 	 * @param args
 	 * @throws InterruptedException
+	 * @throws DatabaseException 
 	 */
-	public static void main(String[] args) throws InterruptedException{
+	public static void main(String[] args) throws InterruptedException, DatabaseException{
 		Client client = new Client();
 		Thread.sleep(1000);
 		String aircraftId = "C-5";
@@ -61,7 +67,7 @@ public class Client implements DatabaseConnection {
 	/////////////////////////////////////////////////////////////////////////////////
 
 	@Override
-	public String[] getAllAircraftIds() {
+	public String[] getAllAircraftIds() throws DatabaseException{
 		String[] list; // To store all the Ids
 		Gson gson = new Gson(); // Google's json parser
 		BufferedReader reader; // Reader from server json message
@@ -72,7 +78,7 @@ public class Client implements DatabaseConnection {
 		list = gson.fromJson(reader, String[].class);	
 		return list;	}
 	
-	public String[] getAllRunwayIds() {
+	public String[] getAllRunwayIds() throws DatabaseException {
 		return getAllRunwayIds("");
 	}
 	
@@ -80,7 +86,7 @@ public class Client implements DatabaseConnection {
 	 * This method will return all the runway Ids for this database connection
 	 */
 	@Override
-	public String[] getAllRunwayIds(String aircraftId) {
+	public String[] getAllRunwayIds(String aircraftId) throws DatabaseException {
 		String[] list; // To store all the Ids
 		Gson gson = new Gson(); // Google's json parser
 		BufferedReader reader; // Reader from server json message
@@ -96,7 +102,7 @@ public class Client implements DatabaseConnection {
 	}
 
 	@Override
-	public Runway getRunway(String runwayId, String aircraftId) {
+	public Runway getRunway(String runwayId, String aircraftId) throws DatabaseException {
 		Runway runway; //The runway object to be deserialized into
 		Gson gson = new Gson(); // Google's json parser
 		BufferedReader reader; // Reader from server json message
@@ -113,11 +119,17 @@ public class Client implements DatabaseConnection {
 	}
 
 	@Override
-	public boolean updateRunway(Runway runway) {
-		HttpPatch request = new HttpPatch();
-		request.addHeader("Accept", "application/json");
-
-		throw new UnsupportedOperationException();
+	public boolean updateRunway(Runway runway) throws DatabaseException {
+		StatusLine status;
+		Gson gson = new Gson(); // Google's json parser
+		String json = gson.toJson(runway);
+		
+		status = sendApplicationJson("/application/runway/update", null, json);
+		
+		if(status.getStatusCode() != HttpStatus.SC_OK)
+			throw new DatabaseException(status.getReasonPhrase());
+		
+		return true;
 	}
 	
 	public InputStream getSettingsStream(){
@@ -170,7 +182,7 @@ public class Client implements DatabaseConnection {
 	}
 
 	
-	private BufferedReader getApplicationJson(String path, List<NameValuePair> parameters){		
+	private BufferedReader getApplicationJson(String path, List<NameValuePair> parameters) throws DatabaseException{		
 		URI uri = null; //The URI that will be built
 		HttpResponse response = null; // The response from the Server
 		BufferedReader reader = null; // What will read the response from the server 
@@ -187,16 +199,19 @@ public class Client implements DatabaseConnection {
 						.build();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
+			throw new DatabaseException(e);			
 		}
-					
+
 		request.setURI(uri); // Use this URI for the request
 		
 		try {
 			response = client.execute(request); // Execute HTTP method 
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			throw new DatabaseException(e);			
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new DatabaseException(e);			
 		}
 		
 		try {
@@ -204,12 +219,58 @@ public class Client implements DatabaseConnection {
 			reader = new BufferedReader( new InputStreamReader(response.getEntity().getContent()));
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
+			throw new DatabaseException(e);			
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new DatabaseException(e);			
 		}
 		
 		return reader;
 	}
+	
+	private StatusLine sendApplicationJson(String path, List<NameValuePair> parameters, String body) throws DatabaseException{
+		URI uri = null; //The URI that will be built
+		HttpResponse response = null; // The response from the Server
+		BufferedReader reader = null; // What will read the response from the server 
+		HttpPatch request = new HttpPatch(); // Using HTTP method PATCH
+		
+		// Application requests over LAN will only use JSON
+		request.addHeader("Accept", "application/json");
+		
+		try {
+			uri = new URIBuilder( JungleJeppsmDNS.getProvider() ) // Partial URI containing host and port <host>:<port> 
+						.setScheme("http") // Not secure
+						.setPath(path) // Request path
+						.addParameters(parameters) //Add url parameters
+						.build();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);			
+		}
+
+		request.setURI(uri); // Use this URI for the request
+		
+		try {
+			request.setEntity( new StringEntity(body) ); //Set the body of the request
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);			
+		}
+		
+		try {
+			response = client.execute(request); // Execute HTTP method 
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);			
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
+		
+		// Return its status
+		return response.getStatusLine();
+	}
+
 
 	
 }

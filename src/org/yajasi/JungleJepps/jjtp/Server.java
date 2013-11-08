@@ -20,6 +20,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
+import org.yajasi.JungleJepps.db.DatabaseException;
 import org.yajasi.JungleJepps.db.DatabaseManager;
 import org.yajasi.JungleJepps.db.SettingsManager;
 import org.yajasi.JungleJepps.pdf.Repository;
@@ -162,13 +163,14 @@ public class Server {
 			runway = json.fromJson(reader, Runway.class);
 			
 			try {
-				db.updateRunway(runway);
-				exchange.sendResponseHeaders(HttpStatus.SC_OK, 0L);
+				boolean success = db.updateRunway(runway);
+				int status = success ? HttpStatus.SC_OK : HttpStatus.SC_CONFLICT;
+				exchange.sendResponseHeaders(status, 0L);
 			} catch (IOException e) {
 				e.printStackTrace();
-			} catch (SQLException e) {
+			} catch (DatabaseException e) {
 				e.printStackTrace();
-			}
+			} 
 		}	
 		
 		/**
@@ -287,7 +289,7 @@ public class Server {
 					try {
 						Runway runway = db.getRunway(runwayId, aircraftId);
 						output = json.toJson(runway);
-					} catch (SQLException e) {
+					} catch (DatabaseException e) {
 						e.printStackTrace();
 					}
 				}
@@ -297,7 +299,7 @@ public class Server {
 					try {
 						String[] runwayIds = db.getAllRunwayIds(aircraftId);
 						output = json.toJson(runwayIds);
-					} catch (SQLException e) {
+					} catch (DatabaseException e) {
 						e.printStackTrace();
 					}
 				}
@@ -309,7 +311,7 @@ public class Server {
 				try {
 					String[] runwayIds = db.getAllRunwayIds();
 					output = json.toJson(runwayIds);
-				} catch (SQLException e) {
+				} catch (DatabaseException e) {
 					e.printStackTrace();
 				}
 			}
@@ -332,7 +334,7 @@ public class Server {
 			try {
 				String[] aircraftIds = db.getAllAircraftIds();	// Get all ids
 				output = json.toJson(aircraftIds); //Serialize
-			} catch (SQLException e) {
+			} catch (DatabaseException e) {
 				e.printStackTrace();
 			}
 			
@@ -349,7 +351,7 @@ public class Server {
 			String[] aids = null;
 			try {
 				aids = db.getAllAircraftIds();
-			} catch (SQLException e) {
+			} catch (DatabaseException e) {
 				e.printStackTrace();
 			}
 			
@@ -358,7 +360,7 @@ public class Server {
 				String[] rids = null;
 				try {
 					rids = db.getAllRunwayIds(aid);
-				} catch (SQLException e) {
+				} catch (DatabaseException e) {
 					e.printStackTrace();
 				}
 				

@@ -4,7 +4,18 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/flying-saucer-core-renderer.jar"/>
 	<classpathentry kind="lib" path="lib/iText-2.0.8.jar"/>
-	<classpathentry kind="lib" path="lib/jmdns.jar"/>
-	<classpathentry kind="lib" path="/Users/joeljeske14/git/jungle-jepps/lib/sqlite-jdbc-3.7.15-M1.jar"/>
+	<classpathentry kind="lib" path="lib/jmdns-3.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/jdbc/sqlite-jdbc-3.7.15-M1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-configuration-1.9-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/commons-configuration-1.9-sources.jar"/>
+	<classpathentry kind="lib" path="lib/commons-configuration-1.9.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/apache-http/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/apache-http/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/apache-http/fluent-hc-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/apache-http/httpclient-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/apache-http/httpclient-cache-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/apache-http/httpcore-4.3.jar"/>
+	<classpathentry kind="lib" path="lib/apache-http/httpmime-4.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
