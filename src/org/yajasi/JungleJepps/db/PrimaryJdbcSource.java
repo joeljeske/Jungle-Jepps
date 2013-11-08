@@ -68,7 +68,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                     tablesCorrect = 0;
                     this.connection = DriverManager.getConnection(dbUrl);
                                         
-                    dbTablesFound = printDbTables(this);
+                    dbTablesFound = printDbTables();
                     for(String N:dbTablesNeeded){//checks to see if the table schema matches the needed schema
                         System.out.println("N: " + N.toUpperCase());
                         for(String F: dbTablesFound){
@@ -83,7 +83,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                         case 0: System.out.println("No Database Tables not found. Building schema now.");setupRelationships(); break;//all tables are not found so a new schema can be setup with not conflicts
                         case 1: System.out.println("Two Database Tables were not found. Unable to repaire. Please check Database"); System.exit(1);
                         case 2: System.out.println("One Database Tables was not found. Unable to repaire. Please check Database"); System.exit(1);
-                        case 3: System.out.println("Database schema is correct. Makeing connection."); break;//no need to setup the schema...hoping that the tables are setup correctly
+                        case 3: System.out.println("Database schema is correct. Making connection."); break;//no need to setup the schema...hoping that the tables are setup correctly
                     }
                 }
                 catch(java.sql.SQLException e){
@@ -264,9 +264,9 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	 * @param db
 	 * @throws SQLException
 	 */
-	public static String[] printDbTables(PrimaryJdbcSource db) throws SQLException {
+	public String[] printDbTables() throws SQLException {
 		
-		DatabaseMetaData meta = db.connection.getMetaData();
+		DatabaseMetaData meta = connection.getMetaData();
 		ResultSet res = meta.getTables(null, null, null, new String[]{"TABLE"});
 		String[] results = new String[3];
                 int I = 0;
@@ -287,7 +287,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             System.out.println("This is the main method of the PrimaryJdbcCource Class\n");
             //PrimaryJdbcSource db = new PrimaryJdbcSource("org.sqlite.JDBC", "jdbc:sqlite:JJDB.db");
             PrimaryJdbcSource db = new PrimaryJdbcSource("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/JJDB?user=jepps&password=jepps");
-            printDbTables(db);
+            db.printDbTables();
             
             String[] aircraftIds, runwayIds;
             Runway runway;
