@@ -68,7 +68,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                     tablesCorrect = 0;
                     this.connection = DriverManager.getConnection(dbUrl);
                                         
-                    dbTablesFound = printDbTables();
+                    dbTablesFound = getDbTables();
                     for(String N:dbTablesNeeded){//checks to see if the table schema matches the needed schema
                         System.out.println("N: " + N.toUpperCase());
                         for(String F: dbTablesFound){
@@ -264,7 +264,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	 * @param db
 	 * @throws SQLException
 	 */
-	public String[] printDbTables() throws SQLException {
+	public String[] getDbTables() throws SQLException {
 		
 		DatabaseMetaData meta = connection.getMetaData();
 		ResultSet res = meta.getTables(null, null, null, new String[]{"TABLE"});
@@ -274,7 +274,6 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                 System.out.println("\n\nList of Tables in Database");
                 while (res.next()) {
                     results[I] = res.getString("TABLE_NAME");
-                    System.out.println( results[I] );
                     I++;
 		}
                 System.out.println("\n\n");
@@ -287,7 +286,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             System.out.println("This is the main method of the PrimaryJdbcCource Class\n");
             //PrimaryJdbcSource db = new PrimaryJdbcSource("org.sqlite.JDBC", "jdbc:sqlite:JJDB.db");
             PrimaryJdbcSource db = new PrimaryJdbcSource("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/JJDB?user=jepps&password=jepps");
-            db.printDbTables();
+            db.getDbTables();
             
             String[] aircraftIds, runwayIds;
             Runway runway;
