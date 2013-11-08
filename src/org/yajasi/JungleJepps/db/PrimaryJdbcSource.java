@@ -67,26 +67,29 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                 try{
                     tablesCorrect = 0;
                     this.connection = DriverManager.getConnection(dbUrl);
-                    ///////this has not been tested yet: START
+                                        
                     dbTablesFound = printDbTables(this);
-                    for(String N:dbTablesNeeded){
+                    for(String N:dbTablesNeeded){//checks to see if the table schema matches the needed schema
+                        System.out.println("N: " + N.toUpperCase());
                         for(String F: dbTablesFound){
-                            if(N.compareTo(F) == 0){
-                                tablesCorrect++;
+                            System.out.println("    F: " + F.toUpperCase());
+                            if(F != null && N.toUpperCase().compareTo(F.toUpperCase()) == 0){
+                                tablesCorrect++;//number of table that are correct.
                             }
                         }
                     }
+                    
                     switch(tablesCorrect){
-                        case 0: System.out.println("Database Tables not found. Building schema now.");setupRelationships(); break;
-                        case 1: System.out.println("Two Database Table were not found. Unable to repaire. Please check Database"); System.exit(1);
-                        case 2: System.out.println("One Database Table was not found. Unable to repaire. Please check Database"); System.exit(1);
-                        case 3: System.out.println("Database schema is correct. Makeing connection."); break;
+                        case 0: System.out.println("No Database Tables not found. Building schema now.");setupRelationships(); break;//all tables are not found so a new schema can be setup with not conflicts
+                        case 1: System.out.println("Two Database Tables were not found. Unable to repaire. Please check Database"); System.exit(1);
+                        case 2: System.out.println("One Database Tables was not found. Unable to repaire. Please check Database"); System.exit(1);
+                        case 3: System.out.println("Database schema is correct. Makeing connection."); break;//no need to setup the schema...hoping that the tables are setup correctly
                     }
-                    ///////this has not been tested yet: END
                 }
                 catch(java.sql.SQLException e){
-                    System.out.println("Exception: " + e.toString() + ": Trying to fix...");
-                    dbname = dbInfo[2].split("/")[1];
+                    System.out.println(e.toString() + ": Trying to fix...");
+                    dbname = dbInfo[2].split("[/?;]+")[2];//this line pulls the desired database name out of the url for mysql and mssql...i think
+                    System.out.println(dbname);
                     urlInfo = dbInfo[2].split(dbname);
                     this.connection = DriverManager.getConnection(dbInfo[0]+":"+dbInfo[1]+":"+urlInfo[0] + urlInfo[1]);
                     connection.createStatement().executeUpdate("CREATE DATABASE " + dbname);
@@ -325,11 +328,13 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 		String[] results = new String[3];
                 int I = 0;
 		
+                System.out.println("\n\nList of Tables in Database");
                 while (res.next()) {
                     results[I] = res.getString("TABLE_NAME");
                     System.out.println( results[I] );
                     I++;
 		}
+                System.out.println("\n\n");
                 return results;
 		
 	}
@@ -337,8 +342,8 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	// This method is an example of how to query and work in a JDBC Context
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {//DBbuild test
             System.out.println("This is the main method of the PrimaryJdbcCource Class\n");
-            PrimaryJdbcSource db = new PrimaryJdbcSource("org.sqlite.JDBC", "jdbc:sqlite:JJDB.db");
-            //PrimaryJdbcSource db = new PrimaryJdbcSource("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/JJDB?user=jepps&password=jepps");
+            //PrimaryJdbcSource db = new PrimaryJdbcSource("org.sqlite.JDBC", "jdbc:sqlite:JJDB.db");
+            PrimaryJdbcSource db = new PrimaryJdbcSource("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/JJDB?user=jepps&password=jepps");
             printDbTables(db);
             
             String[] aircraftIds, runwayIds;
