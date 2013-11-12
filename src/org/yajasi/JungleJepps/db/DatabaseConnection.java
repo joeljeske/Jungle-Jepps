@@ -13,7 +13,7 @@ import com.sun.rowset.CachedRowSetImpl;
 public interface DatabaseConnection {
 
 	
-	public String[] getAllAircraftIds() throws DatabaseException;
+	public String[] getAllAircraftIds() throws DatabaseException, SQLException;
 	
 
 	
@@ -21,13 +21,13 @@ public interface DatabaseConnection {
 	 * Get a list of every runway Id available in the database.
 	 * @return String[] Array of runway Ids available to an aircraft
 	 */
-	public String[] getAllRunwayIds(String aircraftId) throws DatabaseException;
+	public String[] getAllRunwayIds(String aircraftId) throws DatabaseException, SQLException;
 	
         /**
 	 * Get a list of every runway Id available in the database.
 	 * @return String[] Array of runway Ids
 	 */
-        public String[] getAllRunwayIds() throws DatabaseException;
+        public String[] getAllRunwayIds() throws DatabaseException, SQLException;
 	
 	/**
 	 * Get the runway with the corresponding runway.
@@ -35,7 +35,7 @@ public interface DatabaseConnection {
 	 * @param String runwayId
 	 * @return Runway runway from database
 	 */
-	public Runway getRunway(String runwayId, String aircraftId) throws DatabaseException;
+	public Runway getRunway(String runwayId, String aircraftId) throws DatabaseException, SQLException;
 	
 	
 	/**
@@ -43,7 +43,7 @@ public interface DatabaseConnection {
 	 * @param Runway the runway to Update
 	 * @return boolean true if updated successfully 
 	 */
-	public boolean updateRunway(Runway runway) throws DatabaseException;
+	public boolean updateRunway(Runway runway) throws DatabaseException, SQLException;
         
       
         

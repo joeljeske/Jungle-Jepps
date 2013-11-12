@@ -201,7 +201,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
          * @throws SQLException 
          */
 	@Override
-	public boolean updateRunway(Runway runway)throws SQLException{
+	public boolean updateRunway(Runway runway) throws SQLException{
             PreparedStatement statement = null; // if time, consider having all sql statements use this
             String updateSet = new String();
             ResultSet rs = connection.createStatement().executeQuery("SELECT " + Field.RUNWAY_IDENTIFIER + " "
