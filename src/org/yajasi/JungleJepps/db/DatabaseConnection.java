@@ -23,11 +23,11 @@ public interface DatabaseConnection {
 	 */
 	public String[] getAllRunwayIds(String aircraftId) throws DatabaseException;
 	
-        /**
+    /**
 	 * Get a list of every runway Id available in the database.
 	 * @return String[] Array of runway Ids
 	 */
-        public String[] getAllRunwayIds() throws DatabaseException;
+     public String[] getAllRunwayIds() throws DatabaseException;
 	
 	/**
 	 * Get the runway with the corresponding runway.
