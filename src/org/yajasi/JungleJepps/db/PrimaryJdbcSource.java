@@ -10,12 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 import java.util.List;
-import java.io.File;
 
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.Field;
