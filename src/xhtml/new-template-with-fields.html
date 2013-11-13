@@ -1,18 +1,30 @@
 <html>
 
 <!--
-Custom Template Notice
+Jungle Jepps - PDF Template
 
-Tags to inject into
+Author: Joel Jeske
+Date: November 10, 2013
+
+Purpose:
+This file is an HTML template used in the Jungle Jepps Software Suite to create PDF runway documents. The application loads this file and injects the various fields and attributes into this document and renders the HTML as a PDF document. Changes to this document WILL CHANGE the look of saved PDF runway documents. 
+
+NOTICE:
+Improper usage of this file may result undesired outcomes when creating future PDF documents in
+the Jungle Jepps software suite. 
+
+
+Tags to inject into:
 	<data>
 	<label>
 	<img>
 	<unit>
 	
-Atrributes used in custom tags
+Atrributes used in custom tags:
 	field		(the db column name of the field. all lower case, spaces by '_')
-	type		(used in units to specify units for different purposes.)
-	removable	(used to specify which nodes should be removed if the field does not exist)
+	type		(used in <unit> tags to specify units for different purposes)
+	removable	(used to specify which nodes should be removed if the field does not exist or is blank)
+	highlight	(used in conjunction with css in styles.css to highlight a given element)
 	
 -->
 
@@ -100,19 +112,19 @@ Atrributes used in custom tags
 					</td>
 				</tr>
 				<tr>
-					<td>
-						<data removable="true" field="elevation"></data>
+					<td highlight="true" field="elevation" >
+						<data  removable="true" field="elevation">32000</data>
 					</td>
-					<td>
+					<td highlight="true" field="length">
 						<data removable="true" field="length">419</data>
 					</td>
-					<td>
+					<td highlight="true" field="width_text">
 						<data removable="true" field="width_text">31/Ditch</data>
 					</td>
-					<td>
+					<td highlight="true" field="tdz_slope">
 						<data removable="true" field="tdz_slope">2%</data>
 					</td>
-					<td>
+					<td highlight="true" field="ias_adjustment">
 						<data removable="true" field="ias_adjustment">KIAS +8</data>
 					</td>
 				</tr>
@@ -120,11 +132,11 @@ Atrributes used in custom tags
 					<td class="label" >
 						<label removable="true" field="precipitation_on_screen">Land With Precipitation?</label>
 					</td>
-					<td id="map" class="tight" colspan="4" rowspan="6">
+					<td id="map" class="tight" colspan="4" rowspan="16">
 						<img id="topo_map" src="images/kiwi_image.png"/>
 					</td>
 				</tr>
-				<tr removable="true" field="precipitation_on_screen">
+				<tr removable="true" highlight="true" field="precipitation_on_screen">
 					<td>
 						<data field="precipitation_on_screen">NO</data>
 					</td>
@@ -133,49 +145,77 @@ Atrributes used in custom tags
 				<tr >
 					<td class="label">
 						<data field="aircraft_identifier">PC-6</data>
-						<br />
 						<label field="a_landing_restriction">Landing Weight</label>
 					</td>
 				</tr>
+
+
 				<tr>
-					<td>
-					
-						<data class="note-header" removable="true" field="runway_a">Rwy 31</data>		
-						<br removable="true" field="a_landing_restriction"/>					
-						<data class="note-header" removable="true" field="a_landing_restriction"></data>
-						<br removable="true" field="a_landing_note"/>
-						<data class="note" removable="true" field="a_landing_note">No Restrictions</data>
-						<br />
-						<hr removable="true" field="runway_b"/>
-						<data class="note-header" removable="true" field="runway_b">Rwy 13</data>		
-						<br removable="true" field="b_landing_restriction"/>
-						<data class="note-header" removable="true" field="b_landing_restriction"></data>
-						<br removable="true" field="b_landing_note"/>
-						<data class="note" removable="true" field="b_landing_note">No Restrictions</data>
+					<td class="merged bottom" highlight="true" field="runway_a">
+						<data class="note-header" field="runway_a">Rwy 31</data>		
 					</td>
 				</tr>
+				<tr>
+					<td class="merged top bottom" highlight="true" field="a_landing_restriction">
+						<data class="note-header" field="a_landing_restriction"></data>
+					</td>
+				</tr>
+				<tr>
+					<td class="merged top" highlight="true" field="a_landing_note">
+						<data class="note" field="a_landing_note">No Restrictions</data>
+					</td>
+				</tr>
+				
+				
+				<tr>
+					<td class="merged bottom" highlight="true" field="runway_b">
+						<data class="note-header" field="runway_b">Rwy 13</data>		
+					</td>
+				</tr>
+				<tr>
+					<td class="merged top bottom" highlight="true" field="b_landing_restriction">
+						<data class="note-header" field="b_landing_restriction"></data>
+					</td>
+				</tr>
+				<tr>
+					<td class="merged top" highlight="true" field="b_landing_note">
+						<data class="note" field="b_landing_note">No Restrictions</data>
+					</td>
+				</tr>
+				
+				
 				<tr >
 					<td class="label">
 						<data field="aircraft_identifier">PC-6</data>
-						<br />
 						<label field="a_takeoff_restriction">Landing Weight</label>
+					</td>
+				</tr>				
+				<tr>
+					<td highlight="true" field="runway_a" class="merged bottom">
+						<data class="note-header" field="runway_a">Rwy 31</data>		
 					</td>
 				</tr>
 				<tr>
-					<td>
-					
-						<data class="note-header" removable="true" field="runway_a">Rwy 31</data>		
-						<br removable="true" field="a_takeoff_restriction"/>					
-						<data class="note-header" removable="true" field="a_takeoff_restriction"></data>
-						<br removable="true" field="a_takeoff_note"/>
-						<data class="note" removable="true" field="a_takeoff_note">No Restrictions</data>
-						<br />
-						<hr removable="true" field="runway_b"/>
-						<data class="note-header" removable="true" field="runway_b">Rwy 13</data>		
-						<br removable="true" field="b_takeoff_restriction"/>
-						<data class="note-header" removable="true" field="b_takeoff_restriction">-200k / 2700GW</data>
-						<br removable="true" field="b_takeoff_note"/>
-						<data class="note" removable="true" field="b_takeoff_note">Temp until further experience</data>
+					<td highlight="true" field="a_takeoff_restriction" class="merged bottom top">
+						<data class="note-header" field="a_takeoff_restriction"></data>
+					</td>
+				</tr>
+					<td highlight="true"  field="a_takeoff_note" class="merged top">
+						<data class="note" field="a_takeoff_note">No Restrictions</data>
+					</td>
+				</tr>				
+				<tr>
+					<td highlight="true" field="b_takeoff_restriction" class="merged bottom">
+						<data class="note-header" field="runway_b">Rwy 13</data>		
+					</td>
+				</tr>
+				<tr>
+					<td highlight="true" field="b_takeoff_restriction" class="merged bottom top">
+						<data class="note-header" field="b_takeoff_restriction">-200k / 2700GW</data>
+					</td>
+				</tr>
+					<td highlight="true" field="b_takeoff_note" class="merged top">
+						<data class="note" field="b_takeoff_note">Temp until further experience</data>
 					</td>
 				</tr>
 	

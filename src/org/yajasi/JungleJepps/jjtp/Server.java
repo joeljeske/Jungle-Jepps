@@ -10,18 +10,15 @@ import java.io.OutputStream;
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URIBuilder;
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 import org.yajasi.JungleJepps.db.DatabaseException;
 import org.yajasi.JungleJepps.db.DatabaseManager;
+import org.yajasi.JungleJepps.db.Settings;
 import org.yajasi.JungleJepps.db.SettingsManager;
 import org.yajasi.JungleJepps.pdf.Repository;
 
@@ -34,7 +31,12 @@ public class Server {
 	private static Server instance;
 	private static boolean started = false;
 
-	private static final File WEB_ROOT = new File("src/xhtml/");
+	private static final File WEB_ROOT;
+	
+	static {
+		String root = DatabaseManager.getSettings().getStringForKey(Settings.WEB_ROOT);
+		WEB_ROOT = new File(root);
+	}
 
 	public static void main(String[] args) throws IOException{
 		start();
@@ -90,7 +92,7 @@ public class Server {
 		}
 
 		@Override
-		public void handle(HttpExchange exchange) throws IOException{
+		public void handle(HttpExchange exchange) throws IOException {
 			String method = exchange.getRequestMethod().toUpperCase().trim();
 			System.out.println("# HTTP REQUEST ###########################");
 			System.out.print(exchange.getRequestMethod() + ' ');
@@ -103,14 +105,7 @@ public class Server {
 
 			if( method.equals("GET") )
 			{
-                          try 
-                          {
 				doGet( exchange );
-                          }
-                          catch(SQLException e)
-                          {
-                            System.out.println("Caught exception: " + e.getLocalizedMessage());
-                          }
 			}
 			else if( method.equals("POST") ) 
 			{
@@ -118,14 +113,7 @@ public class Server {
 			}
 			else if( method.equals("PATCH") )
 			{
-                          try 
-                          {
 				doPatch( exchange );
-                          }
-                          catch(SQLException e)
-                          {
-                            System.out.println("Caught exception: " + e.getLocalizedMessage());
-                          }
 			}
 			else
 			{
@@ -141,7 +129,7 @@ public class Server {
 		 * @param HttpExchange exchange
 		 * @throws IOException 
 		 */
-		private void doGet(HttpExchange exchange) throws IOException, SQLException{
+		private void doGet(HttpExchange exchange) throws IOException{
 			String path = exchange.getRequestURI().getPath().toLowerCase();
 			System.out.println("Handling GET...");
 			
@@ -168,7 +156,7 @@ public class Server {
 		 * Handles upsert requests from client
 		 * @param exchange
 		 */
-		private void doPatch(HttpExchange exchange) throws SQLException{
+		private void doPatch(HttpExchange exchange){
 			Gson json = new Gson();
 			BufferedReader reader;
 			Runway runway;
@@ -192,9 +180,10 @@ public class Server {
 		 * @param exchange
 		 */
 		private void doPost(HttpExchange exchange){
+			
 		}	
 		
-		private void handleGetDatabaseRequest(HttpExchange exchange) throws IOException, SQLException{
+		private void handleGetDatabaseRequest(HttpExchange exchange) throws IOException{
 			OutputStream os = exchange.getResponseBody();
 			String output = null;
 			String path = exchange.getRequestURI().getPath().toLowerCase();
@@ -240,7 +229,7 @@ public class Server {
 			write(input, output);
 		}
 		
-		private void handleRepository(HttpExchange exchange) throws SQLException{
+		private void handleRepository(HttpExchange exchange){
 			String repoBase = "/repository/";
 			String path = exchange.getRequestURI().getPath();
 			
@@ -279,7 +268,7 @@ public class Server {
 		 * @param exchange
 		 * @return String serialized resultant to respond with
 		 */
-		private String getRunwayData(HttpExchange exchange) throws SQLException{
+		private String getRunwayData(HttpExchange exchange){
 			exchange.getResponseHeaders().add("Content-type", "application/json");
 			Gson json = new Gson(); // Json serializer
 			URI uri = exchange.getRequestURI();
@@ -339,7 +328,7 @@ public class Server {
 		 * @param exchange
 		 * @return String the serialized resultant of the request
 		 */
-		private String getAircraftData(HttpExchange exchange) throws SQLException {
+		private String getAircraftData(HttpExchange exchange) {
 			exchange.getResponseHeaders().add("Content-type", "application/json");
 			//We can assume they only want all the aircraft ids until more methods are needed
 			Gson json = new Gson();
@@ -355,7 +344,7 @@ public class Server {
 			return output;
 		}
 		
-		private String createHtmlRepoView() throws SQLException {
+		private String createHtmlRepoView() {
 			StringBuilder html = new StringBuilder();
 			html.append("<html><head><title>Jungle Jepps Repository</title></head>");
 			html.append("<body><h1>Jungle Jepps Repository Viewer</h1>");

@@ -15,6 +15,7 @@ import org.yajasi.JungleJepps.db.Settings;
 public class Repository {
 
 	public static final File REPOSITORY;
+	public static final String DOCUMENTS_FOLDER = "documents";
 	public static final String PUBLISHED_NAME = "diagram";
 	public static final String ARCHIVE_FOLDER = "archive";
 	public static final String IMAGE_FOLDER = "photos";
@@ -105,6 +106,19 @@ public class Repository {
 		File copy = getPhotoLocation(runway, image);
 		copyFileUsingFileChannels(image, copy);
 		return copy;
+	}
+
+	/**
+	 * Copies a Document to the documents section of the repository
+	 * @param File the docuemnt to copy
+	 * @return The copied file
+	 */
+	public static File addDocumentToRepository(File document) throws IOException {
+		File documents = new File(REPOSITORY, DOCUMENTS_FOLDER); //Get the folder */repository/documents/
+		documents.mkdirs(); // Make sure the folders are made
+		File copy = new File(documents, document.getName()); //Get the file to in the repo to store the copy
+		copyFileUsingFileChannels(document, copy); //Copy the file to the repo
+		return copy; //Return the new file location
 	}
 	
 	/**
