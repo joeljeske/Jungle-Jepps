@@ -42,7 +42,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
          */
         private PrimaryJdbcSource(String dbDriverClass, String dbUrl) throws DatabaseException {   
             Set<String> dbTablesFound;
-            String[] dbTablesNeeded = new String[]{"runway","aircraft","log"};
+            String[] dbTablesNeeded = new String[]{"runway","aircraft","log","defaults"};
             
             try {
                 // Load JDBC class into runtime
@@ -311,6 +311,27 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             
             return true;
         }
+        
+        public String[] getDefaults(Field f) throws DatabaseException{
+            ResultSet rs = null;
+            ArrayList<String> results = new ArrayList<String>();;
+            try{
+                rs = connection.createStatement().executeQuery("SELECT Options "
+                                                                    + "FROM Defaults "
+                                                                    + "WHERE Field = '" + f +"'" );
+                if(rs.next()){
+                    
+                    results.add(rs.getString("Options"));
+                    
+                }
+            }
+            catch(SQLException e){
+                e.printStackTrace();
+            	throw new DatabaseException(e);
+            }
+            
+            return results.toArray(new String[results.size()]);
+        }
 	
 	/**
 	 * Added by Joel.
@@ -481,7 +502,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	                        + "PRIMARY KEY(AIRCRAFT_IDENTIFIER, RUNWAY_ID)"
 	                        + ")"
 	                        );
-	                System.out.println("setup Note");
+	                System.out.println("setup Log");
 	                statement.executeUpdate(
 	                        "CREATE TABLE Log"
 	                        +"(LogID                   INTEGER AUTO_INCREMENT PRIMARY KEY,"
@@ -490,6 +511,15 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	                        + "user                                 VARCHAR(255),"
 	                        + "field_updated                        VARCHAR(2400),"
 	                        + "time                                 TIMESTAMP" 
+	                        + ")"
+	                        );
+                        
+                        System.out.println("setup Default");
+	                statement.executeUpdate(
+	                        "CREATE TABLE Defaults"
+	                        +"(DefaultID                   INTEGER AUTO_INCREMENT PRIMARY KEY,"
+	                        + "Field                       VARCHAR(255),"
+	                        + "Options                      VARCHAR(255)"
 	                        + ")"
 	                        );
 	
