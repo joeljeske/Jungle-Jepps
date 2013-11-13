@@ -103,7 +103,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
          */
         private PrimaryJdbcSource(String dbDriverClass, String dbUrl) throws DatabaseException {   
             Set<String> dbTablesFound;
-            String[] dbTablesNeeded = new String[]{"Runway","Aircraft","Log"};
+            String[] dbTablesNeeded = new String[]{"runway","aircraft","log"};
             
             try {
                 // Load JDBC class into runtime
@@ -148,7 +148,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 				e.printStackTrace();
 			}
             
-            return (String[]) results.toArray();
+            return results.toArray(new String[results.size()]);
         }
 
         /**
@@ -174,7 +174,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             	throw new DatabaseException(e);
             }
 
-            return (String[]) results.toArray();
+            return results.toArray(new String[results.size()]);
         }
         
         /**
@@ -198,7 +198,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             	throw new DatabaseException(e); 
             }
 
-            return (String[]) results.toArray();
+            return results.toArray(new String[results.size()]);
             
         }
         
