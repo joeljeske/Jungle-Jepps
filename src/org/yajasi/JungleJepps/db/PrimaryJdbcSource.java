@@ -332,6 +332,23 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             
             return results.toArray(new String[results.size()]);
         }
+        
+        public boolean updateDefaults(Field f, String newOption) throws DatabaseException{
+            
+            try{
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO Defaults "
+                                                                        + "(Filed,Options)"
+                                                                        + "Value(?,?)");
+                                                                        statement.setString(1, f.toString());
+                                                                        statement.setString(2, newOption);
+                                                                        statement.execute();        
+            }
+            catch(SQLException e){
+                e.printStackTrace();
+            	throw new DatabaseException(e);
+            }
+            return true;
+        }
 	
 	/**
 	 * Added by Joel.
