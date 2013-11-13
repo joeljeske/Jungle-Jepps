@@ -157,6 +157,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	                                                        + "WHERE Runway." + Field.RUNWAY_IDENTIFIER + " ='" + runwayId + "' AND " + Field.AIRCRAFT_IDENTIFIER + " = '" + aircraftId + "' "
 	                                                        );
 	            if(rs.next()){
+	            	
 	                for(Field f: Field.values()){
 	                    results.put(f, rs.getString( f.toString() ));
 	                }
@@ -318,7 +319,6 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                                                                     + "FROM Defaults "
                                                                     + "WHERE Field = '" + f +"'" );
                 if(rs.next()){
-                    
                     results.add(rs.getString("Options"));
                     
                 }
