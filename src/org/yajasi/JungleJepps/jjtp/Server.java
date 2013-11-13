@@ -170,8 +170,10 @@ public class Server {
 				exchange.sendResponseHeaders(status, 0L);
 			} catch (IOException e) {
 				e.printStackTrace();
+				templateResponse(exchange, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 			} catch (DatabaseException e) {
 				e.printStackTrace();
+				templateResponse(exchange, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 			} 
 		}	
 		
