@@ -46,7 +46,7 @@ public class DatabaseManager {
 		}
 	}
 	
-	public static void main(String[] args) throws DatabaseException{
+	public static void main(String[] args) throws DatabaseException, SQLException{
 		// By running this static function, the static block has already run
 		// and therefore the database connection has been made and the settings have 
 		// been initialized. If the instance is primary, the Server has been started a well. 

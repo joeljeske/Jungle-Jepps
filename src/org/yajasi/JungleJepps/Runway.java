@@ -115,7 +115,10 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 		} catch (DatabaseException e) {
 			e.printStackTrace();
 			
-		}		
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		}			
 	}
 	
 	/**
