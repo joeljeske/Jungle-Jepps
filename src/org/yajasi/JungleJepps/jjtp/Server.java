@@ -184,6 +184,7 @@ public class Server {
 		 * @param exchange
 		 */
 		private void doPost(HttpExchange exchange){
+			
 		}	
 		
 		private void handleGetDatabaseRequest(HttpExchange exchange) throws IOException{
