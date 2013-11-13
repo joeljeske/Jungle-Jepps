@@ -19,6 +19,67 @@ import java.io.File;
 
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.Field;
+import static org.yajasi.JungleJepps.Field.AIRCRAFT_IDENTIFIER;
+import static org.yajasi.JungleJepps.Field.A_LANDING_NOTE;
+import static org.yajasi.JungleJepps.Field.A_LANDING_NOTE_HL;
+import static org.yajasi.JungleJepps.Field.A_LANDING_RESTRICTION;
+import static org.yajasi.JungleJepps.Field.A_LANDING_RESTRICTION_HL;
+import static org.yajasi.JungleJepps.Field.A_TAKEOFF_NOTE;
+import static org.yajasi.JungleJepps.Field.A_TAKEOFF_NOTE_HL;
+import static org.yajasi.JungleJepps.Field.A_TAKEOFF_RESTRICTION;
+import static org.yajasi.JungleJepps.Field.A_TAKEOFF_RESTRICTION_HL;
+import static org.yajasi.JungleJepps.Field.B_LANDING_NOTE;
+import static org.yajasi.JungleJepps.Field.B_LANDING_NOTE_HL;
+import static org.yajasi.JungleJepps.Field.B_LANDING_RESTRICTION;
+import static org.yajasi.JungleJepps.Field.B_LANDING_RESTRICTION_HL;
+import static org.yajasi.JungleJepps.Field.B_TAKEOFF_NOTE;
+import static org.yajasi.JungleJepps.Field.B_TAKEOFF_NOTE_HL;
+import static org.yajasi.JungleJepps.Field.B_TAKEOFF_RESTRICTION;
+import static org.yajasi.JungleJepps.Field.B_TAKEOFF_RESTRICTION_HL;
+import static org.yajasi.JungleJepps.Field.CLASSIFICATION;
+import static org.yajasi.JungleJepps.Field.ELEVATION;
+import static org.yajasi.JungleJepps.Field.ELEVATION_HL;
+import static org.yajasi.JungleJepps.Field.FREQUENCY_1;
+import static org.yajasi.JungleJepps.Field.FREQUENCY_2;
+import static org.yajasi.JungleJepps.Field.IAS_ADJUSTMENT;
+import static org.yajasi.JungleJepps.Field.IAS_ADJUSTMENT_HL;
+import static org.yajasi.JungleJepps.Field.IMAGE_PATH;
+import static org.yajasi.JungleJepps.Field.INSPECTION_DATE;
+import static org.yajasi.JungleJepps.Field.INSPECTION_DUE;
+import static org.yajasi.JungleJepps.Field.INSPECTION_NA;
+import static org.yajasi.JungleJepps.Field.INSPECTOR_NAME;
+import static org.yajasi.JungleJepps.Field.LANGUAGE_GREET;
+import static org.yajasi.JungleJepps.Field.LATITUDE;
+import static org.yajasi.JungleJepps.Field.LENGTH;
+import static org.yajasi.JungleJepps.Field.LENGTH_HL;
+import static org.yajasi.JungleJepps.Field.LONGITUDE;
+import static org.yajasi.JungleJepps.Field.P1_TEXT_1;
+import static org.yajasi.JungleJepps.Field.P1_TEXT_2;
+import static org.yajasi.JungleJepps.Field.P1_TEXT_3;
+import static org.yajasi.JungleJepps.Field.P1_TEXT_4;
+import static org.yajasi.JungleJepps.Field.P1_TEXT_5;
+import static org.yajasi.JungleJepps.Field.P1_TEXT_6;
+import static org.yajasi.JungleJepps.Field.P1_TEXT_7;
+import static org.yajasi.JungleJepps.Field.P2_TEXT_1;
+import static org.yajasi.JungleJepps.Field.P2_TEXT_2;
+import static org.yajasi.JungleJepps.Field.P2_TEXT_3;
+import static org.yajasi.JungleJepps.Field.P2_TEXT_4;
+import static org.yajasi.JungleJepps.Field.P2_TEXT_5;
+import static org.yajasi.JungleJepps.Field.P2_TEXT_6;
+import static org.yajasi.JungleJepps.Field.P2_TEXT_7;
+import static org.yajasi.JungleJepps.Field.PDF_PATH;
+import static org.yajasi.JungleJepps.Field.PRECIPITATION_ON_SCREEN;
+import static org.yajasi.JungleJepps.Field.PRECIPITATION_ON_SCREEN_HL;
+import static org.yajasi.JungleJepps.Field.RUNWAY_A;
+import static org.yajasi.JungleJepps.Field.RUNWAY_A_HL;
+import static org.yajasi.JungleJepps.Field.RUNWAY_B;
+import static org.yajasi.JungleJepps.Field.RUNWAY_B_HL;
+import static org.yajasi.JungleJepps.Field.RUNWAY_IDENTIFIER;
+import static org.yajasi.JungleJepps.Field.RUNWAY_NAME;
+import static org.yajasi.JungleJepps.Field.TDZ_SLOPE;
+import static org.yajasi.JungleJepps.Field.TDZ_SLOPE_HL;
+import static org.yajasi.JungleJepps.Field.WIDTH_TEXT;
+import static org.yajasi.JungleJepps.Field.WIDTH_TEXT_HL;
 
 public class PrimaryJdbcSource implements DatabaseConnection {
 	
@@ -180,7 +241,8 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	@Override
 	public boolean updateRunway(Runway runway)throws DatabaseException{
             PreparedStatement statement = null; // if time, consider having all sql statements use this
-            String updateSet = new String();
+            String aircraftUpdateSet = new String();
+            String runwayUpdateSet = new String();
             ResultSet rs;
             
             try {
@@ -208,26 +270,101 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	            }
 	            
 	            for(Field f: runway.keySet()){
-	                if(f != Field.RUNWAY_IDENTIFIER || f != Field.AIRCRAFT_IDENTIFIER ){
-	                    updateSet = updateSet + "," + f + " = '" + runway.get(f) + "' ";
-	                }
-	            }
-	            statement = connection.prepareStatement("UPDATE Runway LEFT JOIN Aircraft "
-	                                                    + "ON Runway."+Field.RUNWAY_IDENTIFIER+" = Aircraft.RUNWAY_ID "
-	                                                    + "SET LAST_UPDATE = ? " + updateSet
-	                                                    + "WHERE Runway."+Field.RUNWAY_IDENTIFIER+" = ? AND Aircraft."+Field.AIRCRAFT_IDENTIFIER+" = ?");
-	                                                    statement.setTimestamp(1, new Timestamp(new Date().getTime()));
-	                                                    statement.setString(2, runway.get(Field.RUNWAY_IDENTIFIER));
-	                                                    statement.setString(3, runway.get(Field.AIRCRAFT_IDENTIFIER));
-	                                                    statement.execute();
-	            statement = connection.prepareStatement("INSERT INTO log("+Field.RUNWAY_IDENTIFIER+","+Field.AIRCRAFT_IDENTIFIER+",user,field_updated,time)"
-	                                                    + "VALUES(?,?,?,?,?)");
-	                                                    statement.setString(1, runway.get(Field.RUNWAY_IDENTIFIER));
-	                                                    statement.setString(2, runway.get(Field.AIRCRAFT_IDENTIFIER));
-	                                                    statement.setString(3, System.getProperty("user.name"));
-	                                                    statement.setString(4, updateSet);
-	                                                    statement.setTimestamp(5, new Timestamp(new Date().getTime()));
-	                                                    statement.execute();
+                int table = 0;//0 = skip item, 1 = item goes in the aircraft table, 2 = item goes in the runway table. NO other number should be set.
+                switch(f){
+                    case RUNWAY_IDENTIFIER: table = 0; break;
+                    case RUNWAY_NAME: table = 2; break;
+                    case AIRCRAFT_IDENTIFIER: table = 0; break;
+                    case LONGITUDE: table = 2; break;
+                    case LATITUDE: table = 2; break;
+                    case INSPECTION_NA: table = 2; break;
+                    case INSPECTION_DATE: table = 2; break;
+                    case INSPECTOR_NAME: table = 2; break;
+                    case INSPECTION_DUE: table = 2; break;
+                    case CLASSIFICATION: table = 2; break;
+                    case FREQUENCY_1: table = 2; break;
+                    case FREQUENCY_2: table = 2; break;
+                    case LANGUAGE_GREET: table = 2; break;
+                    case ELEVATION: table = 2; break;
+                    case ELEVATION_HL: table = 2; break;    
+                    case LENGTH: table = 2; break;
+                    case LENGTH_HL: table = 2; break;
+                    case WIDTH_TEXT: table = 2; break;
+                    case WIDTH_TEXT_HL: table = 2; break;
+                    case TDZ_SLOPE: table = 2; break;
+                    case TDZ_SLOPE_HL: table = 2; break;
+                    case IAS_ADJUSTMENT: table = 1; break;
+                    case IAS_ADJUSTMENT_HL: table = 1; break;
+                    case PRECIPITATION_ON_SCREEN: table = 1; break;
+                    case PRECIPITATION_ON_SCREEN_HL: table = 1; break;
+                    case RUNWAY_A: table = 2; break;
+                    case RUNWAY_A_HL: table = 2; break;
+                    case A_TAKEOFF_RESTRICTION: table = 1; break;
+                    case A_TAKEOFF_RESTRICTION_HL: table = 1; break;
+                    case A_TAKEOFF_NOTE: table = 1; break;
+                    case A_TAKEOFF_NOTE_HL: table = 1; break;
+                    case A_LANDING_RESTRICTION: table = 1; break;
+                    case A_LANDING_RESTRICTION_HL: table = 1; break;
+                    case A_LANDING_NOTE: table = 1; break;
+                    case A_LANDING_NOTE_HL: table = 1; break;
+                    case RUNWAY_B: table = 2; break;
+                    case RUNWAY_B_HL: table = 2; break;
+                    case B_TAKEOFF_RESTRICTION: table = 1; break;
+                    case B_TAKEOFF_RESTRICTION_HL: table = 1; break;
+                    case B_TAKEOFF_NOTE: table = 1; break;
+                    case B_TAKEOFF_NOTE_HL: table = 1; break;
+                    case B_LANDING_RESTRICTION: table = 1; break;
+                    case B_LANDING_RESTRICTION_HL: table = 1; break;
+                    case B_LANDING_NOTE: table = 1; break;
+                    case B_LANDING_NOTE_HL: table = 1; break;
+                    case P1_TEXT_1: table = 1; break;
+                    case P1_TEXT_2: table = 1; break;
+                    case P1_TEXT_3: table = 1; break;
+                    case P1_TEXT_4: table = 1; break;
+                    case P1_TEXT_5: table = 1; break;
+                    case P1_TEXT_6: table = 1; break;
+                    case P1_TEXT_7: table = 1; break;
+                    case P2_TEXT_1: table = 1; break;
+                    case P2_TEXT_2: table = 1; break;
+                    case P2_TEXT_3: table = 1; break;
+                    case P2_TEXT_4: table = 1; break;
+                    case P2_TEXT_5: table = 1; break;
+                    case P2_TEXT_6: table = 1; break;
+                    case P2_TEXT_7: table = 1; break;
+                    case PDF_PATH: table = 1; break;
+                    case IMAGE_PATH: table = 1; break;
+                }
+                switch(table){
+                    case 0: break;
+                    case 1: aircraftUpdateSet = aircraftUpdateSet + "," + f + " = '" + runway.get(f) + "' "; break;
+                    case 2: runwayUpdateSet = runwayUpdateSet + "," + f + " = '" + runway.get(f) + "' "; break;
+                    default: break;
+                }
+                
+            }
+            
+            statement = connection.prepareStatement("UPDATE Aircraft "
+                                                    + "SET LAST_UPDATE = ? " + aircraftUpdateSet
+                                                    + "WHERE Aircraft.RUNWAY_ID = ?"
+                                                    + "AND Aircraft." + Field.AIRCRAFT_IDENTIFIER + " = ?");
+                                                    statement.setTimestamp(1, new Timestamp(new Date().getTime()));
+                                                    statement.setString(2, runway.get(Field.RUNWAY_IDENTIFIER));
+                                                    statement.setString(3, runway.get(Field.AIRCRAFT_IDENTIFIER));
+                                                    statement.execute();
+            statement = connection.prepareStatement("UPDATE Runway "
+                                                    + "SET " + runwayUpdateSet.substring(1)//avoids the leading ","
+                                                    + "WHERE Runway." + Field.RUNWAY_IDENTIFIER + " = ?");
+                                                    statement.setString(1,runway.get(Field.RUNWAY_IDENTIFIER));
+                                                    statement.execute();
+            statement = connection.prepareStatement("INSERT INTO log("+Field.RUNWAY_IDENTIFIER+","+Field.AIRCRAFT_IDENTIFIER+",user,field_updated,time)"
+                                                    + "VALUES(?,?,?,?,?)");
+                                                    statement.setString(1, runway.get(Field.RUNWAY_IDENTIFIER));
+                                                    statement.setString(2, runway.get(Field.AIRCRAFT_IDENTIFIER));
+                                                    statement.setString(3, System.getProperty("user.name"));
+                                                    statement.setString(4, runwayUpdateSet.substring(1) + aircraftUpdateSet);
+                                                    statement.setTimestamp(5, new Timestamp(new Date().getTime()));
+                                                    statement.execute();
+                                                    statement.execute();
             }catch(SQLException e){
             	e.printStackTrace();
             	throw new DatabaseException(e);
