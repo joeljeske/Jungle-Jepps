@@ -32,6 +32,9 @@ public class DatabaseManager {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		/* Start up Server if primary instance */
@@ -96,8 +99,9 @@ public class DatabaseManager {
 	 * @return
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
+	 * @throws DatabaseException 
 	 */
-	private static DatabaseConnection createDatabaseConnection() throws ClassNotFoundException, SQLException{
+	private static DatabaseConnection createDatabaseConnection() throws ClassNotFoundException, SQLException, DatabaseException{
 		System.out.println("Making initial connection to database...");
 		DatabaseConnection newConnection;
 		SettingsManager settings = getSettings();
