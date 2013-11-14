@@ -11,3 +11,6 @@
 /.classpath
 /.project
 /dist/
+/jungle-jepps-nbeans/nbproject/private/
+/jungle-jepps-nbeans/build/
+/manifest.mf
