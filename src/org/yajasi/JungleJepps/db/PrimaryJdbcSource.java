@@ -40,7 +40,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
          */
         private PrimaryJdbcSource(String dbDriverClass, String dbUrl) throws DatabaseException {   
             Set<String> dbTablesFound;
-            String[] dbTablesNeeded = new String[]{"runway","aircraft","log","defaults"};
+            String[] dbTablesNeeded = new String[]{"Runway","Aircraft","Log","Defaults"};
             
             try {
                 // Load JDBC class into runtime
@@ -51,7 +51,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 				
 				//Get all the tables to see if setup is needed
 	            dbTablesFound = getTables();
-	            
+
 	            //If the found list of tables does not contain all of the required ones
 	            if( !dbTablesFound.containsAll( Arrays.asList(dbTablesNeeded) ) )
 	            	setupRelationships();
