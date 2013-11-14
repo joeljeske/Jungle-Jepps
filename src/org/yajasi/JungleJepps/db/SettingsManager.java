@@ -335,7 +335,9 @@ public class SettingsManager implements ValueByEnum{
 	 * @return
 	 */
 	public int getIntegerForKey(Settings key){
-		return Integer.parseInt( getStringForKey(key.toString()) );	
+		String val = getStringForKey(key.toString());
+		val = val.isEmpty() ? "0" : val;
+		return Integer.parseInt( val );	
 	}
 
 	/**
@@ -371,7 +373,9 @@ public class SettingsManager implements ValueByEnum{
 	 * @return value
 	 */
 	public double getDoubleForKey(Settings key){
-		return Double.parseDouble( getStringForKey(key.toString()) );	
+		String val = getStringForKey(key.toString());
+		val = val.isEmpty() ? "0" : val;
+		return Double.parseDouble( val );	
 	}
 	
 	/**
