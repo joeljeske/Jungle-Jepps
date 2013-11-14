@@ -211,8 +211,8 @@ public class SettingsManager implements ValueByEnum{
 		setValue(Settings.IS_OPERATIONS_DB, 		false);
 		setValue(Settings.ALTITUDE_UNITS, 			"ft");
 		setValue(Settings.WEIGHT_UNITS, 			"kg");
-		setValue(Settings.DIMENSION_UNITS, 			"nm");
-		setValue(Settings.DISTANCE_UNITS, 			"m");
+		setValue(Settings.DIMENSION_UNITS, 			"m");
+		setValue(Settings.DISTANCE_UNITS, 			"nm");
 		setValue(Settings.DISTANCE_CONVERT_FACTOR, 	1.852);
 		setValue(Settings.PAGE_1_DISCLAIMER, 		"Use of this diagram is strictly prohibited for aviation operators other than Jungle Jepps mission users. This diagram MAY CONTAIN ERRORS.");
 		setValue(Settings.PAGE_2_DISCLAIMER, 		"No diagram can substitute for a proper runway checkout. Use of this diagram is strictly prohibited for aviation operators other than Jungle Jepps mission users. This diagram MAY CONTAIN ERRORS. Report all safety concerns to the Chief Pilot or designated Safety Officer.");
