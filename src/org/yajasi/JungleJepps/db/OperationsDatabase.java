@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.Runway;
@@ -68,35 +69,89 @@ public class OperationsDatabase implements DatabaseConnection {
 
 	@Override
 	public String[] getAllAircraftIds() throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<String> results = new ArrayList<String>();
+                String sql = String.format("SELECT %s FROM %s", 
+                                           settingsMgr.getOverrideColumn(Field.AIRCRAFT_IDENTIFIER),
+                                           settingsMgr.get(Settings.OPERATIONS_TABLE_NAME));
+                ResultSet rs; 
+                try{
+                    rs = connection.createStatement().executeQuery(sql);
+                    while(rs.next()){
+                        results.add(rs.getString(settingsMgr.getOverrideColumn(Field.AIRCRAFT_IDENTIFIER)));
+                    }
+                }
+                catch(SQLException e){
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
+                
+		return results.toArray(new String[results.size()]);
 	}
 
 
 	@Override
 	public String[] getAllRunwayIds(String aircraftId) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<String> results = new ArrayList<String>();
+                String sql = String.format("SELECT %s FROM %s "
+                                         + "WHERE %s = '%s'", 
+                                         settingsMgr.getOverrideColumn(Field.RUNWAY_IDENTIFIER),
+                                         settingsMgr.get(Settings.OPERATIONS_TABLE_NAME), 
+                                         settingsMgr.getOverrideColumn(Field.AIRCRAFT_IDENTIFIER),
+                                         aircraftId);
+                ResultSet rs; 
+                try{
+                    rs = connection.createStatement().executeQuery(sql);
+                    while(rs.next()){
+                        results.add(rs.getString(settingsMgr.getOverrideColumn(Field.RUNWAY_IDENTIFIER)));
+                    }
+                }
+                catch(SQLException e){
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
+                
+		return results.toArray(new String[results.size()]);
 	}
 
 
 	@Override
 	public String[] getAllRunwayIds() throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<String> results = new ArrayList<String>();
+                String sql = String.format("SELECT %s FROM %s", 
+                                         settingsMgr.getOverrideColumn(Field.RUNWAY_IDENTIFIER),
+                                         settingsMgr.get(Settings.OPERATIONS_TABLE_NAME));
+                ResultSet rs; 
+                try{
+                    rs = connection.createStatement().executeQuery(sql);
+                    while(rs.next()){
+                        results.add(rs.getString(settingsMgr.getOverrideColumn(Field.RUNWAY_IDENTIFIER)));
+                    }
+                }
+                catch(SQLException e){
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
+                
+		return results.toArray(new String[results.size()]);
 	}
 
 
 	@Override
 	public boolean updateRunway(Runway runway) throws DatabaseException {
-		// TODO Auto-generated method stub
+		System.out.println("Update on third party Database not permited");
 		return false;
 	}
 
 
 	@Override
 	public boolean close() throws DatabaseException {
-		// TODO Auto-generated method stub
+		try{
+                    connection.close();
+                }
+                catch(SQLException e){
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
 		return false;
 	}
 
