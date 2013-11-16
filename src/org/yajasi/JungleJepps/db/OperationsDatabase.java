@@ -14,10 +14,12 @@ public class OperationsDatabase implements DatabaseConnection {
 	private SettingsManager settingsMgr;
 	private Connection connection;
 	
-	public OperationsDatabase(SettingsManager settings) throws DatabaseException{
+	public OperationsDatabase(SettingsManager settings, int thirdPartyDbNumber) throws DatabaseException{
 		this.settingsMgr = settings;
-		String dbDriverClass = settingsMgr.get(Settings.OPERATIONS_JDBC_CLASS_PATH);
-		String dbUrl = settingsMgr.get(Settings.OPERATIONS_JDBC_URI);
+		
+                
+                String dbDriverClass = settingsMgr.get(Settings.OPERATIONS_JDBC_CLASS_PATH).split("$")[thirdPartyDbNumber];
+		String dbUrl = settingsMgr.get(Settings.OPERATIONS_JDBC_URI).split("$")[thirdPartyDbNumber];
 		
 		try{
 	        // Load JDBC class into runtime
@@ -168,7 +170,7 @@ public class OperationsDatabase implements DatabaseConnection {
             settings.setOverrideColumn(Field.PDF_PATH, "PDF");
             settings.setValue(Settings.OPERATIONS_TABLE_NAME, "a_id");
 
-            OperationsDatabase db = new OperationsDatabase(settings);
+            OperationsDatabase db = new OperationsDatabase(settings, 0);
             
             String[] aircraftIds, runwayIds;
             Runway runway;
