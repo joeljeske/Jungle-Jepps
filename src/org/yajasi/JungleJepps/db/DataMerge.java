@@ -12,18 +12,28 @@ import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 
 public class DataMerge implements DatabaseConnection{
-	private DatabaseConnection primaryConnection;
-        private DatabaseConnection operationsConnection;
+	//private DatabaseConnection primaryConnection;
+        //private DatabaseConnection operationsConnection;
 	//private DatabaseConnection primarySource;
+        private DatabaseConnection[] connections;
 	private SettingsManager settingsMgr;
+        int numOfDbs;
 
 	public DataMerge(SettingsManager settings)throws SQLException, DatabaseException{		
             // Keep reference to primary source to query when necessary
-            this.primaryConnection = new PrimaryJdbcSource(settings);
-            this.operationsConnection = new OperationsDatabase(settings);
+            this.settingsMgr = settings;
+            numOfDbs = settingsMgr.get(Settings.OPERATIONS_JDBC_CLASS_PATH).split("$").length+1;
+            System.out.println("here: " + numOfDbs);
+            connections = new DatabaseConnection[numOfDbs];
+            
+            this.connections[0] = new PrimaryJdbcSource(settings);
+            for(int I = 1; I < numOfDbs; I++){
+                this.connections[I] = new OperationsDatabase(settings, I-1); //the -1 is so that the OperationsDatabase does not have to account for the primary database 
+            }
+            
 
             // Keep reference to settings manager to retrieve overridden field list
-            this.settingsMgr = settings;
+            
 
             //force primaryConnection to have all Keys from operationConnection
             ODPDclosure();
@@ -31,44 +41,44 @@ public class DataMerge implements DatabaseConnection{
 	
 	@Override
 	public String[] getAllAircraftIds() throws DatabaseException {
-            return operationsConnection.getAllAircraftIds();
+            return connections[0].getAllAircraftIds();
 	}
 
 	@Override
 	public String[] getAllRunwayIds() throws DatabaseException{
-            return operationsConnection.getAllRunwayIds();
+            return connections[0].getAllRunwayIds();
                 
 	}
 	
 	@Override
 	public String[] getAllRunwayIds(String aircraftId)throws DatabaseException {
-            return operationsConnection.getAllRunwayIds(aircraftId);
+            return connections[0].getAllRunwayIds(aircraftId);
 	}
 
 	@Override
 	public Runway getRunway(String runwayId, String aircraftId)throws DatabaseException {
-            Runway operationsRunway = new Runway();
-            Runway primaryRunway = new Runway();
+            //Runway operationsRunway = new Runway();
+            Runway results = connections[0].getRunway(runwayId, aircraftId);
 
-            operationsRunway = operationsConnection.getRunway(runwayId, aircraftId);
-            primaryRunway = primaryConnection.getRunway(runwayId, aircraftId);
+            for(int I = numOfDbs-1; I > 0; I--){//this loop is in revers to make sure that the first 3rd party database has primacy on the results
+                results.putAll(connections[I].getRunway(runwayId, aircraftId));
+            }
 
-            primaryRunway.putAll(operationsRunway);
-
-            return primaryRunway;
+            return results;
 	}
 
 	@Override
 	public boolean updateRunway(Runway runway)throws DatabaseException {
-            primaryConnection.updateRunway(runway);
+            connections[0].updateRunway(runway);
             return true;
 	}
 	
 	@Override
 	public boolean close()throws DatabaseException {
 		// TODO Auto-generated method stub
-            operationsConnection.close();
-            primaryConnection.close();
+            for(int I = 0; I < numOfDbs; I++){
+                connections[I].close();
+            }
             return true;
 	}
         
@@ -120,23 +130,27 @@ public class DataMerge implements DatabaseConnection{
         }
         
         private boolean ODPDclosure() throws DatabaseException{
-            String[] operationsAID = operationsConnection.getAllAircraftIds();
-            String[] operationsRID = operationsConnection.getAllRunwayIds();
+            String[] operationsAID;
+            String[] operationsRID;
             
             Runway operationsRunway = new Runway();
             Runway primaryRunway = new Runway();
-            
-            for(String R: operationsRID){
-                for(String A: operationsAID){
-                    operationsRunway = operationsConnection.getRunway(R, A);
-                    if(!operationsRunway.isEmpty()){
-                        primaryRunway.clear();
-                        primaryRunway.put(Field.RUNWAY_IDENTIFIER, R);
-                        primaryRunway.put(Field.AIRCRAFT_IDENTIFIER, A);
-                        primaryConnection.updateRunway(primaryRunway);
+            for(int I = 1; I < numOfDbs; I ++){
+                operationsAID = connections[I].getAllAircraftIds();
+                operationsRID = connections[I].getAllRunwayIds();
+                for(String R: operationsRID){
+                    for(String A: operationsAID){
+                        operationsRunway = connections[I].getRunway(R, A);
+                        if(!operationsRunway.isEmpty()){
+                            primaryRunway.clear();
+                            primaryRunway.put(Field.RUNWAY_IDENTIFIER, R);
+                            primaryRunway.put(Field.AIRCRAFT_IDENTIFIER, A);
+                            connections[0].updateRunway(primaryRunway);
+                        }
                     }
                 }
             }
+            
             return false;
         }
 }
