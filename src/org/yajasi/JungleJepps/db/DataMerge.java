@@ -17,7 +17,7 @@ public class DataMerge implements DatabaseConnection{
 	//private DatabaseConnection primarySource;
 	private SettingsManager settingsMgr;
 
-	public DataMerge(SettingsManager settings, DatabaseConnection primarySource) throws ClassNotFoundException, SQLException, DatabaseException{		
+	public DataMerge(SettingsManager settings)throws SQLException, DatabaseException{		
             // Keep reference to primary source to query when necessary
             this.primaryConnection = new PrimaryJdbcSource(settings);
             this.operationsConnection = new OperationsDatabase(settings);
@@ -53,9 +53,9 @@ public class DataMerge implements DatabaseConnection{
             operationsRunway = operationsConnection.getRunway(runwayId, aircraftId);
             primaryRunway = primaryConnection.getRunway(runwayId, aircraftId);
 
-            operationsRunway.putAll(primaryRunway);
+            primaryRunway.putAll(operationsRunway);
 
-            return operationsRunway;
+            return primaryRunway;
 	}
 
 	@Override
@@ -71,6 +71,53 @@ public class DataMerge implements DatabaseConnection{
             primaryConnection.close();
             return true;
 	}
+        
+        public static void main(String[] args) throws DatabaseException {//DBbuild test
+            System.out.println("This is the main method of the datamerge Class\n");
+            SettingsManager settings = SettingsManager.getInstance();
+            //settings for mysql
+            settings.setValue(Settings.PRIMARY_JDBC_CLASS_PATH, "com.mysql.jdbc.Driver"); 
+            settings.setValue(Settings.PRIMARY_JDBC_URI, "jdbc:mysql://localhost/JJDB?user=jepps&password=jepps");
+            settings.setValue(Settings.OPERATIONS_JDBC_CLASS_PATH, "com.mysql.jdbc.Driver");
+            settings.setValue(Settings.OPERATIONS_JDBC_URI, "jdbc:mysql://localhost/JJDB3?user=jepps&password=jepps");
+            settings.setOverrideColumn(Field.AIRCRAFT_IDENTIFIER, "craft");
+            settings.setOverrideColumn(Field.RUNWAY_IDENTIFIER, "RUNWAY_ID");
+            settings.setOverrideColumn(Field.PDF_PATH, "PDF");
+            settings.setValue(Settings.OPERATIONS_TABLE_NAME, "a_id");
+                       
+            try{
+                DataMerge db = new DataMerge(settings);
+            
+                String[] aircraftIds, runwayIds;
+                Runway runway;
+
+                ///getting runway and aircraft IDs
+                aircraftIds = db.getAllAircraftIds();
+                System.out.println("number of aircraft= " + aircraftIds.length);
+                runwayIds = db.getAllRunwayIds( aircraftIds[0] );
+                System.out.println("number of runway= " + runwayIds.length);
+                runway = db.getRunway("KIW", "PC-6"); 
+
+                System.out.print("\nAircraft IDs: ");
+                for(String aid : aircraftIds)
+                        System.out.print(aid + ", ");
+
+                System.out.print("\nRunway IDs: ");
+                for(String rid : runwayIds)
+                        System.out.print(rid + ", ");
+
+
+                System.out.print("\n\n-----" + "KIW" + "PC-6" + "---Field Printouts-----\n");
+                for(Field f : runway.keySet())
+                        System.out.println(f.toString() + ": " + runway.get(f) );
+
+
+                db.close();
+            }
+            catch(SQLException e){
+                System.out.println(e);
+            }
+        }
         
         private boolean ODPDclosure() throws DatabaseException{
             String[] operationsAID = operationsConnection.getAllAircraftIds();
