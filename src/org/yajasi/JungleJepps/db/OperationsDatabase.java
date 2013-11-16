@@ -154,5 +154,48 @@ public class OperationsDatabase implements DatabaseConnection {
 		}
 		return false;
 	}
+        
+        public static void main(String[] args) throws DatabaseException{
+            System.out.println("This is the main method of the OperationsJdbcCource Class\n");
+            SettingsManager settings = SettingsManager.getInstance();
+            //settings for mysql
+            settings.setValue(Settings.PRIMARY_JDBC_CLASS_PATH, "com.mysql.jdbc.Driver"); 
+            settings.setValue(Settings.PRIMARY_JDBC_URI, "jdbc:mysql://localhost/JJDB?user=jepps&password=jepps");
+            settings.setValue(Settings.OPERATIONS_JDBC_CLASS_PATH, "com.mysql.jdbc.Driver");
+            settings.setValue(Settings.OPERATIONS_JDBC_URI, "jdbc:mysql://localhost/JJDB3?user=jepps&password=jepps");
+            settings.setOverrideColumn(Field.AIRCRAFT_IDENTIFIER, "craft");
+            settings.setOverrideColumn(Field.RUNWAY_IDENTIFIER, "RUNWAY_ID");
+            settings.setOverrideColumn(Field.PDF_PATH, "PDF");
+            settings.setValue(Settings.OPERATIONS_TABLE_NAME, "a_id");
+
+            OperationsDatabase db = new OperationsDatabase(settings);
+            
+            String[] aircraftIds, runwayIds;
+            Runway runway;
+
+            ///getting runway and aircraft IDs
+            aircraftIds = db.getAllAircraftIds();
+            System.out.println("number of aircraft= " + aircraftIds.length);
+            runwayIds = db.getAllRunwayIds( aircraftIds[0] );
+            System.out.println("number of runway= " + runwayIds.length);
+            runway = db.getRunway(runwayIds[0], aircraftIds[0]); 
+            
+            System.out.print("\nAircraft IDs: ");
+            for(String aid : aircraftIds)
+                    System.out.print(aid + ", ");
+
+            System.out.print("\nRunway IDs: ");
+            for(String rid : runwayIds)
+                    System.out.print(rid + ", ");
+                       
+            ///row display
+            runway = db.getRunway(runwayIds[0], aircraftIds[0]);
+            System.out.print("\n\n-----" + runwayIds[0] + "---" + aircraftIds[0] + "---Field Printouts-----\n");
+            for(Field f : runway.keySet())
+                    System.out.println(f.toString() + ": " + runway.get(f) );
+            
+            db.close();
+            
+        }
 
 }
