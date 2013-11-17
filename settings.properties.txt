@@ -1,5 +1,5 @@
 #Jungle Jepps Settings List
-#Tue Nov 12 18:30:22 CST 2013
+#Thu Nov 14 21:06:08 CST 2013
 label.p2_text_5=Minumum Number/Type of Wind Indicators
 label.p2_text_4=Chief Pilot Comments
 label.p2_text_3=Explanation of Restrictions
@@ -12,12 +12,12 @@ label.language_greet=Language / Greeting
 default_expiration_period=12
 primary_jdbc_uri=jdbc\:sqlite\:JJDB.db
 label.inspection_na=N/A
-weight_units=kg
 label.b_landing_restriction=Landing Weight
+weight_units=kg
 label.classification=Classification
 label.ias_adjustment=Gnd Speed
-primary_jdbc_class_path=org.sqlite.JDBC
 repository_path=C\:\\Users\\Timothy\\JungleJepps\\
+primary_jdbc_class_path=org.sqlite.JDBC
 label.longitude=Longitude
 label.width_text=Width
 page_2_disclaimer=No diagram can substitute for a proper runway checkout. Use of this diagram is strictly prohibited for aviation operators other than Jungle Jepps mission users. This diagram MAY CONTAIN ERRORS. Report all safety concerns to the Chief Pilot or designated Safety Officer.
