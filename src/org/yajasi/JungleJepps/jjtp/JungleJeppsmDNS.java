@@ -27,7 +27,7 @@ public class JungleJeppsmDNS {
 	public static final String PROPRIETARY_MDNS_SERVICE_TYPE = "_junglejepps._tcp.local.";
 	public static final String HTTP_MDNS_SERVICE_TYPE = "_http._tcp.local.";
 
-	public static final int SERVER_PORT = 8080;
+	public static final int SERVER_PORT = 6545;
 	private static final String MDNS_SERVICE_NAME = "JJTP service";
 	private static final String MDNS_SERVICE_NAME_PRETTY = "Jungle Jepps Desktop Service";
 
