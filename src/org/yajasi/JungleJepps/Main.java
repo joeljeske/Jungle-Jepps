@@ -7,10 +7,22 @@ import java.sql.SQLException;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 import org.yajasi.JungleJepps.db.DatabaseException;
 import org.yajasi.JungleJepps.db.DatabaseManager;
+import org.yajasi.JungleJepps.ui.NewJFrame;
 
 public class Main {
 
 	public static void main(String[] args) throws SQLException, DatabaseException {
+		
+	    java.awt.EventQueue.invokeLater(new Runnable() {
+	        public void run() {
+	          new NewJFrame().setVisible(true);
+	        }
+	      });		
+	    
+	    if(true)
+			return;
+	    
+	    
 		System.out.println("Running main...");
 
 		
