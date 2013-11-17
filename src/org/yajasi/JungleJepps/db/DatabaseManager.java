@@ -118,7 +118,8 @@ public class DatabaseManager {
 			// Should this instance connect to a third party db and merge or only the primary 
 			if( isUsingThirdParty )
 			{
-				newConnection = new DataMerge(settings, newConnection);
+				throw new UnsupportedOperationException("Data merge construction needs fixing in DatabaseManager class");
+				//newConnection = new DataMerge(settings, newConnection);
 			}			
 		}
 		else
