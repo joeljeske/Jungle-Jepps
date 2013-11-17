@@ -181,7 +181,9 @@ public class PrimaryJdbcSource implements DatabaseConnection {
             PreparedStatement statement = null; // if time, consider having all sql statements use this
             String aircraftUpdateSet = new String();
             String runwayUpdateSet = new String();
+            boolean created = false;
             ResultSet rs;
+            
             
             try {
 	            rs = connection.createStatement().executeQuery("SELECT " + Field.RUNWAY_IDENTIFIER + " "
@@ -205,6 +207,7 @@ public class PrimaryJdbcSource implements DatabaseConnection {
 	                connection.createStatement().executeUpdate("INSERT INTO Aircraft "
 	                                                        + "(RUNWAY_ID,"+ Field.AIRCRAFT_IDENTIFIER.toString() +") "
 	                                                        + "VALUES ('"+ runway.get(Field.RUNWAY_IDENTIFIER)+"','" + runway.get(Field.AIRCRAFT_IDENTIFIER)+ "')");
+                                                                created = true;
 	            }
 	            
 	            for(Field f: runway.keySet()){
@@ -298,7 +301,10 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                                                             statement.setString(1,runway.get(Field.RUNWAY_IDENTIFIER));
                                                             statement.execute();
                 }
-                if(aircraftUpdateSet.length() > 0 || runwayUpdateSet.length() > 0 ){                                            
+                if(aircraftUpdateSet.length() > 0 || runwayUpdateSet.length() > 0 || created){
+                    if(created){
+                        runwayUpdateSet = " Created: " + runwayUpdateSet.substring(1);
+                    }
                     statement = connection.prepareStatement("INSERT INTO log("+Field.RUNWAY_IDENTIFIER+","+Field.AIRCRAFT_IDENTIFIER+",user,field_updated,time)"
                                                             + "VALUES(?,?,?,?,?)");
                                                             statement.setString(1, runway.get(Field.RUNWAY_IDENTIFIER));
