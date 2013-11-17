@@ -10,6 +10,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <Events>
     <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
@@ -89,10 +90,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane23" min="-2" pref="1152" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                      <Component id="jScrollPane23" min="-2" pref="1044" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="126" max="-2" attributes="0"/>
                       <Component id="filler1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="181" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -109,7 +110,7 @@
                               <Component id="jScrollPane23" min="-2" pref="653" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="34" max="32767" attributes="0"/>
+                      <EmptySpace pref="22" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1315,10 +1316,10 @@
                                   <Component id="jLabel44" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel45" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="118" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="434" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
@@ -1365,7 +1366,7 @@
                               <Component id="jScrollPane14" min="-2" pref="60" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace type="unrelated" pref="25" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="jLabel41" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel34" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -1427,7 +1428,7 @@
                           <Component id="jScrollPane19" alignment="2" min="-2" pref="60" max="-2" attributes="0"/>
                           <Component id="jLabel51" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="25" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1826,7 +1827,7 @@
                       <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jPanel13" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="125" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1839,7 +1840,7 @@
                           <Component id="jPanel11" max="32767" attributes="0"/>
                           <Component id="jPanel13" alignment="1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="321" max="32767" attributes="0"/>
+                      <EmptySpace pref="307" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1987,7 +1988,7 @@
                               <Component id="jCheckBox21" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jButton5" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="346" max="32767" attributes="0"/>
+                          <EmptySpace pref="28" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -2051,25 +2052,26 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="jSeparator1" alignment="1" min="-2" pref="946" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel101" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                                      <Component id="settingsLabelsScroll" min="-2" pref="386" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="jSeparator1" alignment="1" min="-2" pref="946" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel101" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                                          <Component id="settingsLabelsScroll" min="-2" pref="386" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jScrollPane22" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jScrollPane22" max="32767" attributes="0"/>
+                              <Component id="jLabel100" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jLabel100" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="settingsMainScroll" alignment="0" min="-2" pref="952" max="-2" attributes="0"/>
+                          <Component id="settingsMainScroll" min="-2" pref="977" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="399" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -2078,9 +2080,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel100" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="settingsMainScroll" min="-2" pref="255" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="settingsMainScroll" min="-2" pref="261" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                       <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel101" min="-2" max="-2" attributes="0"/>
@@ -2089,7 +2091,7 @@
                           <Component id="settingsLabelsScroll" min="-2" pref="230" max="-2" attributes="0"/>
                           <Component id="jScrollPane22" min="-2" pref="230" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="110" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -2105,7 +2107,7 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace pref="41" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="jLabel56" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel55" min="-2" max="-2" attributes="0"/>
@@ -2135,7 +2137,7 @@
                                   <Component id="distanceConvert" alignment="0" max="32767" attributes="0"/>
                                   <Component id="page1DisclaimerScroll" alignment="0" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="37" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel69" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel68" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -2159,7 +2161,7 @@
                                   <Component id="adminEmail" max="32767" attributes="0"/>
                                   <Component id="adminPass" alignment="0" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="41" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -2378,6 +2380,9 @@
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" value="Each network of Jungle Jepps must have exactly 1 primary instance to control the every other instance."/>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(jCheckBox23){     public void onChange(String value){         settings.setValue(Settings.IS_PRIMARY, value);     } };"/>
+                      </AuxValues>
                     </Component>
                     <Component class="javax.swing.JTextField" name="repoPath">
                       <Properties>
@@ -2466,6 +2471,9 @@
                           <Connection code="settings.getStringForKey(Settings.ALTITUDE_UNITS)&#xa;" type="code"/>
                         </Property>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(altitude){&#xa;    public void onChange(String value){&#xa;        settings.setValue(Settings.ALTITUDE_UNITS, value);&#xa;    }&#xa;};"/>
+                      </AuxValues>
                     </Component>
                     <Component class="javax.swing.JComboBox" name="weight">
                       <Properties>
@@ -2476,6 +2484,9 @@
                           <Connection code="settings.getStringForKey(Settings.WEIGHT_UNITS)&#xa;" type="code"/>
                         </Property>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(weight){     public void onChange(String value){         settings.setValue(Settings.WEIGHT_UNITS, value);     } };"/>
+                      </AuxValues>
                     </Component>
                     <Component class="javax.swing.JComboBox" name="distance">
                       <Properties>
@@ -2486,6 +2497,9 @@
                           <Connection code="settings.getStringForKey(Settings.DISTANCE_UNITS)&#xa;" type="code"/>
                         </Property>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(distance){     public void onChange(String value){         settings.setValue(Settings.DISTANCE_UNITS, value);     } };"/>
+                      </AuxValues>
                     </Component>
                     <Component class="javax.swing.JComboBox" name="dimension">
                       <Properties>
@@ -2496,6 +2510,9 @@
                           <Connection code="settings.getStringForKey(Settings.DIMENSION_UNITS)&#xa;" type="code"/>
                         </Property>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(dimension){     public void onChange(String value){         settings.setValue(Settings.DIMENSION_UNITS, value);     } };"/>
+                      </AuxValues>
                     </Component>
                     <Component class="javax.swing.JTextField" name="distanceConvert">
                       <Properties>
@@ -2517,6 +2534,9 @@
                           <Connection code="settings.getStringForKey(Settings.LONG_LAT_FORMAT)&#xa;" type="code"/>
                         </Property>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(longLatFormat){     public void onChange(String value){         settings.setValue(Settings.LONG_LAT_FORMAT, value);     } };"/>
+                      </AuxValues>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="trueCourse">
                       <Properties>
@@ -2525,6 +2545,9 @@
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" value="True course or magnetic course"/>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(trueCourse){     &#xa;    public void onChange(String value){ &#xa;        settings.setValue(Settings.IS_TRUE_COURSE, value);     &#xa;    }&#xa;};"/>
+                      </AuxValues>
                     </Component>
                     <Component class="javax.swing.JTextField" name="magVariation">
                       <Properties>
@@ -2549,6 +2572,9 @@
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="secondaryRunwayActionPerformed"/>
                       </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(secondaryRunway){     &#xa;    public void onChange(String value){         &#xa;        settings.setValue(Settings.SECONDARY_RUNWAY, value);     &#xa;    } &#xa;};"/>
+                      </AuxValues>
                     </Component>
                     <Component class="javax.swing.JComboBox" name="homeRunway">
                       <Properties>
@@ -2562,6 +2588,9 @@
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="homeRunwayActionPerformed"/>
                       </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(homeRunway){     public void onChange(String value){         settings.setValue(Settings.HOME_RUNWAY, value);     } };"/>
+                      </AuxValues>
                     </Component>
                     <Component class="javax.swing.JTextField" name="defExpiration">
                       <Properties>
@@ -2584,8 +2613,16 @@
                         <Component class="javax.swing.JTextArea" name="page2Disclaimer">
                           <Properties>
                             <Property name="columns" type="int" value="20"/>
+                            <Property name="lineWrap" type="boolean" value="true"/>
                             <Property name="rows" type="int" value="5"/>
+                            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="settings.getStringForKey(Settings.PAGE_2_DISCLAIMER)" type="code"/>
+                            </Property>
+                            <Property name="wrapStyleWord" type="boolean" value="true"/>
                           </Properties>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(page2Disclaimer){     public void onChange(String value){         settings.setValue(Settings.PAGE_2_DISCLAIMER, value);     } };"/>
+                          </AuxValues>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -2599,8 +2636,16 @@
                         <Component class="javax.swing.JTextArea" name="page1Disclaimer">
                           <Properties>
                             <Property name="columns" type="int" value="20"/>
+                            <Property name="lineWrap" type="boolean" value="true"/>
                             <Property name="rows" type="int" value="5"/>
+                            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="settings.getStringForKey(Settings.PAGE_1_DISCLAIMER)&#xa;" type="code"/>
+                            </Property>
+                            <Property name="wrapStyleWord" type="boolean" value="true"/>
                           </Properties>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="new OnChange(page1Disclaimer){     public void onChange(String value){         settings.setValue(Settings.PAGE_1_DISCLAIMER, value);     } };"/>
+                          </AuxValues>
                         </Component>
                       </SubComponents>
                     </Container>
