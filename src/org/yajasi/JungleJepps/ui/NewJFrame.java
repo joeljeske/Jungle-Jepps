@@ -4,12 +4,18 @@
  */
 package org.yajasi.JungleJepps.ui;
 
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JTextField;
@@ -89,23 +95,147 @@ public class NewJFrame extends javax.swing.JFrame {
   }
   
   
-  @SuppressWarnings("serial")
-private abstract class JJComboBoxModel extends AbstractListModel implements ComboBoxModel{}
-  @SuppressWarnings("serial")
-private ComboBoxModel newComboBoxModel(final String[] options){
-      return new JJComboBoxModel(){
-          String item;
+    private class JJComboBoxModel extends AbstractListModel implements ComboBoxModel{
+         private String item;
+         private String[] options;
          
-          @Override
-          public void setSelectedItem(Object anItem) { item = (String) anItem; }
-          @Override
-          public Object getSelectedItem() { return item; }
-          @Override
-          public int getSize() { return options.length; }
-          @Override
-          public Object getElementAt(int index) { return options[index]; }
-      };
-  }
+         public JJComboBoxModel(String[] opts){
+            this.options = opts;   
+         }
+         
+         @Override
+         public void setSelectedItem(Object anItem) { 
+             item = (String) anItem; 
+         }
+         
+         @Override
+         public Object getSelectedItem() { 
+             return item; 
+         }
+         
+         @Override
+         public int getSize() { 
+             return options.length; 
+         }
+         
+         @Override
+         public Object getElementAt(int index) { 
+             return options[index]; 
+         }
+    }
+    
+    private class JJDefaultsComboBoxModel extends JJComboBoxModel {
+         private Field field;
+         private final static String defaultChangeOption = "--Change Defaults--";
+         
+         public JJDefaultsComboBoxModel(Field field){
+            //Construct upper model
+            super( null ); 
+            
+            //Get current defualts
+            String[] defaults  = settings.getDefaults(field);
+            
+            //The the defaults into the super.options String[] 
+            loadDefaults(defaults);
+            
+            //Add default item to bottom of list
+            super.options[ super.options.length - 1 ] = defaultChangeOption;
+            
+            //Keep a handle on the field to load the 
+            this.field = field;
+         }
+         
+         //Helper function
+         private void loadDefaults(String[] defs){
+            //Construct new array with an extra spot at the bottom
+            super.options = new String[defs.length + 1];
+            
+            //Copy defaults to options array to be displayed in menu drop down
+            for(int i = 0; i < defs.length; i++)
+                super.options[i] = defs[i];
+         }
+         
+         @Override
+         public void setSelectedItem(Object anItem){
+             if( defaultChangeOption.equals(anItem) )
+             {
+                 StringBuilder initializer = new StringBuilder();
+                 //Loop through every option except the one to change defaults
+                 for(int i = 0; i < super.options.length - 1; i++)
+                 {
+                     if( !super.options[i].isEmpty() ) //If there is a default
+                     {
+                        initializer.append( super.options[i] );
+                        initializer.append("\n");
+                     }
+                 }
+                 
+                 final JDialog popup = new JDialog();
+                 popup.setTitle("Choose menu defaults for <" + settings.getLabel(field) + ">");
+                 popup.setSize(400, 300);
+                 
+                 javax.swing.JPanel innerPanel = new javax.swing.JPanel(); //will hold label and text area
+                 
+                 //Graphical Layout:
+                 //<Label>    <text area>
+                 //<Cancel>   <Save>
+                 innerPanel.setLayout(new GridLayout(2, 2)); 
+                 
+                 final javax.swing.JTextArea defaults = new javax.swing.JTextArea();
+                 javax.swing.JButton cancel = new javax.swing.JButton("Cancel");
+                 javax.swing.JButton save = new javax.swing.JButton("Save");
+
+
+                 cancel.addActionListener(new ActionListener(){
+                     @Override
+                     public void actionPerformed(ActionEvent e) {
+                         //Discard window
+                         popup.dispose();
+                     }
+                 });
+                 
+                 save.addActionListener(new ActionListener(){
+                     @Override
+                     public void actionPerformed(ActionEvent e) {
+                         //Get and split resultant into String[]
+                         String result = defaults.getText();
+                         String[] newDefaults = result.split("\n");
+
+                         //Save defaults in settings
+                         settings.setDefaults(field, newDefaults);
+                         
+                         //Save the new settings in this runtime
+                         loadDefaults(newDefaults);
+                         
+                         //Discard window
+                         popup.dispose();
+                     }
+                 });
+                 
+                 defaults.setText( initializer.toString() );
+                 innerPanel.add( new JLabel("Menu Defaults (on separate lines)" ) );
+                 innerPanel.add(defaults); 
+                 innerPanel.add(cancel);
+                 innerPanel.add(save);
+                 
+                 popup.add(innerPanel);
+                 popup.setVisible(true);
+                 
+             }
+             else //if not the default option
+             {
+                 //Set the model box to this item
+                super.setSelectedItem(anItem);
+             }
+         }
+         
+        
+    }
+    
+    private ComboBoxModel newComboBoxModel(String[] options){
+        return new JJComboBoxModel(options);
+    }
+
 
   /**
    * This method is called from within the constructor to initialize the form.
@@ -667,7 +797,7 @@ private ComboBoxModel newComboBoxModel(final String[] options){
 
     jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Information"));
 
-    jComboBox5.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    jComboBox5.setModel(new JJDefaultsComboBoxModel(Field.CLASSIFICATION));
 
     jLabel7.setText(SettingsManager.getInstance().getLabel(Field.CLASSIFICATION));
 
