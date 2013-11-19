@@ -283,7 +283,9 @@ public class SettingsManager implements ValueByEnum{
 		
 		if(joined != "")
 			joined.substring(0, joined.lastIndexOf(LIST_SEPERATOR));
-		setValue(field.toString(), joined);
+		
+		
+		setValue(DEFAULTS_PREFIX + field.toString(), joined);
 	}
 	
 	/**
