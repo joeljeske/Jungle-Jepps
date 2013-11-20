@@ -14,13 +14,37 @@ import java.util.Set;
 
 import org.yajasi.JungleJepps.db.DatabaseException;
 import org.yajasi.JungleJepps.db.DatabaseManager;
+import org.yajasi.JungleJepps.db.SettingsManager;
 import org.yajasi.JungleJepps.pdf.HtmlPreparer;
 import org.yajasi.JungleJepps.pdf.Repository;
 
 public class Runway extends HashMap<Field, String> implements ValueByEnum {
-
+	
+	//This will hold all the fields that have been changed since the last call to save it 
 	private Set<Field> modifiedFields;
 	
+	/**
+	 * This method can be called to initialize a runway with fields. 
+	 * <b>Note:</b> This method can initialize a runway with fields that 
+	 * are readonly. This should be used when constructing a runway from 
+	 * readonly data (e.g. from the th 3rd party database)
+	 * @param readonlyFields
+	 * @return Runway initialized runway object
+	 */
+	public static Runway initialize(Map<Field, String> readonlyFields){
+		Runway runway = new Runway();
+		
+		//Add all the fields using a private override method
+		for(Field f : readonlyFields.keySet())
+			runway.putOverride(f, readonlyFields.get(f));
+		
+		//Return the runway with all the fields set, regardless if they are readonly
+		return runway;
+	}
+	
+	/**
+	 * Constructs a new and empty Runway object.
+	 */
 	public Runway(){
 		super();
 		 modifiedFields = new HashSet<Field>();
@@ -55,20 +79,32 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	}
 	
 	/**
-	 * Set a new value for a field
+	 * Set a new value for a field 
 	 * @param field
 	 * @param value
-	 * @return
+	 * @return String the previous value if any
 	 */
 	@Override
 	public String put(Field field, String value){
 		if( isFieldReadonly(field) )
 			throw new java.lang.IllegalAccessError("Field is readonly. Field: " + field.toString());
 		
+		return putOverride(field, value);
+	}
+	
+	/**
+	 * This method is private and does the leg work for putting a field
+	 * in the runway object. It does not check if the field is overridden
+	 * @param field
+	 * @param value
+	 * @return Stirng The previous value if any
+	 */
+	private String putOverride(Field field, String value){
 		//Store null instead of empty string
 		if(value != null && value.isEmpty())
 			value = null;
 		
+		//Use the HashMap method to store the value 
 		String oldValue = super.put(field, value);
 		
 		// Old value cannot null unless new value is null and 
@@ -76,6 +112,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 			modifiedFields.add( field ); // This field is now modified
 		
 		
+		//Return the value that was previously set for this key
 		return oldValue;
 	}
 	
@@ -84,7 +121,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	 * is to be pulled from an operations database and therefore is
 	 * a readonly field.
 	 * @param field
-	 * @return
+	 * @return Boolean true if the field is overridden and therefore readonly
 	 */
 	public boolean isFieldReadonly(Field field){
 		return DatabaseManager.getSettings().isFieldOverridden(field);
@@ -146,29 +183,41 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	
 	/**
 	 * Used to publish the Runway PDF to the repository.
-	 * @return publishedFile
+	 * @return File the file pointer to the location of the newly published PDF 
 	 * @throws IOException 
 	 */
-	public File publish() throws IOException{
+	public File publish() throws IOException {
+		//Publish and retrieve the file in one call
 		File published =  HtmlPreparer.publish(this);
+		
+		//Now that the file is published, we need to copy it to the archive location
+		//for record keeping history
+		
+		//Get the location where the copy should be stored
 		File copy = Repository.getArchiveLocation(this);
 		
-	    InputStream is = null;
-	    OutputStream os = null;
+	    InputStream is = null; //to read from the published file
+	    OutputStream os = null; //to write to the copy file
 	    try {
-	        is = new FileInputStream(published);
+	    	//Construct File Streams for copying
+	        is = new FileInputStream(published); 
 	        os = new FileOutputStream(copy);
 	        
+	        //Copy 1KB at a type
 	        byte[] buffer = new byte[1024];
-	        int length;
-	        while ((length = is.read(buffer)) > 0) {
-	            os.write(buffer, 0, length);
-	        }
+	        int length; //The length read
+	        
+	        //Read from the input stream until nothing is read
+	        while ((length = is.read(buffer)) > 0) 
+	            os.write(buffer, 0, length); //Write out what is read without an offset
+	       
 	    } finally {
-	        is.close();
+	    	//Good housekeeping 
+	        is.close(); 
 	        os.close();
 	    }
 	    
+	    //Return the original file of the published PDF after we are done copying
 	    return published;
 	}
 
@@ -177,21 +226,21 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	 * @return publishedFile
 	 */
 	public File preview(){
+		//Construct a simple temp file and publish to it
 		File temp = new File("temp.pdf");
-		return HtmlPreparer.publish(this, temp);		
+		return HtmlPreparer.publish(this, temp);
 	}
 
 	/**
-	 * 
+	 * Same as method <code>public String get(Field field)</code>
+	 * Needed to comply with interface, ValueByEnum. 
 	 * @param key
 	 * @return
 	 */
 	@Override
 	public String get(Enum key) {
-		if(key instanceof Field)
-			return get( (Object) key );
-		
-		return null; 
+		//Cast as object to avoid recursive method calls.
+		return get( (Object) key ); 
 	}
 	
 	/**
@@ -208,4 +257,32 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	}
 
 	
+	//Test method
+	public static void main(String[] args){
+		SettingsManager settings = DatabaseManager.getSettings();
+		
+		Runway r = new Runway();
+		
+		settings.setOverrideColumn(Field.A_LANDING_NOTE, ""); //Not overriden 
+		try {
+			r.put(Field.A_LANDING_NOTE, "Test 1 (Valid)");
+			assert true;
+		} catch(java.lang.IllegalAccessError e){
+			e.printStackTrace();
+			assert false;
+		}
+			
+		settings.setOverrideColumn(Field.A_LANDING_NOTE, "THIS IS OVERRIDDEN");
+		try {
+			r.put(Field.A_LANDING_NOTE, "Test 2 (Invalid)"); //Should have exception
+			assert false;
+		} catch(java.lang.IllegalAccessError e){
+			e.printStackTrace();
+			assert true;
+		}
+		
+		
+		
+		
+	}
 }
