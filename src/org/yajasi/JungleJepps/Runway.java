@@ -1,3 +1,23 @@
+/////////////////////////////////////////////////////////////////////////
+// Author: Joel Jeske
+// File: Runway.java
+// Class: org.yajasi.JungleJepps.Runway
+//
+// Target Platform: Java Virtual Machine 
+// Development Platform: Apple OS X 10.9
+// Development Environment: Eclipse Kepler
+// 
+// Project: Jungle Jepps - Desktop
+// Copyright 2013 YAJASI. All rights reserved. 
+// 
+// Objective: This class is used to store all the data about a Runway 
+// during runtime. This class will not be persistent except by calling 
+// the save(), publish(), or preview() methods, where this class 
+// calls methods on the database and local filesystem to store information
+// either as PDF binary or in a database. 
+//
+/////////////////////////////////////////////////////////////////////////
+
 package org.yajasi.JungleJepps;
 
 import java.io.File;
@@ -6,7 +26,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,6 +38,10 @@ import org.yajasi.JungleJepps.pdf.HtmlPreparer;
 import org.yajasi.JungleJepps.pdf.Repository;
 
 public class Runway extends HashMap<Field, String> implements ValueByEnum {
+	/**
+	 * Serial verision for Runway object
+	 */
+	private static final long serialVersionUID = -5658099536565799785L;
 	
 	//This will hold all the fields that have been changed since the last call to save it 
 	private Set<Field> modifiedFields;
