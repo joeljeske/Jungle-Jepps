@@ -1,9 +1,29 @@
+/////////////////////////////////////////////////////////////////////////
+// Author: Joel Jeske
+// File: DatabaseManager.java
+// Class: org.yajasi.JungleJepps.db.DatabaseManager
+//
+// Target Platform: Java Virtual Machine 
+// Development Platform: Apple OS X 10.9
+// Development Environment: Eclipse Kepler SDK
+// 
+// Project: Jungle Jepps - Desktop
+// Copyright 2013 YAJASI. All rights reserved. 
+// 
+// Objective: This class is used to manage the database connections and 
+// the settings connection. It retrieves the settings instance and 
+// constructs the various database connection types based on if this is
+// the primary or secondary connections and the status of the 3rd party
+// database.
+//
+/////////////////////////////////////////////////////////////////////////
+
+
 package org.yajasi.JungleJepps.db;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.sql.SQLException;
 
 import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.Runway;
@@ -13,13 +33,13 @@ import org.yajasi.JungleJepps.jjtp.Server;
 
 public class DatabaseManager {
 	
-	private static DatabaseConnection primaryDB;
-	
 	/**
-	 * Must be called prior to using database.
-	 * @throws ClassNotFoundException
-	 * @throws SQLException
+	 * Will hold the primary database connection. <br />
+	 * This could be a networked LAN client, JDBC connection
+	 * or a DataMerge connection using two JDBC connections
 	 */
+	private static DatabaseConnection primaryDB;
+
 	static {
 		// By having a static block to initialize the database, it removes the need for 
 		// each method to handle the exceptions that could occur from loading the DB.
@@ -30,18 +50,18 @@ public class DatabaseManager {
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (DatabaseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		/* Start up Server if primary instance */
 		boolean isPrimary = getSettings().getBooleanForKey(Settings.IS_PRIMARY);
+		
 		if(isPrimary)
 		{
 			try {
+				//Server starts the mDNS broadcast and 
+				//initializes its services in a separate thread
 				Server.start();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -49,6 +69,7 @@ public class DatabaseManager {
 		}
 	}
 	
+	//Simple test method creates the database and calls various methods on it.
 	public static void main(String[] args) throws DatabaseException{
 		// By running this static function, the static block has already run
 		// and therefore the database connection has been made and the settings have 
@@ -98,21 +119,24 @@ public class DatabaseManager {
 	 * the merge class with a 3rd party source if need be.
 	 * @return
 	 * @throws ClassNotFoundException
-	 * @throws SQLException
 	 * @throws DatabaseException 
 	 */
-	private static DatabaseConnection createDatabaseConnection() throws ClassNotFoundException, SQLException, DatabaseException{
+	private static DatabaseConnection createDatabaseConnection() throws ClassNotFoundException, DatabaseException{
+		//Verbose output
 		System.out.println("Making initial connection to database...");
+		
+		//Will hold the two data source connections
 		DatabaseConnection newConnection;
 		SettingsManager settings = getSettings();
 		
-
+		//True if this instance is the primary connection
 		boolean isPrimary = settings.getBooleanForKey(Settings.IS_PRIMARY);
 		boolean isUsingThirdParty = settings.getBooleanForKey(Settings.IS_OPERATIONS_DB);
 
 		// Should this instance connect to db directly or through primary instance?		
 		if( isPrimary )
 		{
+			//Get a database connection from the primary JDBC source
 			newConnection = new PrimaryJdbcSource( settings );
 			
 			// Should this instance connect to a third party db and merge or only the primary 
@@ -124,21 +148,31 @@ public class DatabaseManager {
 		}
 		else
 		{
-			Client client = new Client();
-			newConnection = (DatabaseConnection) client;
+			//Create a LAN client to connect to the primary instance
+			//This will be our primary connection
+			newConnection = (DatabaseConnection) new Client(); 
 			
+			//Create a new listener to wait until we have a primary instance IP and port
 			JungleJeppsmDNS.registerChangeListener(new JungleJeppsmDNS.ProviderStatusListener() {
 
+				//This block will run async whenever we have a primary instance
 				@Override
 				public void newPrimaryProvider(URI newProvider) {
+					//We know the database will be a client becuase this block only runs 
+					//if we are a secondary instance
 					Client client = (Client) getDatabase();
+					
+					//Get a stream to load the settings from
 					InputStream stream = client.getSettingsStream();
+					
+					//Load the settings from the primary source using a LAN stream
 					SettingsManager.loadFromInputStream(stream);
 				}
 			});
 			
 		}
 		
+		//We now have a good connection whether it is a JDBC source, DataMerge, or a Client
 		return newConnection;
 	}
 

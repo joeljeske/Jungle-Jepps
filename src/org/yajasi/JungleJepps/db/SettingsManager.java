@@ -1,5 +1,25 @@
-package org.yajasi.JungleJepps.db;
+/////////////////////////////////////////////////////////////////////////
+// Author: Joel Jeske
+// File: SettingsManager.java
+// Class: org.yajasi.JungleJepps.db.SettingsManager
+//
+// Target Platform: Java Virtual Machine 
+// Development Platform: Apple OS X 10.9
+// Development Environment: Eclipse Kepler SDK
+// 
+// Project: Jungle Jepps - Desktop
+// Copyright 2013 YAJASI. All rights reserved. 
+// 
+// Objective: This class is used to store all the persistent settings. This 
+// class makes use of the Java properties persistence using a simple key-
+// value pairing storage in plain text. This class has wrapper methods 
+// such that other classes can store arrays or field labels. Note the 
+// warying difference when using a Settings ENUM or a Field ENUM as the 
+// primary key.
+//
+/////////////////////////////////////////////////////////////////////////
 
+package org.yajasi.JungleJepps.db;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +32,13 @@ import java.util.Properties;
 import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.ValueByEnum;
 
+/**
+ * This class makes use of the singleton model having exactly one instance
+ * at a time during runtime.  
+ * 
+ * @author Joel Jeske
+ *
+ */
 public class SettingsManager implements ValueByEnum{
 	
 	/**
@@ -67,38 +94,62 @@ public class SettingsManager implements ValueByEnum{
 		connection = new Properties();
 	}
 	
+	/**
+	 * This class overrides the use of the persistent file and instead loads from the 
+	 * Server primary instance relayed by the client class. 
+	 * @param stream
+	 */
 	public static void loadFromInputStream(InputStream stream){
+		//Verbose 
 		System.out.println("Loading settings from primary source...");
 
 		try {
+			//Load the stream into runtime and override most fields
 			connection.load(stream);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		// Overriding fields from the primary source that do not apply.
+		// Overriding fields from the primary source that do not apply to the secondary instance.
 		instance.setValue(Settings.IS_PRIMARY, false);
-		
 	}
 	
+	/**
+	 * Called from the server when the secondary instance needs the raw stream 
+	 * too the persistant file. 
+	 * @return
+	 */
 	public static InputStream getSettingsStream(){
+		//Will hold our stream from the file
 		InputStream is = null;
+		
+		//Make sure all changes are saved in the file before loading it. 
 		getInstance().save();
+		
 		try {
+			//Create the input stream to the raw file
 			is = new FileInputStream(DB);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		
+		//Give the input stream so it can be used to load the settings on the client
 		return is;
 	}
 	
+	/**
+	 * Get the raw length of the settings file. Used so the HTTP server can
+	 * accurately define the length of its message to the client.
+	 * @return Long the length in bytes of the settings file
+	 */
 	public static Long getLength(){
+		//Make sure everything is saved
 		getInstance().save();
+		
+		//Return the length of the file in bytes
 		return DB.length();
 	}
-	
-	
+
 	///////////////////////////////////////////////////////////////////////////	
 	/**
 	 * Singleton model. Use to retrieve an instance of this class. 
@@ -106,6 +157,7 @@ public class SettingsManager implements ValueByEnum{
 	 * @return SettingsManager instance
 	 */
 	public static SettingsManager getInstance(){
+		//Only create an instance if one does not exist
 		if( instance == null)
 			instance = new SettingsManager();
 		return instance;
@@ -116,22 +168,36 @@ public class SettingsManager implements ValueByEnum{
 	 * no file is found.
 	 */
 	private SettingsManager(){
+		//If the settings file exists and we dont need initialization
 		if( DB.exists() )
 		{
+			//Load the 
 			InputStream is;
 			try {
+				//Create an input stream from the settings file
 				is = new FileInputStream( DB );
+				
+				//Load this stream into our settings
 				connection.load( is );
+				
+				//Good housekeeping
 				is.close();
 			} catch (Exception e) {
 				e.printStackTrace();
+				
+				//Reset all the settings
 				initialize();
+				
+				//Save this clean version
 				save();
 			}
 		}
 		else
 		{
+			//Reset all the settings
 			initialize();
+			
+			//Save this new clean set of settings
 			save();
 		}
 	}
@@ -141,6 +207,7 @@ public class SettingsManager implements ValueByEnum{
 	 */
 	public void save(){
 		try {
+			//Save this using the Java properties save method. 
 			connection.store(new FileOutputStream(DB), "Jungle Jepps Settings List");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -199,7 +266,9 @@ public class SettingsManager implements ValueByEnum{
 		setLabel(Field.P2_TEXT_6, 				"Runway Minimum Maintainance Standard");
 		setLabel(Field.P2_TEXT_7, 				"Pilot Authority for Runway Below Standard");
 		
-		/* Initialize List Defalts */
+		/* Initialize List Defaults */
+		setDefaults(Field.CLASSIFICATION, new String[]{"YES", "NO"});
+		/* TODO: Find all defaults needed in SRS */
 		
 		/* Initialize Settings Defaults */
 		String defaultHomeDirectory = System.getProperty("user.home") + File.separator + "JungleJepps" + File.separator;
@@ -228,6 +297,7 @@ public class SettingsManager implements ValueByEnum{
 	 * @return
 	 */
 	private String getStringForKey(String key){
+		//Get the string from settings and default to an empty string
 		return connection.getProperty(key, "");
 	}
 		
@@ -237,6 +307,7 @@ public class SettingsManager implements ValueByEnum{
 	 * @param value
 	 */
 	private void setValue(String key, String value){
+		//Set the value directly
 		connection.put(key, value);
 	}
 	
@@ -248,6 +319,7 @@ public class SettingsManager implements ValueByEnum{
 	 * @return field label
 	 */
 	public String getLabel(Field field){
+		//Add the label prefix, "LABEL." to differentiate this setting
 		return getStringForKey(LABEL_PREFIX + field.toString() );
 	}
 	
@@ -257,6 +329,7 @@ public class SettingsManager implements ValueByEnum{
 	 * @param label
 	 */
 	public void setLabel(Field field, String label){
+		//Get the label using the same prefix used to settings
 		setValue(LABEL_PREFIX + field.toString(), label);
 	}
 	
@@ -266,7 +339,10 @@ public class SettingsManager implements ValueByEnum{
 	 * @return
 	 */
 	public String[] getDefaults(Field field){
+		//Get the array as a string
 		String defaults = getStringForKey(DEFAULTS_PREFIX + field.toString());
+		
+		//Split up back into array for easy use
 		return defaults.split( LIST_SEPERATOR );
 	}
 	
@@ -277,15 +353,29 @@ public class SettingsManager implements ValueByEnum{
 	 * @param defaults
 	 */
 	public void setDefaults(Field field, String[] defaults){
-		String joined = "";
-		for(String str : defaults)
-			joined += str + LIST_SEPERATOR;
+		//
+		StringBuilder joined = new StringBuilder();
+				
+		//If there are any defaults to add
+		if(defaults.length > 0)
+		{
+			//Loop through defaults
+			for(String str : defaults)
+			{
+				//Add the item
+				joined.append(str);
+				
+				//And add the delimiter
+				joined.append(LIST_SEPERATOR);
+			}
 		
-		if(joined != "")
-			joined.substring(0, joined.lastIndexOf(LIST_SEPERATOR));
+			//
+			//Remove the last delimiter
+			joined.substring(0, joined.length() - 1);
+		}
 		
-		
-		setValue(DEFAULTS_PREFIX + field.toString(), joined);
+		//Save this joined String
+		setValue(DEFAULTS_PREFIX + field.toString(), joined.toString());
 	}
 	
 	/**
@@ -296,6 +386,7 @@ public class SettingsManager implements ValueByEnum{
 	 * @return columnName
 	 */
 	public String getOverrideColumn(Field field){
+		//Get the key with the correct prefix
 		return getStringForKey( OVERRIDE_PREFIX + field.toString() );
 	}
 	
@@ -306,10 +397,12 @@ public class SettingsManager implements ValueByEnum{
 	 * @return columnName
 	 */
 	public void setOverrideColumn(Field field, String columnName){
+		//Set the key with the correct prefix
 		setValue(OVERRIDE_PREFIX + field.toString(), columnName );
 	}
 	
 	public boolean isFieldOverridden(Field field){
+		//Field is overridden when there is a non-empty string for its override value
 		return !getOverrideColumn(field).isEmpty();
 	}
 	
