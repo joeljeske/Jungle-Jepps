@@ -14,7 +14,9 @@
 // during runtime. This class will not be persistent except by calling 
 // the save(), publish(), or preview() methods, where this class 
 // calls methods on the database and local filesystem to store information
-// either as PDF binary or in a database. 
+// either as PDF binary or in a database. This class extends a Map<Field, String> 
+// and can therefore only contain values for chosen Fields as speficied in 
+// the Field enum.
 //
 /////////////////////////////////////////////////////////////////////////
 
