@@ -263,7 +263,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	 * @return
 	 */
 	@Override
-	public String get(Enum key) {
+	public String get(JungleJeppsEnum key) {
 		//Cast as object to avoid recursive method calls.
 		return get( (Object) key ); 
 	}
@@ -305,9 +305,6 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 			e.printStackTrace();
 			assert true;
 		}
-		
-		
-		
 		
 	}
 }

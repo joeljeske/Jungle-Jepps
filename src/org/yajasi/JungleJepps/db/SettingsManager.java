@@ -493,7 +493,7 @@ public class SettingsManager implements ValueByEnum{
 	}
 
 	@Override
-	public String get(Enum key) {
+	public String get(JungleJeppsEnum key) {
 		if(key instanceof Field)
 			return getLabel( (Field) key );
 		

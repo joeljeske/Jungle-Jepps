@@ -19,7 +19,9 @@
 
 package org.yajasi.JungleJepps.db;
 
-public enum Settings {
+import org.yajasi.JungleJepps.ValueByEnum;
+
+public enum Settings implements ValueByEnum.JungleJeppsEnum {
 	IS_PRIMARY,
 	REPOSITORY_PATH,
 	PRIMARY_JDBC_URI,

@@ -2,6 +2,17 @@ package org.yajasi.JungleJepps;
 
 public interface ValueByEnum {
 	
-	String get(Enum key);
-
+	/**
+	 * Must be able to get a string for a JungleJeppsEnum
+	 * @param key
+	 * @return
+	 */
+	String get(JungleJeppsEnum key);
+	
+	
+	public interface JungleJeppsEnum {}
 }
+
+
+
+
