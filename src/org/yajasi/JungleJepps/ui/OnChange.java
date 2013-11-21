@@ -1,8 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/////////////////////////////////////////////////////////////////////////
+// Author: Joel Jeske
+// File: OnChange.java
+// Class: org.yajasi.JungleJepps.ui.OnChange
+//
+// Target Platform: Java Virtual Machine 
+// Development Platform: Apple OS X 10.9
+// Development Environment: NetBeans 7.4 OS X
+// 
+// Project: Jungle Jepps - Desktop
+// Copyright 2013 YAJASI. All rights reserved. 
+// 
+// Objective: This class is used to simplify an OnChange listener for GUI
+// objects. Various constructor types accepts different GUI elements and 
+// listens for change in focus. If the element has a new state or value 
+// when the focus is lost, the listener is notified with the new String 
+// representation of this value. 
+//
+/////////////////////////////////////////////////////////////////////////
+
 
 package org.yajasi.JungleJepps.ui;
 
@@ -13,14 +28,25 @@ import javax.swing.JComboBox;
 import javax.swing.text.JTextComponent;
 
 /**
- *
- * @author joeljeske14
+ * This class can listen on various Java Swing elements 
+ * for changes in value when the focus is lost.  
+ * The listener must implement the onChange(String) handler
+ * which will be called when the GUI element changes. 
+ * 
+ * @author Joel Jeske
  */
 public abstract class OnChange  {
     
+	//Holds the String for various text elements 
     private String old;
+    
+    //Holds the index into the combo box element 
     private int index;
     
+    /**
+     * Use this constructor to listen for changes on a combo box
+     * @param menu
+     */
     public OnChange(final JComboBox menu){
         // Listen for focus events to see if the value has changed
         menu.addFocusListener(new FocusListener(){
@@ -47,6 +73,10 @@ public abstract class OnChange  {
         });
     }
     
+    /**
+     * Use this constructor to listen for changes on a text-based element
+     * @param field
+     */
     public OnChange(final JTextComponent field){
         // Listen for focus events to see if the value has changed
         field.addFocusListener(new FocusListener(){
@@ -72,7 +102,11 @@ public abstract class OnChange  {
         });
     }
     
-     public OnChange(final JCheckBox field){
+    /**
+     * Use this constructor to listen for change on a checkbox element 
+     * @param field
+     */
+    public OnChange(final JCheckBox field){
         // Listen for focus events to see if the value has changed
         field.addFocusListener(new FocusListener(){
             @Override
@@ -99,6 +133,10 @@ public abstract class OnChange  {
     }
     
     
-    
+    /**
+     * This method will be called when the selected GUI element was changed
+     * and the focus is then lost.
+     * @param value
+     */
     public abstract void onChange(String value);
 }
