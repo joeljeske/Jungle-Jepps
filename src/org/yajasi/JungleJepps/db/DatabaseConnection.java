@@ -1,21 +1,39 @@
+/////////////////////////////////////////////////////////////////////////
+// Author: Joel Jeske
+// File: DatabaseConnection.java
+// Class: org.yajasi.JungleJepps.db.DatabaseConnection
+//
+// Target Platform: Java Virtual Machine 
+// Development Platform: Apple OS X 10.9
+// Development Environment: Eclipse Kepler SDK
+// 
+// Project: Jungle Jepps - Desktop
+// Copyright 2013 YAJASI. All rights reserved. 
+// 
+// Objective: This interface is used to define a connection to a database 
+// for use in Jungle Jepps. It is possible to implement this interface
+// and then modify DatabaseManager class to instantiate it based on 
+// appropriate conditions. This modularizes our database connection
+//
+/////////////////////////////////////////////////////////////////////////
+
 package org.yajasi.JungleJepps.db;
 
 import org.yajasi.JungleJepps.Runway;
-import java.sql.*;
-import com.sun.rowset.CachedRowSetImpl;
 
 /**
  * Defines abstract connection to a database used for Jungle Jepps.
  * 
  * @author Joel Jeske
- *
  */
 public interface DatabaseConnection {
-
 	
+	/**
+	 * Get a list of all the aailable aircraft Ids
+	 * @return String[] of all the aircraft ids
+	 * @throws DatabaseException
+	 */
 	public String[] getAllAircraftIds() throws DatabaseException;
-	
-
 	
 	/**
 	 * Get a list of every runway Id available in the database.
@@ -37,19 +55,16 @@ public interface DatabaseConnection {
 	 */
 	public Runway getRunway(String runwayId, String aircraftId) throws DatabaseException;
 	
-	
 	/**
 	 * Update the runway in the database to reflect the database.
 	 * @param Runway the runway to Update
-	 * @return boolean true if updated successfully 
+	 * @return True if updated successfully 
 	 */
 	public boolean updateRunway(Runway runway) throws DatabaseException;
         
-      
-        
     /**
-     * closes the database;
-     * @return 1 if data base is closed. 0 if no data base was open
+     * Closes the database;
+     * @return True if data base is closed. False if no data base was open
      */
     public boolean close() throws DatabaseException;
 
