@@ -305,6 +305,9 @@
                       <SubComponents>
                         <Component class="javax.swing.JButton" name="jButton3">
                           <Properties>
+                            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="new ImageIcon(getField(Field.IMAGE_PATH))" type="code"/>
+                            </Property>
                             <Property name="text" type="java.lang.String" value="Select New Image File"/>
                           </Properties>
                           <Events>

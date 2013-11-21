@@ -613,6 +613,7 @@ public class NewJFrame extends javax.swing.JFrame {
     jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Image"));
     jPanel8.setName("test"); // NOI18N
 
+    jButton3.setIcon(new ImageIcon(getField(Field.IMAGE_PATH)));
     jButton3.setText("Select New Image File");
     jButton3.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2806,6 +2807,13 @@ public class NewJFrame extends javax.swing.JFrame {
         image = Repository.copyImageFile(r, image);
       } catch (IOException ex) {
         ex.printStackTrace();
+      }
+      
+      System.out.println("New Image Path: " + image.getAbsolutePath());
+      
+      r.put(Field.IMAGE_PATH, image.getAbsolutePath());
+      if(r.isModified()){
+        r.save();
       }
       jLabel17.setIcon(new ImageIcon(image.getAbsolutePath()));
     }

@@ -139,10 +139,10 @@ public class Repository {
 		//Get the base folder for the runway
 		File runwayBase = getRunwayBaseFolder(runway); // Base runway folder
 		
-		String photoName = File.separator + IMAGE_FOLDER + File.separator; // ==> "/photos/"
 		//Get the directory name inside of the runway folder
 		// ==> "/photos/"
-		String photoName = File.pathSeparator + IMAGE_FOLDER + File.pathSeparator; 
+                String photoName = File.separator + IMAGE_FOLDER + File.separator;
+
 		
 		//Get a descriptive file name based on runway info and current datetime
 		String descriptiveName = getDescriptiveName(runway);
@@ -218,7 +218,7 @@ public class Repository {
 		} finally {
 			//Responsible housekeeping
 			inputChannel.close();
-			//outputChannel.close();
+			outputChannel.close();
 		}
 	}
 	
