@@ -20,7 +20,7 @@
 // fields are named directly as stated in the SRS V1.0.1 Section 3.4.8.3.
 // The "_HL" append represents a boolean typed value if stating if a field
 // should be highlighted on the PDF Runway char.
-//
+// 
 /////////////////////////////////////////////////////////////////////////
 
 package org.yajasi.JungleJepps;
