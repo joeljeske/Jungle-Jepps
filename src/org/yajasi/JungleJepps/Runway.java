@@ -133,7 +133,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 		String oldValue = super.put(field, value);
 		
 		// Old value cannot null unless new value is null and 
-		if( equals(oldValue, value) )
+		if( !equals(oldValue, value) )
 			modifiedFields.add( field ); // This field is now modified
 		
 		
