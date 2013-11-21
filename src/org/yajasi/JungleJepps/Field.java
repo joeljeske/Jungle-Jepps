@@ -25,7 +25,7 @@
 
 package org.yajasi.JungleJepps;
 
-public enum Field {
+public enum Field implements ValueByEnum.JungleJeppsEnum {
 	  RUNWAY_IDENTIFIER, 
 	  RUNWAY_NAME,
 	  AIRCRAFT_IDENTIFIER,

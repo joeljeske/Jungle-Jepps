@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.ValueByEnum;
+import org.yajasi.JungleJepps.ValueByEnum.JungleJeppsEnum;
 import org.yajasi.JungleJepps.db.DatabaseManager;
 import org.yajasi.JungleJepps.db.Settings;
 import org.yajasi.JungleJepps.db.SettingsManager;
@@ -234,7 +235,7 @@ public class HtmlPreparer {
         	{
             	String id = tag.getAttributes().getNamedItem( ATTR ).getNodeValue();
             	
-            	Enum val;
+            	ValueByEnum.JungleJeppsEnum val;
             	try {
             		val = Enum.valueOf(type, id.toUpperCase());
             		
