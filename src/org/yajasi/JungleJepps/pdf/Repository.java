@@ -139,7 +139,6 @@ public class Repository {
 		//Get the base folder for the runway
 		File runwayBase = getRunwayBaseFolder(runway); // Base runway folder
 		
-		String photoName = File.separator + IMAGE_FOLDER + File.separator; // ==> "/photos/"
 		//Get the directory name inside of the runway folder
 		// ==> "/photos/"
 		String photoName = File.pathSeparator + IMAGE_FOLDER + File.pathSeparator; 
