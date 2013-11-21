@@ -5,7 +5,7 @@
 //
 // Target Platform: Java Virtual Machine 
 // Development Platform: Apple OS X 10.9
-// Development Environment: Eclipse Kepler
+// Development Environment: Eclipse Kepler SDK
 // 
 // Project: Jungle Jepps - Desktop
 // Copyright 2013 YAJASI. All rights reserved. 
