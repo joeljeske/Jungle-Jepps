@@ -4,7 +4,6 @@
  */
 package org.yajasi.JungleJepps.ui;
 
-import com.mysql.jdbc.Util;
 import com.sun.org.apache.xml.internal.serializer.utils.Utils;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
