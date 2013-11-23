@@ -60,7 +60,7 @@ public abstract class OnChange  {
             public void focusLost(FocusEvent e) {
             	int newIndex = menu.getSelectedIndex();
             	
-                if( index != newIndex ) //If the value has changed
+                if( index != newIndex || true) //If the value has changed
                 {
                     // Set value for future changes
                     index = newIndex;
