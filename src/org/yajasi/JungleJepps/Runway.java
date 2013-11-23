@@ -280,6 +280,11 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 		return (str == str2) ||
 				(str != null && str2 != null && str.equals(str2));
 	}
+        
+        public void dump(){
+            for(Field f : this.keySet())
+                System.out.println(f.toString() + ": " + this.get(f));
+        }
 
 	
 	//Test method
