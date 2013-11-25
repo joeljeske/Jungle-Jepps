@@ -390,26 +390,26 @@ public class NewJFrame extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jLabel17 = new javax.swing.JLabel();
         topographyFieldset = new javax.swing.JPanel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jCheckBox3 = new javax.swing.JCheckBox();
+        elevationLabel = new javax.swing.JLabel();
+        lengthLabel = new javax.swing.JLabel();
+        widthLabel = new javax.swing.JLabel();
+        elevationHL = new javax.swing.JCheckBox();
         jLabel15 = new javax.swing.JLabel();
-        jCheckBox4 = new javax.swing.JCheckBox();
-        jCheckBox5 = new javax.swing.JCheckBox();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
-        jCheckBox6 = new javax.swing.JCheckBox();
-        jCheckBox7 = new javax.swing.JCheckBox();
-        jTextField11 = new javax.swing.JTextField();
-        jTextField12 = new javax.swing.JTextField();
-        jTextField13 = new javax.swing.JTextField();
-        jTextField14 = new javax.swing.JTextField();
-        jTextField15 = new javax.swing.JTextField();
+        lengthHL = new javax.swing.JCheckBox();
+        widthHL = new javax.swing.JCheckBox();
+        tdzoneLabel = new javax.swing.JLabel();
+        iasAdjustLabel = new javax.swing.JLabel();
+        iasAdjustHL = new javax.swing.JCheckBox();
+        tdZoneHL = new javax.swing.JCheckBox();
+        elevation = new javax.swing.JTextField();
+        length = new javax.swing.JTextField();
+        width = new javax.swing.JTextField();
+        tdZone = new javax.swing.JTextField();
+        iasAdjust = new javax.swing.JTextField();
         longitude = new javax.swing.JTextField();
         longLabel = new javax.swing.JLabel();
         latLabel = new javax.swing.JLabel();
-        latField = new javax.swing.JTextField();
+        latitude = new javax.swing.JTextField();
         inspectionFieldset = new javax.swing.JPanel();
         inspectionCheckbox = new javax.swing.JCheckBox();
         inspectionCompletedLabel = new javax.swing.JLabel();
@@ -756,86 +756,96 @@ public class NewJFrame extends javax.swing.JFrame {
 
         topographyFieldset.setBorder(javax.swing.BorderFactory.createTitledBorder("Topography"));
 
-        jLabel12.setText(SettingsManager.getInstance().getLabel(Field.ELEVATION) + " (" + SettingsManager.getInstance().getStringForKey(Settings.ALTITUDE_UNITS) + ')');
+        elevationLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        elevationLabel.setText(SettingsManager.getInstance().getLabel(Field.ELEVATION) + " (" + SettingsManager.getInstance().getStringForKey(Settings.ALTITUDE_UNITS) + ')');
 
-    jLabel13.setText(String.format("%s (%s)", settings.getLabel(Field.LENGTH), settings.getStringForKey(Settings.DIMENSION_UNITS)));
+    lengthLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+    lengthLabel.setText(String.format("%s (%s)", settings.getLabel(Field.LENGTH), settings.getStringForKey(Settings.DIMENSION_UNITS)));
 
-    jLabel14.setText(String.format("%s (%s)", settings.getLabel(Field.WIDTH_TEXT), settings.getStringForKey(Settings.DIMENSION_UNITS)));
+    widthLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+    widthLabel.setText(String.format("%s (%s)", settings.getLabel(Field.WIDTH_TEXT), settings.getStringForKey(Settings.DIMENSION_UNITS)));
 
-    jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
+    elevationHL.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jCheckBox3ActionPerformed(evt);
+            elevationHLActionPerformed(evt);
         }
     });
 
     jLabel15.setText("Highlight");
 
-    jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
+    lengthHL.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jCheckBox4ActionPerformed(evt);
+            lengthHLActionPerformed(evt);
         }
     });
 
-    jCheckBox5.addActionListener(new java.awt.event.ActionListener() {
+    widthHL.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jCheckBox5ActionPerformed(evt);
+            widthHLActionPerformed(evt);
         }
     });
 
-    jLabel19.setText(settings.getLabel(Field.TDZ_SLOPE));
+    tdzoneLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+    tdzoneLabel.setText(settings.getLabel(Field.TDZ_SLOPE));
 
-    jLabel20.setText(settings.getLabel(Field.IAS_ADJUSTMENT)
+    iasAdjustLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+    iasAdjustLabel.setText(settings.getLabel(Field.IAS_ADJUSTMENT)
     );
 
-    jCheckBox6.addActionListener(new java.awt.event.ActionListener() {
+    iasAdjustHL.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jCheckBox6ActionPerformed(evt);
+            iasAdjustHLActionPerformed(evt);
         }
     });
 
-    jCheckBox7.addActionListener(new java.awt.event.ActionListener() {
+    tdZoneHL.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jCheckBox7ActionPerformed(evt);
+            tdZoneHLActionPerformed(evt);
         }
     });
 
-    jTextField11.setText("text");
-    jTextField11.addActionListener(new java.awt.event.ActionListener() {
+    elevation.setText(getField(Field.ELEVATION));
+    elevation.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField11ActionPerformed(evt);
+            elevationActionPerformed(evt);
         }
     });
+    Save.onChange(elevation, Field.ELEVATION);
 
-    jTextField12.setText("text");
-    jTextField12.addActionListener(new java.awt.event.ActionListener() {
+    length.setText(getField(Field.LENGTH));
+    length.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField12ActionPerformed(evt);
+            lengthActionPerformed(evt);
         }
     });
+    Save.onChange(length, Field.LENGTH);
 
-    jTextField13.setText("text");
-    jTextField13.setMaximumSize(new java.awt.Dimension(180, 28));
-    jTextField13.setMinimumSize(new java.awt.Dimension(180, 28));
-    jTextField13.setPreferredSize(new java.awt.Dimension(180, 28));
-    jTextField13.addActionListener(new java.awt.event.ActionListener() {
+    width.setText(getField(Field.WIDTH_TEXT));
+    width.setMaximumSize(new java.awt.Dimension(180, 28));
+    width.setMinimumSize(new java.awt.Dimension(180, 28));
+    width.setPreferredSize(new java.awt.Dimension(180, 28));
+    width.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField13ActionPerformed(evt);
+            widthActionPerformed(evt);
         }
     });
+    Save.onChange(width, Field.WIDTH_TEXT);
 
-    jTextField14.setText("text");
-    jTextField14.addActionListener(new java.awt.event.ActionListener() {
+    tdZone.setText(getField(Field.TDZ_SLOPE));
+    tdZone.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField14ActionPerformed(evt);
+            tdZoneActionPerformed(evt);
         }
     });
+    Save.onChange(tdZone, Field.TDZ_SLOPE);
 
-    jTextField15.setText("text");
-    jTextField15.addActionListener(new java.awt.event.ActionListener() {
+    iasAdjust.setText(getField(Field.IAS_ADJUSTMENT));
+    iasAdjust.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jTextField15ActionPerformed(evt);
+            iasAdjustActionPerformed(evt);
         }
     });
+    Save.onChange(iasAdjust, Field.IAS_ADJUSTMENT);
 
     longitude.setText(getField(Field.LONGITUDE));
     longitude.addActionListener(new java.awt.event.ActionListener() {
@@ -845,15 +855,17 @@ public class NewJFrame extends javax.swing.JFrame {
     });
     Save.onChange(longitude, Field.LONGITUDE);
 
+    longLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     longLabel.setText(SettingsManager.getInstance().getLabel(Field.LONGITUDE));
 
+    latLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     latLabel.setText(SettingsManager.getInstance().getLabel(Field.LATITUDE));
     latLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
-    latField.setText(getField(Field.LATITUDE));
-    latField.addActionListener(new java.awt.event.ActionListener() {
+    latitude.setText(getField(Field.LATITUDE));
+    latitude.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            latFieldActionPerformed(evt);
+            latitudeActionPerformed(evt);
         }
     });
 
@@ -865,32 +877,32 @@ public class NewJFrame extends javax.swing.JFrame {
             .addGap(5, 5, 5)
             .addGroup(topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                 .addComponent(longLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(elevationLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lengthLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(widthLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(tdzoneLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(iasAdjustLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(latLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGap(18, 18, 18)
             .addGroup(topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jTextField11)
-                .addComponent(jTextField12)
-                .addComponent(jTextField13, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
-                .addComponent(jTextField14)
-                .addComponent(latField, javax.swing.GroupLayout.Alignment.TRAILING)
-                .addComponent(jTextField15)
+                .addComponent(elevation)
+                .addComponent(length)
+                .addComponent(width, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+                .addComponent(tdZone)
+                .addComponent(latitude, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(iasAdjust)
                 .addComponent(longitude, javax.swing.GroupLayout.Alignment.TRAILING))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                .addComponent(jCheckBox7)
-                .addComponent(jCheckBox6)
-                .addComponent(jCheckBox5)
-                .addComponent(jCheckBox4)
-                .addComponent(jCheckBox3)
+                .addComponent(tdZoneHL)
+                .addComponent(iasAdjustHL)
+                .addComponent(widthHL)
+                .addComponent(lengthHL)
+                .addComponent(elevationHL)
                 .addComponent(jLabel15)))
     );
 
-    topographyFieldsetLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel12, jLabel13, jLabel14, jLabel19, jLabel20, latLabel, longLabel});
+    topographyFieldsetLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {elevationLabel, iasAdjustLabel, latLabel, lengthLabel, longLabel, tdzoneLabel, widthLabel});
 
     topographyFieldsetLayout.setVerticalGroup(
         topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -899,29 +911,29 @@ public class NewJFrame extends javax.swing.JFrame {
             .addComponent(jLabel15)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                .addComponent(jLabel12)
-                .addComponent(jCheckBox3)
-                .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(elevationLabel)
+                .addComponent(elevationHL)
+                .addComponent(elevation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                .addComponent(jLabel13)
-                .addComponent(jCheckBox4)
-                .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(lengthLabel)
+                .addComponent(lengthHL)
+                .addComponent(length, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                .addComponent(jCheckBox5)
-                .addComponent(jLabel14)
-                .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(widthHL)
+                .addComponent(widthLabel)
+                .addComponent(width, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                .addComponent(jLabel19)
-                .addComponent(jCheckBox7)
-                .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(tdzoneLabel)
+                .addComponent(tdZoneHL)
+                .addComponent(tdZone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                .addComponent(jLabel20)
-                .addComponent(jCheckBox6)
-                .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(iasAdjustLabel)
+                .addComponent(iasAdjustHL)
+                .addComponent(iasAdjust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGap(65, 65, 65)
             .addGroup(topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(longitude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -929,31 +941,35 @@ public class NewJFrame extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(topographyFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(latLabel)
-                .addComponent(latField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(latitude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGap(30, 30, 30))
     );
 
-    topographyFieldsetLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel12, jLabel13, jLabel14, jLabel19, jLabel20, latLabel, longLabel});
+    topographyFieldsetLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {elevationLabel, iasAdjustLabel, latLabel, lengthLabel, longLabel, tdzoneLabel, widthLabel});
 
     inspectionFieldset.setBorder(javax.swing.BorderFactory.createTitledBorder("Inspection"));
     inspectionFieldset.setMaximumSize(new java.awt.Dimension(250, 155));
     inspectionFieldset.setMinimumSize(new java.awt.Dimension(250, 155));
 
+    inspectionCompletedLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     inspectionCompletedLabel.setText(SettingsManager.getInstance().getLabel(Field.INSPECTION_DATE));
     inspectionCompletedLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
     inspectionCompletedLabel.setMaximumSize(new java.awt.Dimension(90, 16));
     inspectionCompletedLabel.setMinimumSize(new java.awt.Dimension(90, 16));
 
     inspectionCompleted.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    inspectionCompleted.setSelectedItem(getField(Field.INSPECTION_DUE));
 
+    pilotInspectionLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     pilotInspectionLabel.setText(SettingsManager.getInstance().getLabel(Field.INSPECTOR_NAME));
     pilotInspectionLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
     pilotInspection.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+    inspectionDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     inspectionDateLabel.setText(SettingsManager.getInstance().getLabel(Field.INSPECTION_DUE));
 
-    inspectionDate.setText("date");
+    inspectionDate.setText(getField(Field.INSPECTION_DATE));
     inspectionDate.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             inspectionDateActionPerformed(evt);
@@ -967,6 +983,7 @@ public class NewJFrame extends javax.swing.JFrame {
         }
     });
 
+    inspectionLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     inspectionLabel.setText(settings.getLabel(Field.INSPECTION_NA));
     inspectionLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
     inspectionLabel.setMaximumSize(new java.awt.Dimension(90, 16));
@@ -978,12 +995,12 @@ public class NewJFrame extends javax.swing.JFrame {
     inspectionFieldsetLayout.setHorizontalGroup(
         inspectionFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(inspectionFieldsetLayout.createSequentialGroup()
-            .addContainerGap()
             .addGroup(inspectionFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(inspectionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(inspectionCompletedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(inspectionDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(pilotInspectionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(pilotInspectionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(inspectionDateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(12, 12, 12)
             .addGroup(inspectionFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(inspectionFieldsetLayout.createSequentialGroup()
                     .addComponent(inspectionDate, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
@@ -1029,28 +1046,40 @@ public class NewJFrame extends javax.swing.JFrame {
     classification.setModel(new JJDefaultsComboBoxModel(classification, Field.CLASSIFICATION));
     classification.setSelectedItem(getField(Field.CLASSIFICATION));
 
+    classificationLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     classificationLabel.setText(SettingsManager.getInstance().getLabel(Field.CLASSIFICATION));
 
+    freq1Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     freq1Label.setText(SettingsManager.getInstance().getLabel(Field.FREQUENCY_1));
 
+    freq2Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     freq2Label.setText(SettingsManager.getInstance().getLabel(Field.FREQUENCY_2));
 
-    freq1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    freq1.setModel(new JJDefaultsComboBoxModel(freq1, Field.FREQUENCY_1));
+    freq1.setSelectedItem(getField(Field.FREQUENCY_1));
+    Save.onChange(freq1, Field.FREQUENCY_1);
 
-    freq2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    freq2.setModel(new JJDefaultsComboBoxModel(freq2, Field.FREQUENCY_2));
+    freq2.setSelectedItem(getField(Field.FREQUENCY_2));
+    Save.onChange(freq2, Field.FREQUENCY_2);
 
+    langGreetLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     langGreetLabel.setText(SettingsManager.getInstance().getLabel(Field.LANGUAGE_GREET));
 
-    langGreet.setText("text");
+    langGreet.setText(getField(Field.LANGUAGE_GREET));
     langGreet.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             langGreetActionPerformed(evt);
         }
     });
+    Save.onChange(langGreet, Field.LANGUAGE_GREET);
 
+    precipLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     precipLabel.setText(SettingsManager.getInstance().getLabel(Field.PRECIPITATION_ON_SCREEN));
 
-    precip.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    precip.setModel(new JJDefaultsComboBoxModel(precip, Field.CLASSIFICATION));
+    precip.setSelectedItem(getField(Field.CLASSIFICATION));
+    Save.onChange(precip, Field.CLASSIFICATION);
 
     precipHL.setText("Highlight");
     precipHL.addActionListener(new java.awt.event.ActionListener() {
@@ -1079,7 +1108,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addComponent(langGreet, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(precip, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(classification, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addContainerGap(29, Short.MAX_VALUE))
+            .addContainerGap(35, Short.MAX_VALUE))
     );
 
     informationFieldsetLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {classification, freq1, freq2, langGreet, precip});
@@ -1650,7 +1679,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(jLabel44)
                         .addComponent(jLabel45))
                     .addGap(0, 0, Short.MAX_VALUE)))
-            .addContainerGap(305, Short.MAX_VALUE))
+            .addContainerGap(307, Short.MAX_VALUE))
         .addGroup(notesTabLayout.createSequentialGroup()
             .addGap(10, 10, 10)
             .addComponent(jLabel27)
@@ -2795,9 +2824,9 @@ public class NewJFrame extends javax.swing.JFrame {
     // TODO add your handling code here:
   }//GEN-LAST:event_previewViewButtonActionPerformed
 
-  private void latFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latFieldActionPerformed
+  private void latitudeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latitudeActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_latFieldActionPerformed
+  }//GEN-LAST:event_latitudeActionPerformed
 
   private void longitudeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_longitudeActionPerformed
     // TODO add your handling code here:
@@ -2815,49 +2844,49 @@ public class NewJFrame extends javax.swing.JFrame {
     // TODO add your handling code here:
   }//GEN-LAST:event_precipHLActionPerformed
 
-  private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
+  private void elevationHLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_elevationHLActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jCheckBox3ActionPerformed
+  }//GEN-LAST:event_elevationHLActionPerformed
 
-  private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
+  private void lengthHLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lengthHLActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jCheckBox4ActionPerformed
+  }//GEN-LAST:event_lengthHLActionPerformed
 
-  private void jCheckBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox5ActionPerformed
+  private void widthHLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_widthHLActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jCheckBox5ActionPerformed
+  }//GEN-LAST:event_widthHLActionPerformed
 
-  private void jCheckBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox6ActionPerformed
+  private void iasAdjustHLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iasAdjustHLActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jCheckBox6ActionPerformed
+  }//GEN-LAST:event_iasAdjustHLActionPerformed
 
-  private void jCheckBox7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox7ActionPerformed
+  private void tdZoneHLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tdZoneHLActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jCheckBox7ActionPerformed
+  }//GEN-LAST:event_tdZoneHLActionPerformed
 
   private void jCheckBox9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox9ActionPerformed
     // TODO add your handling code here:
   }//GEN-LAST:event_jCheckBox9ActionPerformed
 
-  private void jTextField11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField11ActionPerformed
+  private void elevationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_elevationActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jTextField11ActionPerformed
+  }//GEN-LAST:event_elevationActionPerformed
 
-  private void jTextField12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField12ActionPerformed
+  private void lengthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lengthActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jTextField12ActionPerformed
+  }//GEN-LAST:event_lengthActionPerformed
 
-  private void jTextField13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField13ActionPerformed
+  private void widthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_widthActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jTextField13ActionPerformed
+  }//GEN-LAST:event_widthActionPerformed
 
-  private void jTextField14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField14ActionPerformed
+  private void tdZoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tdZoneActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jTextField14ActionPerformed
+  }//GEN-LAST:event_tdZoneActionPerformed
 
-  private void jTextField15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField15ActionPerformed
+  private void iasAdjustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iasAdjustActionPerformed
     // TODO add your handling code here:
-  }//GEN-LAST:event_jTextField15ActionPerformed
+  }//GEN-LAST:event_iasAdjustActionPerformed
 
   private void jCheckBox16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox16ActionPerformed
     // TODO add your handling code here:
@@ -3035,11 +3064,17 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox distance;
     private javax.swing.JTextField distanceConvert;
     private javax.swing.JPanel documentsTab;
+    private javax.swing.JTextField elevation;
+    private javax.swing.JCheckBox elevationHL;
+    private javax.swing.JLabel elevationLabel;
     private javax.swing.JComboBox freq1;
     private javax.swing.JLabel freq1Label;
     private javax.swing.JComboBox freq2;
     private javax.swing.JLabel freq2Label;
     private javax.swing.JComboBox homeRunway;
+    private javax.swing.JTextField iasAdjust;
+    private javax.swing.JCheckBox iasAdjustHL;
+    private javax.swing.JLabel iasAdjustLabel;
     private javax.swing.JPanel imagePickerFieldset;
     private javax.swing.JPanel informationFieldset;
     private javax.swing.JCheckBox inspectionCheckbox;
@@ -3066,22 +3101,12 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox25;
     private javax.swing.JCheckBox jCheckBox26;
     private javax.swing.JCheckBox jCheckBox27;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
-    private javax.swing.JCheckBox jCheckBox5;
-    private javax.swing.JCheckBox jCheckBox6;
-    private javax.swing.JCheckBox jCheckBox7;
     private javax.swing.JCheckBox jCheckBox9;
     private javax.swing.JLabel jLabel100;
     private javax.swing.JLabel jLabel101;
     private javax.swing.JLabel jLabel102;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
@@ -3199,11 +3224,6 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea7;
     private javax.swing.JTextArea jTextArea8;
     private javax.swing.JTextArea jTextArea9;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
     private javax.swing.JTextField jTextField16;
     private javax.swing.JTextField jTextField17;
     private javax.swing.JTextField jTextField18;
@@ -3234,8 +3254,11 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField43;
     private javax.swing.JTextField langGreet;
     private javax.swing.JLabel langGreetLabel;
-    private javax.swing.JTextField latField;
     private javax.swing.JLabel latLabel;
+    private javax.swing.JTextField latitude;
+    private javax.swing.JTextField length;
+    private javax.swing.JCheckBox lengthHL;
+    private javax.swing.JLabel lengthLabel;
     private javax.swing.JLabel longLabel;
     private javax.swing.JComboBox longLatFormat;
     private javax.swing.JTextField longitude;
@@ -3273,8 +3296,14 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane settingsMainScroll;
     private javax.swing.JPanel settingsTab;
     private javax.swing.JTabbedPane tabView;
+    private javax.swing.JTextField tdZone;
+    private javax.swing.JCheckBox tdZoneHL;
+    private javax.swing.JLabel tdzoneLabel;
     private javax.swing.JPanel topographyFieldset;
     private javax.swing.JCheckBox trueCourse;
     private javax.swing.JComboBox weight;
+    private javax.swing.JTextField width;
+    private javax.swing.JCheckBox widthHL;
+    private javax.swing.JLabel widthLabel;
     // End of variables declaration//GEN-END:variables
 }

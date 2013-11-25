@@ -387,30 +387,30 @@
                                   <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                       <Component id="longLabel" linkSize="9" alignment="0" pref="100" max="32767" attributes="0"/>
-                                      <Component id="jLabel12" linkSize="9" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jLabel13" linkSize="9" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jLabel14" linkSize="9" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jLabel19" linkSize="9" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jLabel20" linkSize="9" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="elevationLabel" linkSize="9" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lengthLabel" linkSize="9" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="widthLabel" linkSize="9" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="tdzoneLabel" linkSize="9" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="iasAdjustLabel" linkSize="9" alignment="0" max="32767" attributes="0"/>
                                       <Component id="latLabel" linkSize="9" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jTextField11" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jTextField12" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jTextField13" alignment="0" pref="283" max="32767" attributes="0"/>
-                                      <Component id="jTextField14" max="32767" attributes="0"/>
-                                      <Component id="latField" alignment="1" max="32767" attributes="0"/>
-                                      <Component id="jTextField15" max="32767" attributes="0"/>
+                                      <Component id="elevation" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="length" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="width" alignment="0" pref="289" max="32767" attributes="0"/>
+                                      <Component id="tdZone" max="32767" attributes="0"/>
+                                      <Component id="latitude" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="iasAdjust" max="32767" attributes="0"/>
                                       <Component id="longitude" alignment="1" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="2" attributes="0">
-                                      <Component id="jCheckBox7" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox6" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox5" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox4" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox3" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tdZoneHL" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="iasAdjustHL" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="widthHL" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lengthHL" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="elevationHL" alignment="2" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel15" alignment="2" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -423,33 +423,33 @@
                                   <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="2" attributes="0">
-                                      <Component id="jLabel12" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox3" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField11" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="elevationLabel" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="elevationHL" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="elevation" alignment="2" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="2" attributes="0">
-                                      <Component id="jLabel13" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox4" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField12" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lengthLabel" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lengthHL" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="length" alignment="2" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="2" attributes="0">
-                                      <Component id="jCheckBox5" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel14" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField13" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="widthHL" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="widthLabel" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="width" alignment="2" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="2" attributes="0">
-                                      <Component id="jLabel19" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox7" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField14" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tdzoneLabel" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tdZoneHL" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tdZone" alignment="2" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="2" attributes="0">
-                                      <Component id="jLabel20" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox6" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField15" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="iasAdjustLabel" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="iasAdjustHL" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="iasAdjust" alignment="2" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -459,7 +459,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="latLabel" linkSize="10" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="latField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="latitude" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                               </Group>
@@ -467,30 +467,33 @@
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="jLabel12">
+                        <Component class="javax.swing.JLabel" name="elevationLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.ELEVATION) + &quot; (&quot; + SettingsManager.getInstance().getStringForKey(Settings.ALTITUDE_UNITS) + &apos;)&apos;" type="code"/>
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel13">
+                        <Component class="javax.swing.JLabel" name="lengthLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="String.format(&quot;%s (%s)&quot;, settings.getLabel(Field.LENGTH), settings.getStringForKey(Settings.DIMENSION_UNITS))" type="code"/>
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel14">
+                        <Component class="javax.swing.JLabel" name="widthLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="String.format(&quot;%s (%s)&quot;, settings.getLabel(Field.WIDTH_TEXT), settings.getStringForKey(Settings.DIMENSION_UNITS))" type="code"/>
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox3">
+                        <Component class="javax.swing.JCheckBox" name="elevationHL">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox3ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="elevationHLActionPerformed"/>
                           </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel15">
@@ -498,59 +501,73 @@
                             <Property name="text" type="java.lang.String" value="Highlight"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox4">
+                        <Component class="javax.swing.JCheckBox" name="lengthHL">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox4ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lengthHLActionPerformed"/>
                           </Events>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox5">
+                        <Component class="javax.swing.JCheckBox" name="widthHL">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox5ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="widthHLActionPerformed"/>
                           </Events>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel19">
+                        <Component class="javax.swing.JLabel" name="tdzoneLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="settings.getLabel(Field.TDZ_SLOPE)" type="code"/>
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel20">
+                        <Component class="javax.swing.JLabel" name="iasAdjustLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="settings.getLabel(Field.IAS_ADJUSTMENT)&#xa;" type="code"/>
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox6">
+                        <Component class="javax.swing.JCheckBox" name="iasAdjustHL">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox6ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="iasAdjustHLActionPerformed"/>
                           </Events>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox7">
+                        <Component class="javax.swing.JCheckBox" name="tdZoneHL">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox7ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tdZoneHLActionPerformed"/>
                           </Events>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField11">
+                        <Component class="javax.swing.JTextField" name="elevation">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="text"/>
+                            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.ELEVATION)" type="code"/>
+                            </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField11ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="elevationActionPerformed"/>
                           </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="Save.onChange(elevation, Field.ELEVATION);"/>
+                          </AuxValues>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField12">
+                        <Component class="javax.swing.JTextField" name="length">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="text"/>
+                            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.LENGTH)" type="code"/>
+                            </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField12ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lengthActionPerformed"/>
                           </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="Save.onChange(length, Field.LENGTH);"/>
+                          </AuxValues>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField13">
+                        <Component class="javax.swing.JTextField" name="width">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="text"/>
+                            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.WIDTH_TEXT)" type="code"/>
+                            </Property>
                             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[180, 28]"/>
                             </Property>
@@ -562,24 +579,37 @@
                             </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField13ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="widthActionPerformed"/>
                           </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="Save.onChange(width, Field.WIDTH_TEXT);"/>
+                          </AuxValues>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField14">
+                        <Component class="javax.swing.JTextField" name="tdZone">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="text"/>
+                            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.TDZ_SLOPE)" type="code"/>
+                            </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField14ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tdZoneActionPerformed"/>
                           </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="Save.onChange(tdZone, Field.TDZ_SLOPE);"/>
+                          </AuxValues>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField15">
+                        <Component class="javax.swing.JTextField" name="iasAdjust">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="text"/>
+                            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.IAS_ADJUSTMENT)" type="code"/>
+                            </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField15ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="iasAdjustActionPerformed"/>
                           </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="Save.onChange(iasAdjust, Field.IAS_ADJUSTMENT);"/>
+                          </AuxValues>
                         </Component>
                         <Component class="javax.swing.JTextField" name="longitude">
                           <Properties>
@@ -596,6 +626,7 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="longLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.LONGITUDE)" type="code"/>
                             </Property>
@@ -603,20 +634,21 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="latLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.LATITUDE)" type="code"/>
                             </Property>
                             <Property name="horizontalTextPosition" type="int" value="4"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="latField">
+                        <Component class="javax.swing.JTextField" name="latitude">
                           <Properties>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="getField(Field.LATITUDE)" type="code"/>
                             </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="latFieldActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="latitudeActionPerformed"/>
                           </Events>
                         </Component>
                       </SubComponents>
@@ -640,13 +672,13 @@
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="inspectionLabel" linkSize="6" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
-                                      <Component id="inspectionCompletedLabel" linkSize="6" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
-                                      <Component id="inspectionDateLabel" linkSize="6" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
-                                      <Component id="pilotInspectionLabel" linkSize="6" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
+                                      <Component id="inspectionCompletedLabel" linkSize="6" min="-2" pref="110" max="-2" attributes="0"/>
+                                      <Component id="pilotInspectionLabel" linkSize="6" min="-2" pref="110" max="-2" attributes="0"/>
+                                      <Component id="inspectionDateLabel" linkSize="6" min="-2" pref="110" max="-2" attributes="0"/>
                                   </Group>
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
                                           <Component id="inspectionDate" pref="262" max="32767" attributes="0"/>
@@ -702,6 +734,7 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="inspectionCompletedLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.INSPECTION_DATE)" type="code"/>
                             </Property>
@@ -724,10 +757,14 @@
                                 <StringItem index="3" value="Item 4"/>
                               </StringArray>
                             </Property>
+                            <Property name="selectedItem" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.INSPECTION_DUE)" type="code"/>
+                            </Property>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="pilotInspectionLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.INSPECTOR_NAME)" type="code"/>
                             </Property>
@@ -748,6 +785,7 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="inspectionDateLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.INSPECTION_DUE)" type="code"/>
                             </Property>
@@ -755,7 +793,9 @@
                         </Component>
                         <Component class="javax.swing.JTextField" name="inspectionDate">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="date"/>
+                            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.INSPECTION_DATE)" type="code"/>
+                            </Property>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inspectionDateActionPerformed"/>
@@ -771,6 +811,7 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="inspectionLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="settings.getLabel(Field.INSPECTION_NA)" type="code"/>
                             </Property>
@@ -818,7 +859,7 @@
                                       <Component id="precip" linkSize="1" alignment="0" min="-2" pref="320" max="-2" attributes="0"/>
                                       <Component id="classification" linkSize="1" alignment="0" min="-2" pref="320" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace pref="29" max="32767" attributes="0"/>
+                                  <EmptySpace pref="35" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -869,6 +910,7 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="classificationLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.CLASSIFICATION)" type="code"/>
                             </Property>
@@ -876,6 +918,7 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="freq1Label">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.FREQUENCY_1)" type="code"/>
                             </Property>
@@ -883,6 +926,7 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="freq2Label">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.FREQUENCY_2)" type="code"/>
                             </Property>
@@ -890,30 +934,33 @@
                         </Component>
                         <Component class="javax.swing.JComboBox" name="freq1">
                           <Properties>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="4">
-                                <StringItem index="0" value="Item 1"/>
-                                <StringItem index="1" value="Item 2"/>
-                                <StringItem index="2" value="Item 3"/>
-                                <StringItem index="3" value="Item 4"/>
-                              </StringArray>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="new JJDefaultsComboBoxModel(freq1, Field.FREQUENCY_1)" type="code"/>
+                            </Property>
+                            <Property name="selectedItem" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.FREQUENCY_1)" type="code"/>
                             </Property>
                           </Properties>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="Save.onChange(freq1, Field.FREQUENCY_1);&#xa;"/>
+                          </AuxValues>
                         </Component>
                         <Component class="javax.swing.JComboBox" name="freq2">
                           <Properties>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="4">
-                                <StringItem index="0" value="Item 1"/>
-                                <StringItem index="1" value="Item 2"/>
-                                <StringItem index="2" value="Item 3"/>
-                                <StringItem index="3" value="Item 4"/>
-                              </StringArray>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="new JJDefaultsComboBoxModel(freq2, Field.FREQUENCY_2)" type="code"/>
+                            </Property>
+                            <Property name="selectedItem" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.FREQUENCY_2)" type="code"/>
                             </Property>
                           </Properties>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="Save.onChange(freq2, Field.FREQUENCY_2);"/>
+                          </AuxValues>
                         </Component>
                         <Component class="javax.swing.JLabel" name="langGreetLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.LANGUAGE_GREET)" type="code"/>
                             </Property>
@@ -921,14 +968,20 @@
                         </Component>
                         <Component class="javax.swing.JTextField" name="langGreet">
                           <Properties>
-                            <Property name="text" type="java.lang.String" value="text"/>
+                            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.LANGUAGE_GREET)" type="code"/>
+                            </Property>
                           </Properties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="langGreetActionPerformed"/>
                           </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="Save.onChange(langGreet, Field.LANGUAGE_GREET);&#xa;"/>
+                          </AuxValues>
                         </Component>
                         <Component class="javax.swing.JLabel" name="precipLabel">
                           <Properties>
+                            <Property name="horizontalAlignment" type="int" value="4"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="SettingsManager.getInstance().getLabel(Field.PRECIPITATION_ON_SCREEN)" type="code"/>
                             </Property>
@@ -936,15 +989,16 @@
                         </Component>
                         <Component class="javax.swing.JComboBox" name="precip">
                           <Properties>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="4">
-                                <StringItem index="0" value="Item 1"/>
-                                <StringItem index="1" value="Item 2"/>
-                                <StringItem index="2" value="Item 3"/>
-                                <StringItem index="3" value="Item 4"/>
-                              </StringArray>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="new JJDefaultsComboBoxModel(precip, Field.CLASSIFICATION)" type="code"/>
+                            </Property>
+                            <Property name="selectedItem" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getField(Field.CLASSIFICATION)" type="code"/>
                             </Property>
                           </Properties>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="Save.onChange(precip, Field.CLASSIFICATION);&#xa;"/>
+                          </AuxValues>
                         </Component>
                         <Component class="javax.swing.JCheckBox" name="precipHL">
                           <Properties>
@@ -1486,7 +1540,7 @@
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="305" max="32767" attributes="0"/>
+                      <EmptySpace pref="307" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace min="10" pref="10" max="-2" attributes="0"/>

@@ -36,19 +36,19 @@ public class Save {
         Save.isSaveImmediate = isSaveImmediate;
     }    
     
-    public static void onChange(JComboBox element, Field field){
+    public static void onChange(JComboBox element, Field Field){
         //Create new listener and inject its field to save immediately
-        new Save.SaveOnChange(element).fieldToSave = field;
+        new Save.SaveOnChange(element).fieldToSave = Field;
     }
     
-    public static void onChange(JTextComponent element, Field field){
+    public static void onChange(JTextComponent element, Field Field){
         //Create new listener and inject its field to save immediately
-        new Save.SaveOnChange(element).fieldToSave = field;
+        new Save.SaveOnChange(element).fieldToSave = Field;
     }
     
-    public static void onChange(JCheckBox element, Field field){
+    public static void onChange(JCheckBox element, Field Field){
         //Create new listener and inject its field to save immediately
-        new Save.SaveOnChange(element).fieldToSave = field;
+        new Save.SaveOnChange(element).fieldToSave = Field;
     }
     
     
