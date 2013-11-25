@@ -237,7 +237,7 @@ public class HtmlPreparer {
             	
             	ValueByEnum.JungleJeppsEnum val;
             	try {
-            		val = Enum.valueOf(type, id.toUpperCase());
+            		val = (JungleJeppsEnum) Enum.valueOf(type, id.toUpperCase());
             		
             		//The value is not the ENUM
             	} catch(IllegalArgumentException e){ 
