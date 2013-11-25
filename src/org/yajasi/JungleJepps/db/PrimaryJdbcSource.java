@@ -310,7 +310,12 @@ public class PrimaryJdbcSource implements DatabaseConnection {
                                                             statement.setString(1, runway.get(Field.RUNWAY_IDENTIFIER));
                                                             statement.setString(2, runway.get(Field.AIRCRAFT_IDENTIFIER));
                                                             statement.setString(3, System.getProperty("user.name"));
-                                                            statement.setString(4, runwayUpdateSet.substring(1) + aircraftUpdateSet);
+                                                            if(runwayUpdateSet.length() > 0){
+                                                                statement.setString(4, runwayUpdateSet.substring(1) + aircraftUpdateSet);
+                                                            }
+                                                            else{
+                                                                statement.setString(4, aircraftUpdateSet);
+                                                            }
                                                             statement.setTimestamp(5, new Timestamp(new Date().getTime()));
                                                             statement.execute();
                                                             statement.execute();
