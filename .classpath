@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="lib/apache-http/httpclient-cache-4.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/apache-http/httpcore-4.3.jar"/>
 	<classpathentry kind="lib" path="lib/apache-http/httpmime-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/jcalendar-1.4/lib/jcalendar-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

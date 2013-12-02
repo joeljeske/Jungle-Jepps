@@ -20,4 +20,7 @@ NOTES FROM PREM DESIGN DOC
 
 10) We may not have the iOS
 
+11) Image same size
+
+
 
