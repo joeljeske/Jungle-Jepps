@@ -21,7 +21,7 @@ Jungle Jepps Desktop will be managed by a pilot who will hold primary responsibi
 * Author: Zach Osterloo
 * Purpose: Specifies the software requirements for the Desktop and Mobile applications in the Jungle Jepps software suite
 * Current Version: v1.0.1
-* Path: [/docs/JungleJepps-SRS.pdf]()
+* Path: [/docs/JungleJepps-SRS.pdf](/docs/JungleJepps-SRS.pdf)
 
 ####Design Document
 * Author: LeTourneau Team
