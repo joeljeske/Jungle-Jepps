@@ -21,22 +21,22 @@ Jungle Jepps Desktop will be managed by a pilot who will hold primary responsibi
 * Author: Zach Osterloo
 * Purpose: Specifies the software requirements for the Desktop and Mobile applications in the Jungle Jepps software suite
 * Current Version: v1.0.1
-* Path: /docs/JungleJepps-SRS.pdf
+* Path: [/docs/JungleJepps-SRS.pdf]()
 
 ####Design Document
 * Author: LeTourneau Team
 * Purpose: Clarifies the approach to the implementation decided by the developers. 
 * Current Version: v0.1.0
-* Path: /docs/Preliminary-Design.pdf
+* Path: [/docs/Preliminary-Design.pdf]()
 
 ##Repository Structure
 This repository is primarily organized in 4 folders.  
-####/src/ 
+####[/src/]()
 Contains the Java source code for the application in addition to various CSS, and HTML documents acting as a template for the PDF document. The Java files are organized into standard class path and package structure with the primary package namely, "org.yajasi.JungleJepps", containing the majority of the application.  
-####/lib/ 
+####[/lib/]()
 Contains the included libraries in use in the application. Should be packaged in a .jar.  
-####/doc/
+####[/doc/]()
 Contains sparse documentation for both the included libraries and various documents for Jungle Jepps desktop application.  
-####/uml/  
+####[/uml/]()
 Contains various UML diagrams including class, data flow, and use case. 
 
