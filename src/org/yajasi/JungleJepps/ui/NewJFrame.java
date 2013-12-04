@@ -692,7 +692,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
         aircraftDisclaimerLabel.setText("This Diagram is for " + getAircraftId() + " aircraft only.");
 
-        runwayChooserLabel.setText(SettingsManager.getInstance().getLabel(Field.RUNWAY_IDENTIFIER));
+        runwayChooserLabel.setText(settings.getLabel(Field.RUNWAY_IDENTIFIER));
 
         changeLogScroll.setBorder(javax.swing.BorderFactory.createTitledBorder("Change Log"));
 
@@ -757,7 +757,7 @@ public class NewJFrame extends javax.swing.JFrame {
         topographyFieldset.setBorder(javax.swing.BorderFactory.createTitledBorder("Topography"));
 
         elevationLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        elevationLabel.setText(SettingsManager.getInstance().getLabel(Field.ELEVATION) + " (" + SettingsManager.getInstance().getStringForKey(Settings.ALTITUDE_UNITS) + ')');
+        elevationLabel.setText(settings.getLabel(Field.ELEVATION) + " (" + settings.getStringForKey(Settings.ALTITUDE_UNITS) + ')');
 
     lengthLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
     lengthLabel.setText(String.format("%s (%s)", settings.getLabel(Field.LENGTH), settings.getStringForKey(Settings.DIMENSION_UNITS)));
@@ -856,10 +856,10 @@ public class NewJFrame extends javax.swing.JFrame {
     Save.onChange(longitude, Field.LONGITUDE);
 
     longLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    longLabel.setText(SettingsManager.getInstance().getLabel(Field.LONGITUDE));
+    longLabel.setText(settings.getLabel(Field.LONGITUDE));
 
     latLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    latLabel.setText(SettingsManager.getInstance().getLabel(Field.LATITUDE));
+    latLabel.setText(settings.getLabel(Field.LATITUDE));
     latLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
     latitude.setText(getField(Field.LATITUDE));
@@ -952,7 +952,7 @@ public class NewJFrame extends javax.swing.JFrame {
     inspectionFieldset.setMinimumSize(new java.awt.Dimension(250, 155));
 
     inspectionCompletedLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    inspectionCompletedLabel.setText(SettingsManager.getInstance().getLabel(Field.INSPECTION_DATE));
+    inspectionCompletedLabel.setText(settings.getLabel(Field.INSPECTION_DATE));
     inspectionCompletedLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
     inspectionCompletedLabel.setMaximumSize(new java.awt.Dimension(90, 16));
     inspectionCompletedLabel.setMinimumSize(new java.awt.Dimension(90, 16));
@@ -961,13 +961,13 @@ public class NewJFrame extends javax.swing.JFrame {
     inspectionCompleted.setSelectedItem(getField(Field.INSPECTION_DUE));
 
     pilotInspectionLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    pilotInspectionLabel.setText(SettingsManager.getInstance().getLabel(Field.INSPECTOR_NAME));
+    pilotInspectionLabel.setText(settings.getLabel(Field.INSPECTOR_NAME));
     pilotInspectionLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
     pilotInspection.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
     inspectionDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    inspectionDateLabel.setText(SettingsManager.getInstance().getLabel(Field.INSPECTION_DUE));
+    inspectionDateLabel.setText(settings.getLabel(Field.INSPECTION_DUE));
 
     inspectionDate.setText(getField(Field.INSPECTION_DATE));
     inspectionDate.addActionListener(new java.awt.event.ActionListener() {
@@ -1047,13 +1047,13 @@ public class NewJFrame extends javax.swing.JFrame {
     classification.setSelectedItem(getField(Field.CLASSIFICATION));
 
     classificationLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    classificationLabel.setText(SettingsManager.getInstance().getLabel(Field.CLASSIFICATION));
+    classificationLabel.setText(settings.getLabel(Field.CLASSIFICATION));
 
     freq1Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    freq1Label.setText(SettingsManager.getInstance().getLabel(Field.FREQUENCY_1));
+    freq1Label.setText(settings.getLabel(Field.FREQUENCY_1));
 
     freq2Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    freq2Label.setText(SettingsManager.getInstance().getLabel(Field.FREQUENCY_2));
+    freq2Label.setText(settings.getLabel(Field.FREQUENCY_2));
 
     freq1.setModel(new JJDefaultsComboBoxModel(freq1, Field.FREQUENCY_1));
     freq1.setSelectedItem(getField(Field.FREQUENCY_1));
@@ -1064,7 +1064,7 @@ public class NewJFrame extends javax.swing.JFrame {
     Save.onChange(freq2, Field.FREQUENCY_2);
 
     langGreetLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    langGreetLabel.setText(SettingsManager.getInstance().getLabel(Field.LANGUAGE_GREET));
+    langGreetLabel.setText(settings.getLabel(Field.LANGUAGE_GREET));
 
     langGreet.setText(getField(Field.LANGUAGE_GREET));
     langGreet.addActionListener(new java.awt.event.ActionListener() {
@@ -1075,7 +1075,7 @@ public class NewJFrame extends javax.swing.JFrame {
     Save.onChange(langGreet, Field.LANGUAGE_GREET);
 
     precipLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    precipLabel.setText(SettingsManager.getInstance().getLabel(Field.PRECIPITATION_ON_SCREEN));
+    precipLabel.setText(settings.getLabel(Field.PRECIPITATION_ON_SCREEN));
 
     precip.setModel(new JJDefaultsComboBoxModel(precip, Field.CLASSIFICATION));
     precip.setSelectedItem(getField(Field.CLASSIFICATION));

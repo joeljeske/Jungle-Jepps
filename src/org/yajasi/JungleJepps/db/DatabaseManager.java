@@ -9,12 +9,6 @@
 // 
 // Project: Jungle Jepps - Desktop
 // Copyright 2013 YAJASI. All rights reserved. 
-// 
-// Objective: This class is used to manage the database connections and 
-// the settings connection. It retrieves the settings instance and 
-// constructs the various database connection types based on if this is
-// the primary or secondary connections and the status of the 3rd party
-// database.
 //
 /////////////////////////////////////////////////////////////////////////
 
@@ -31,6 +25,15 @@ import org.yajasi.JungleJepps.jjtp.Client;
 import org.yajasi.JungleJepps.jjtp.JungleJeppsmDNS;
 import org.yajasi.JungleJepps.jjtp.Server;
 
+/**
+ * This class is used to manage the database connections and 
+ * the settings connection. It retrieves the settings instance and 
+ * constructs the various database connection types based on if this is
+ * the primary or secondary connections and the status of the 3rd party
+ * database.
+ * @author Joel Jeske
+ *
+ */
 public class DatabaseManager {
 	
 	/**
@@ -39,6 +42,11 @@ public class DatabaseManager {
 	 * or a DataMerge connection using two JDBC connections
 	 */
 	private static DatabaseConnection primaryDB;
+	
+	/**
+	 * This class is used as static only so we have a private and empty constructor.
+	 */
+	private DatabaseManager(){}
 
 	static {
 		// By having a static block to initialize the database, it removes the need for 

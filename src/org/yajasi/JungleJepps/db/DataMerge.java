@@ -11,7 +11,7 @@ import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseConnection;
 
-public class DataMerge implements DatabaseConnection{
+class DataMerge implements DatabaseConnection{
 	//private DatabaseConnection primaryConnection;
         //private DatabaseConnection operationsConnection;
 	//private DatabaseConnection primarySource;

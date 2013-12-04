@@ -9,12 +9,6 @@
 // 
 // Project: Jungle Jepps - Desktop
 // Copyright 2013 YAJASI. All rights reserved. 
-// 
-// Objective: This class is used to simplify an OnChange listener for GUI
-// objects. Various constructor types accepts different GUI elements and 
-// listens for change in focus. If the element has a new state or value 
-// when the focus is lost, the listener is notified with the new String 
-// representation of this value. 
 //
 /////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +26,12 @@ import javax.swing.text.JTextComponent;
  * for changes in value when the focus is lost.  
  * The listener must implement the onChange(String) handler
  * which will be called when the GUI element changes. 
+ * <br />
+ * This class is used to simplify an OnChange listener for GUI
+ * objects. Various constructor types accepts different GUI elements and 
+ * listens for change in focus. If the element has a new state or value 
+ * when the focus is lost, the listener is notified with the new String 
+ * representation of this value. 
  * 
  * @author Joel Jeske
  */

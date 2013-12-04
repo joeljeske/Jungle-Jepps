@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.Runway;
 
-public class OperationsDatabase implements DatabaseConnection {
+class OperationsDatabase implements DatabaseConnection {
 	
 	private SettingsManager settingsMgr;
 	private Connection connection;

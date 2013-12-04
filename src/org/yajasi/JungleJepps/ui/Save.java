@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.yajasi.JungleJepps.ui;
 
 import javax.swing.JCheckBox;
@@ -14,8 +8,11 @@ import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.Runway;
 
 /**
- *
- * @author joeljeske14
+ * This class is used to set a field element to save when changed. 
+ * Ther user interface makes frequent calls to initiate the fields
+ * to listen for changes and then save. 
+ * 
+ * @author Joel Jeske
  */
 public class Save {
     

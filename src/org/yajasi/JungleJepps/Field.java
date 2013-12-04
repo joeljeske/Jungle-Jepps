@@ -10,21 +10,24 @@
 // Project: Jungle Jepps - Desktop
 // Copyright 2013 YAJASI. All rights reserved. 
 // 
-// Objective: This file represents a Java ENUM. This enumerated type
-// is a list of every possible field that pertaining to a Runway, Aircraft,
-// and Runway-Aircraft relationship. This ENUM is used to generate Strings
-// pertaining to Fields and Field-relevant information (e.g. column override
-// names, field labels, etc...). To generate the string, use the toString()
-// instance method. There is a standard naming convention used here: 
-// All capital letters, spaces represented as '_'. The majority of these
-// fields are named directly as stated in the SRS V1.0.1 Section 3.4.8.3.
-// The "_HL" append represents a boolean typed value if stating if a field
-// should be highlighted on the PDF Runway char.
-// 
 /////////////////////////////////////////////////////////////////////////
 
 package org.yajasi.JungleJepps;
 
+/**
+ * This file represents a Java ENUM. This enumerated type
+ * is a list of every possible field that pertaining to a Runway, Aircraft,
+ * and Runway-Aircraft relationship. This ENUM is used to generate Strings
+ * pertaining to Fields and Field-relevant information (e.g. column override
+ * names, field labels, etc...). To generate the string, use the toString()
+ * instance method. There is a standard naming convention used here: 
+ * All capital letters, spaces represented as '_'. The majority of these
+ * fields are named directly as stated in the SRS V1.0.1 Section 3.4.8.3.
+ * The "_HL" append represents a boolean typed value if stating if a field
+ * should be highlighted on the PDF Runway char.
+ * @author joeljeske14
+ *
+ */
 public enum Field implements ValueByEnum.JungleJeppsEnum {
 	  RUNWAY_IDENTIFIER, 
 	  RUNWAY_NAME,

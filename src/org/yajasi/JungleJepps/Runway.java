@@ -9,14 +9,6 @@
 // 
 // Project: Jungle Jepps - Desktop
 // Copyright 2013 YAJASI. All rights reserved. 
-// 
-// Objective: This class is used to store all the data about a Runway 
-// during runtime. This class will not be persistent except by calling 
-// the save(), publish(), or preview() methods, where this class 
-// calls methods on the database and local filesystem to store information
-// either as PDF binary or in a database. This class extends a Map<Field, String> 
-// and can therefore only contain values for chosen Fields as speficied in 
-// the Field enum.
 //
 /////////////////////////////////////////////////////////////////////////
 
@@ -39,6 +31,17 @@ import org.yajasi.JungleJepps.db.SettingsManager;
 import org.yajasi.JungleJepps.pdf.HtmlPreparer;
 import org.yajasi.JungleJepps.pdf.Repository;
 
+/**
+ * This class is used to store all the data about a Runway 
+ * during runtime. This class will not be persistent except by calling 
+ * the save(), publish(), or preview() methods, where this class 
+ * calls methods on the database and local filesystem to store information
+ * either as PDF binary or in a database. This class extends a Map<Field, String> 
+ * and can therefore only contain values for chosen Fields as speficied in 
+ * the Field enum.
+ * @author Joel Jeske
+ *
+ */
 public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	/**
 	 * Serial verision for Runway object
@@ -155,7 +158,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	/** 
 	 * Used to indicate if this Runway object in current runtime reflects
 	 * what is stored in the database. 
-	 * @return
+	 * @return boolean
 	 */
 	public boolean isModified(){
 		// Must contain at least one entry to be modified
@@ -260,7 +263,7 @@ public class Runway extends HashMap<Field, String> implements ValueByEnum {
 	 * Same as method <code>public String get(Field field)</code>
 	 * Needed to comply with interface, ValueByEnum. 
 	 * @param key
-	 * @return
+	 * @return String
 	 */
 	@Override
 	public String get(JungleJeppsEnum key) {

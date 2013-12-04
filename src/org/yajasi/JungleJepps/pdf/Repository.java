@@ -8,11 +8,7 @@
 // Development Environment: Eclipse Kepler SDK
 // 
 // Project: Jungle Jepps - Desktop
-// Copyright 2013 YAJASI. All rights reserved. 
-// 
-// Objective: This class is used to manage the Repository. It handles the 
-// location management and file structure of the Repository such as where
-// the active PDF document for a runway is stored or where the 
+// Copyright 2013 YAJASI. All rights reserved.  
 //
 /////////////////////////////////////////////////////////////////////////
 
@@ -30,16 +26,53 @@ import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.db.DatabaseManager;
 import org.yajasi.JungleJepps.db.Settings;
 
+/**
+ * This class is used to manage the Repository. It handles the 
+ * location management and file structure of the Repository such as where
+ * the active PDF document for a runway is stored or where the
+ * @author Joel Jekse
+ *
+ */
 public class Repository {
 
+	/**
+	 * Points to the root directory of the repository. 
+	 * Used to easily create other File objects pointing to 
+	 * files and folders in the repository
+	 */
 	public static final File REPOSITORY;
+	
+	/**
+	 * The name of the folder where miscellaneous documents are 
+	 * stored inside the repository.
+	 */
 	public static final String DOCUMENTS_FOLDER = "documents";
+	
+	/**
+	 * The name of the active PDF in the repository.
+	 */
 	public static final String PUBLISHED_NAME = "diagram";
+	
+	/**
+	 * The name of the folder inside a runway-aircraft relationship
+	 * that holds all of the PDFs created. 
+	 */
 	public static final String ARCHIVE_FOLDER = "archive";
+	
+	/**
+	 * The name of the folder inside a runway-aircraft relationship
+	 * that holds all of the images of the topo maps. 
+	 */
 	public static final String IMAGE_FOLDER = "photos";
+	
+	/**
+	 * The file extension for the document type (i.e. '.pdf')
+	 */
 	public static final String DOCUMENT_EXTENSION = ".pdf";
 	
-	//Static block run upon class load
+	/**
+	 * Initialize the class on static class load.
+	 */
 	static {
 		//Get the repository base path
 		String path = DatabaseManager.getSettings().getStringForKey(Settings.REPOSITORY_PATH);

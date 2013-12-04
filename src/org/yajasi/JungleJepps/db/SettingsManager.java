@@ -9,13 +9,6 @@
 // 
 // Project: Jungle Jepps - Desktop
 // Copyright 2013 YAJASI. All rights reserved. 
-// 
-// Objective: This class is used to store all the persistent settings. This 
-// class makes use of the Java properties persistence using a simple key-
-// value pairing storage in plain text. This class has wrapper methods 
-// such that other classes can store arrays or field labels. Note the 
-// warying difference when using a Settings ENUM or a Field ENUM as the 
-// primary key.
 //
 /////////////////////////////////////////////////////////////////////////
 
@@ -33,8 +26,12 @@ import org.yajasi.JungleJepps.Field;
 import org.yajasi.JungleJepps.ValueByEnum;
 
 /**
- * This class makes use of the singleton model having exactly one instance
- * at a time during runtime.  
+ * This class is used to store all the persistent settings. This 
+ * class makes use of the Java properties persistence using a simple key- 
+ * value pairing storage in plain text. This class has wrapper methods 
+ * such that other classes can store arrays or field labels. Note the 
+ * warying difference when using a Settings ENUM or a Field ENUM as the 
+ * primary key.  
  * 
  * @author Joel Jeske
  *
@@ -156,7 +153,7 @@ public class SettingsManager implements ValueByEnum{
 	 * Used to prevent multiple instances trying to modify or read from a single file.
 	 * @return SettingsManager instance
 	 */
-	public static SettingsManager getInstance(){
+	static SettingsManager getInstance(){
 		//Only create an instance if one does not exist
 		if( instance == null)
 			instance = new SettingsManager();

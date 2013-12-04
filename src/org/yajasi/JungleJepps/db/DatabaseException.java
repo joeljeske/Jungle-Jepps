@@ -10,14 +10,17 @@
 // Project: Jungle Jepps - Desktop
 // Copyright 2013 YAJASI. All rights reserved. 
 // 
-// Objective: This class an exception used to abstract all possible errors
-// in using the database connection.
-//
 /////////////////////////////////////////////////////////////////////////
 
 
 package org.yajasi.JungleJepps.db;
 
+/**
+ * This class an exception used to abstract all possible errors
+ * in using the database connection.
+ * @author Joel Jeske
+ *
+ */
 public class DatabaseException extends Exception{
 
 	/**

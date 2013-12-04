@@ -10,10 +10,6 @@
 // Project: Jungle Jepps - Desktop
 // Copyright 2013 YAJASI. All rights reserved. 
 // 
-// Objective: This file represents an ENUM for every setting
-// needed for Jungle Jepps Desktop configuration. This is used to as the
-// key in a key-value persistence storage system in the SettingsManager.
-//
 /////////////////////////////////////////////////////////////////////////
 
 
@@ -21,6 +17,13 @@ package org.yajasi.JungleJepps.db;
 
 import org.yajasi.JungleJepps.ValueByEnum;
 
+/**
+ * This file represents an ENUM for every setting
+ * needed for Jungle Jepps Desktop configuration. This is used to as the
+ * key in a key-value persistence storage system in the SettingsManager.
+ * @author Joel Jeske
+ *
+ */
 public enum Settings implements ValueByEnum.JungleJeppsEnum {
 	IS_PRIMARY,
 	REPOSITORY_PATH,

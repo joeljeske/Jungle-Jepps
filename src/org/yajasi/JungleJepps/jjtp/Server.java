@@ -126,7 +126,7 @@ public class Server {
 		/** 
 		 *  Handles browser interaction and requests from client
 		 *  for strip id list and strip select.
-		 * @param HttpExchange exchange
+		 * @param exchange
 		 * @throws IOException 
 		 */
 		private void doGet(HttpExchange exchange) throws IOException{

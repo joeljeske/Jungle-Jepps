@@ -74,7 +74,9 @@ public class HtmlPreparer {
 	/**
 	 * Single front end to PDF preparer. Can overload method with other
 	 * options. To change parameters, the constants must be modified.
-	 * @param dataMap
+	 * @param runway
+	 * @param image
+	 * @param output 
 	 * @param outputUrl
 	 */
 	public File prepareAndPublish(Runway runway, File image, File output){
@@ -100,7 +102,7 @@ public class HtmlPreparer {
 	
 	/**
 	 * Saves the DOM as a PDF using PDF Generator class
-	 * @param outputUrl
+	 * @param output
 	 * @throws IOException
 	 * @throws DocumentException
 	 */
@@ -152,7 +154,7 @@ public class HtmlPreparer {
 	 * tag that's name matches HOOK_TAG and looks for a value for the key of the 
 	 * attribute value for the attribute with the name that matches HOOK_NAME_ATTR.
 	 * The value found in dataMap replaces the textNode in the DOM.
-	 * @param dataMap
+	 * @param runway
 	 */
 	private void injectData(Runway runway){
 		SettingsManager settings = DatabaseManager.getSettings();
@@ -213,8 +215,9 @@ public class HtmlPreparer {
 	 * attribute value for the attribute with the name that matches idAttribute.
 	 * The value found in dataMap replaces the textNode in the DOM.
 	 * @param source
-	 * @param tagName
-	 * @param idAttribute
+	 * @param TAG
+	 * @param ATTR
+	 * @param type
 	 */
 	private void inject(ValueByEnum source, final String TAG, final String ATTR, Class type, Boolean removeNulls){
 		// Setup a XPath evaluator to query through the DOM

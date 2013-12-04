@@ -18,7 +18,7 @@ import java.util.List;
 import org.yajasi.JungleJepps.Runway;
 import org.yajasi.JungleJepps.Field;
 
-public class PrimaryJdbcSource implements DatabaseConnection {
+class PrimaryJdbcSource implements DatabaseConnection {
 	
 	private Connection connection;
 	

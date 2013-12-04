@@ -9,11 +9,6 @@
 // 
 // Project: Jungle Jepps - Desktop
 // Copyright 2013 YAJASI. All rights reserved. 
-// 
-// Objective: This interface is used to define a connection to a database 
-// for use in Jungle Jepps. It is possible to implement this interface
-// and then modify DatabaseManager class to instantiate it based on 
-// appropriate conditions. This modularizes our database connection
 //
 /////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +17,10 @@ package org.yajasi.JungleJepps.db;
 import org.yajasi.JungleJepps.Runway;
 
 /**
- * Defines abstract connection to a database used for Jungle Jepps.
+ * This interface is used to define a connection to a database 
+ * for use in Jungle Jepps. It is possible to implement this interface
+ * and then modify DatabaseManager class to instantiate it based on 
+ * appropriate conditions. This modularizes our database connection
  * 
  * @author Joel Jeske
  */
