@@ -34,8 +34,11 @@ public class Server {
 	private static final File WEB_ROOT;
 	
 	static {
-		String root = DatabaseManager.getSettings().getStringForKey(Settings.WEB_ROOT);
-		WEB_ROOT = new File(root);
+		//String root = DatabaseManager.getSettings().getStringForKey(Settings.WEB_ROOT);
+		String root = String.format("runtime%cxhtml",
+				File.separatorChar,
+				File.separatorChar);
+		WEB_ROOT = new File(Repository.JAR_FOLDER, root);
 	}
 
 	public static void main(String[] args) throws IOException{
