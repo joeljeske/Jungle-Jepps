@@ -2,6 +2,8 @@ package org.yajasi.JungleJepps.pdf;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,8 +38,8 @@ public class HtmlPreparer {
 	private static final String REMOVED_ATTR = "removable='true'";
 	private static final String HIGHLIGHT_ATTR = "highlight";
 	
-	private static final String TOPO_DOM_ID = "topo_image";
-	private static final String TEMPLATE_URI = "src/xhtml/new-template.html";
+	private static final String TOPO_DOM_ID = "topo_map";
+	private static final String TEMPLATE_URI = String.format("runtime%cxhtml%cnew-template.html", File.separatorChar, File.separatorChar);
 	
 	private Document dom;
 	private String parentUrl;
@@ -60,8 +62,7 @@ public class HtmlPreparer {
 	}
 	
 	public static File publish(Runway runway, File output){
-		File image = Repository.getPhotoFile(runway);
-		File out = new HtmlPreparer().prepareAndPublish(runway, image, output);
+		File out = new HtmlPreparer().prepareAndPublish(runway, output);
 		runway.put(Field.PDF_PATH, out.getAbsolutePath());
 		return out;
 	}
@@ -79,15 +80,12 @@ public class HtmlPreparer {
 	 * @param output 
 	 * @param outputUrl
 	 */
-	public File prepareAndPublish(Runway runway, File image, File output){
+	public File prepareAndPublish(Runway runway, File output){
 		dom = null;
 		parentUrl = null;
 		
 		loadTemplate();
 		injectData(runway);
-
-		String imageUrl = image.getAbsolutePath();
-		injectImage(imageUrl);
 		
 		try {			
 			publishPDF(output);
@@ -116,8 +114,7 @@ public class HtmlPreparer {
 	 * Constant. Initializes the DOM document.
 	 */
 	private void loadTemplate(){
-        File template = new File( TEMPLATE_URI );
-        loadTemplate( template );
+        loadTemplate( new File(Repository.JAR_FOLDER, TEMPLATE_URI) );
 	}
 
 	/**
@@ -132,12 +129,11 @@ public class HtmlPreparer {
         try {
 			// Create DOM builder
 			docBuilder = docBuilderFactory.newDocumentBuilder();
-			
 			// Parse in file
 	        this.dom = (Document) docBuilder.parse ( template );
 	        
 	        // Save Parents path for later use by HTML parser (e.g. relative paths...)
-	        File parent = template.getAbsoluteFile().getParentFile();
+	        File parent = template.getParentFile();
 			parentUrl = (parent == null ? "" : parent.toURI().toURL().toExternalForm());
 			
 		} catch (ParserConfigurationException e) {
@@ -163,6 +159,9 @@ public class HtmlPreparer {
 		inject( settings, LABEL_TAG, FIELD_ATTR, Field.class, false);
 		inject( settings, UNIT_TAG, UNIT_ATTR, Settings.class, false);
 		highlight(runway, HIGHLIGHT_ATTR, FIELD_ATTR);
+		
+		String path = new File( runway.get(Field.IMAGE_PATH) ).getAbsolutePath();
+		injectImage( path );
 	}
 	
 	private void highlight(Runway runway, final String HL_ATTR, final String ID_ATTR){
@@ -342,6 +341,7 @@ public class HtmlPreparer {
 					// Set the text node to contain the imageUrl 
 					// <img src="C:\Users\User\Public\JungleJepps\Repository\KIWI\C-5\topo.jpg";
 					src.setTextContent( imageUrl );
+					
 				}
 			}
 		}

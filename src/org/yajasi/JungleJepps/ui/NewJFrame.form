@@ -100,10 +100,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="runwayMainScroll" min="-2" pref="985" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="runwayMainScroll" alignment="1" min="-2" pref="985" max="-2" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="publishButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -134,6 +131,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Publish / Unavailable"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="publishButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="previewViewButton">
               <Properties>
@@ -353,9 +353,6 @@
                       <SubComponents>
                         <Component class="javax.swing.JButton" name="jButton3">
                           <Properties>
-                            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new ImageIcon(getField(Field.IMAGE_PATH))" type="code"/>
-                            </Property>
                             <Property name="text" type="java.lang.String" value="Select New Image File"/>
                           </Properties>
                           <Events>
@@ -687,7 +684,6 @@
                                       </Group>
                                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace max="-2" attributes="0"/>
                                               <Component id="inspectionCheckbox" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="298" max="-2" attributes="0"/>
                                           </Group>
@@ -1128,10 +1124,12 @@
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="runwayBLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="runwayBName" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jCheckBox16" alignment="1" min="-2" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="3" attributes="0">
+                                                  <Component id="runwayBLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="runwayBName" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              </Group>
                                           </Group>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
@@ -1171,10 +1169,12 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="jLabel102" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="runwayALabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="runwayAName" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jCheckBox24" alignment="1" min="-2" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="3" attributes="0">
+                                                  <Component id="runwayALabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="runwayAName" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              </Group>
                                           </Group>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
@@ -1540,7 +1540,7 @@
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="307" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
@@ -2048,7 +2048,7 @@
                       <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="jPanel13" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="179" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

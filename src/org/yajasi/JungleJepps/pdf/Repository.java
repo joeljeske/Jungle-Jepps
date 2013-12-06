@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.channels.FileChannel;
 import java.util.Calendar;
 
@@ -41,6 +43,9 @@ public class Repository {
 	 * files and folders in the repository
 	 */
 	public static final File REPOSITORY;
+	
+	
+	public static final File JAR_FOLDER;
 	
 	/**
 	 * The name of the folder where miscellaneous documents are 
@@ -75,10 +80,18 @@ public class Repository {
 	 */
 	static {
 		//Get the repository base path
-		String path = DatabaseManager.getSettings().getStringForKey(Settings.REPOSITORY_PATH);
+		String repoPath = DatabaseManager.getSettings().getStringForKey(Settings.REPOSITORY_PATH);
+		String jarPath = Repository.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		
+		try {
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
 		//Make the File that the repository resides in
-		REPOSITORY = new File(path);
+		REPOSITORY = new File(repoPath);
+		JAR_FOLDER = new File(jarPath).getParentFile();
 	}
 	
 	

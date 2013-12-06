@@ -662,6 +662,11 @@ public class NewJFrame extends javax.swing.JFrame {
         aircraftChooserLabel.setText("Aircraft Type");
 
         publishButton.setText("Publish / Unavailable");
+        publishButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                publishButtonActionPerformed(evt);
+            }
+        });
 
         previewViewButton.setText("Preview / View");
         previewViewButton.addActionListener(new java.awt.event.ActionListener() {
@@ -721,7 +726,6 @@ public class NewJFrame extends javax.swing.JFrame {
         imagePickerFieldset.setBorder(javax.swing.BorderFactory.createTitledBorder("Image"));
         imagePickerFieldset.setName("test"); // NOI18N
 
-        jButton3.setIcon(new ImageIcon(getField(Field.IMAGE_PATH)));
         jButton3.setText("Select New Image File");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1008,7 +1012,6 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addComponent(inspectionDateChooser))
                 .addGroup(inspectionFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, inspectionFieldsetLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inspectionCheckbox)
                         .addGap(298, 298, 298))
                     .addComponent(inspectionCompleted, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1348,10 +1351,11 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addContainerGap()
                     .addComponent(jLabel26)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(runwaysFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(runwayBLabel)
-                        .addComponent(runwayBName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jCheckBox16))
+                    .addGroup(runwaysFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jCheckBox16, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(runwaysFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(runwayBLabel)
+                            .addComponent(runwayBName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(runwaysFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(runwaysFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1380,10 +1384,11 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addGroup(runwaysFieldsetLayout.createSequentialGroup()
                     .addComponent(jLabel102)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(runwaysFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(runwayALabel)
-                        .addComponent(runwayAName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jCheckBox24))
+                    .addGroup(runwaysFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jCheckBox24, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(runwaysFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(runwayALabel)
+                            .addComponent(runwayAName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(runwaysFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(runwaysFieldsetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1478,9 +1483,7 @@ public class NewJFrame extends javax.swing.JFrame {
         .addGroup(runwayTabLayout.createSequentialGroup()
             .addContainerGap()
             .addGroup(runwayTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, runwayTabLayout.createSequentialGroup()
-                    .addComponent(runwayMainScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 985, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, 0))
+                .addComponent(runwayMainScroll, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 985, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, runwayTabLayout.createSequentialGroup()
                     .addComponent(publishButton)
                     .addGap(18, 18, 18)
@@ -1679,7 +1682,7 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addComponent(jLabel44)
                         .addComponent(jLabel45))
                     .addGap(0, 0, Short.MAX_VALUE)))
-            .addContainerGap(307, Short.MAX_VALUE))
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addGroup(notesTabLayout.createSequentialGroup()
             .addGap(10, 10, 10)
             .addComponent(jLabel27)
@@ -1890,7 +1893,7 @@ public class NewJFrame extends javax.swing.JFrame {
             .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(28, 28, 28)
             .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(179, Short.MAX_VALUE))
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     documentsTabLayout.setVerticalGroup(
         documentsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2821,7 +2824,12 @@ public class NewJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
   private void previewViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewViewButtonActionPerformed
-    // TODO add your handling code here:
+      File temp = runway.preview();
+      try {
+          java.awt.Desktop.getDesktop().open(temp);
+      } catch (IOException ex) {
+          Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+      }
   }//GEN-LAST:event_previewViewButtonActionPerformed
 
   private void latitudeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latitudeActionPerformed
@@ -3021,12 +3029,21 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox10ActionPerformed
 
+    private void publishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publishButtonActionPerformed
+      try {
+          runway.publish();
+      } catch (IOException ex) {
+          Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }//GEN-LAST:event_publishButtonActionPerformed
+
   /**
    * @param args the command line arguments
    */
   public static void main(String args[]) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 
     
+  System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Jungle Jepps");
     
     javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     
